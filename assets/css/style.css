@@ -1,0 +1,137 @@
+/* =============================
+   متدرب - ملف التنسيق العام
+   ============================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+
+:root {
+  --primary: #2e3b55;
+  --secondary: #4b5e88;
+  --light-bg: #f8f9fa;
+  --text: #222;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+body {
+  background-color: var(--light-bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ====== NAVBAR ====== */
+nav {
+  background-color: var(--primary);
+  color: white;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+nav .logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+/* ====== HERO SECTION ====== */
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+  background: linear-gradient(to bottom right, #2e3b55, #4b5e88);
+  color: white;
+}
+.hero h1 {
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+.hero p {
+  font-size: 18px;
+}
+
+/* ====== ABOUT SECTION ====== */
+.about {
+  padding: 60px 20px;
+  background-color: white;
+  text-align: center;
+}
+.about h2 {
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+/* ====== SERVICES SECTION ====== */
+.services {
+  padding: 60px 20px;
+  text-align: center;
+  background-color: var(--light-bg);
+}
+.services h2 {
+  color: var(--primary);
+  margin-bottom: 30px;
+}
+.services .cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+.services .card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.services .card h3 {
+  color: var(--secondary);
+  margin-bottom: 10px;
+}
+
+/* ====== FOOTER ====== */
+footer {
+  background-color: var(--primary);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 50px;
+  font-size: 14px;
+}
+
+/* ====== BUTTONS & FORMS ====== */
+button {
+  background-color: var(--primary);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+button:hover {
+  background-color: var(--secondary);
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
