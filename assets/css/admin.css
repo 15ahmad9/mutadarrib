@@ -1,0 +1,152 @@
+body {
+  font-family: "Cairo", sans-serif;
+  background-color: #f4f6f8;
+  direction: rtl;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-container {
+  margin-right: 220px;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.stats {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 20px;
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+}
+
+.quick-links .btn {
+  display: inline-block;
+  background: #007bff;
+  color: white;
+  padding: 10px 20px;
+  margin: 5px;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.quick-links .btn:hover {
+  background: #0056b3;
+}
+
+
+.admin-sidebar {
+  width: 200px;
+  background-color: #2c3e50;
+  color: white;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 0;
+  padding-top: 60px;
+}
+.admin-sidebar ul { list-style: none; padding: 0; }
+.admin-sidebar li { margin: 10px 0; }
+.admin-sidebar a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 10px 20px;
+}
+.admin-sidebar a:hover {
+  background-color: #1abc9c;
+}
+.admin-header {
+  background-color: #34495e;
+  color: white;
+  padding: 15px;
+  text-align: right;
+}
+.logout {
+  float: left;
+  color: white;
+  text-decoration: none;
+}
+.logout:hover { text-decoration: underline; }
+
+
+
+.container {
+      width: 90%;
+      margin: 40px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    form {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 8px;
+      width: 300px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 8px 12px;
+      background-color: #0077b6;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #0077b6;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    .no-data {
+      text-align: center;
+      color: #777;
+      margin-top: 20px;
+    }
+
+    .add-btn {
+  background-color: #38b000;
+  color: white;
+  padding: 7px 15px;
+  text-decoration: none;
+  border-radius: 6px;
+  margin-right: 10px;
+  font-weight: bold;
+}
+.add-btn:hover { opacity: 0.8; }
+
+

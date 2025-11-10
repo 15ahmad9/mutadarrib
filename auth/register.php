@@ -12,27 +12,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $role        = $_POST['role'];
 
     try {
-        if ($role === 'lawyer') {
 
-            // 1️⃣ تحقق من أن المحامي موجود في الجدول الرئيسي
-            $stmt = $pdo->prepare("SELECT master_id FROM lawyers_master WHERE national_id = ?");
-            $stmt->execute([$national_id]);
-            $lawyerMaster = $stmt->fetch(PDO::FETCH_ASSOC);
+        // 🧠 تحقق أولاً من وجود حساب مسبقًا
+        $checkUser = $pdo->prepare("SELECT user_id FROM users WHERE national_id = ?");
+        $checkUser->execute([$national_id]);
 
-            if (!$lawyerMaster) {
-                $message = "<p class='error'>❌ لا يمكن إنشاء الحساب، الرقم الوطني غير موجود في سجل المزاولين.</p>";
-            } else {
-                // 2️⃣ تحقق من أن الرقم الوطني غير مستخدم مسبقًا
-                $checkUser = $pdo->prepare("SELECT user_id FROM users WHERE national_id = ?");
-                $checkUser->execute([$national_id]);
+        if ($checkUser->rowCount() > 0) {
+            $message = "<p class='error'>⚠️ يوجد حساب بالفعل مرتبط بهذا الرقم الوطني. يرجى تسجيل الدخول.</p>";
+        } else {
 
-                if ($checkUser->rowCount() > 0) {
-                    $message = "<p class='error'>⚠️ يوجد حساب بالفعل مرتبط بهذا الرقم الوطني. يرجى تسجيل الدخول.</p>";
+            // 🧑‍⚖️ تسجيل محامي مزاول
+            if ($role === 'lawyer') {
+
+                $stmt = $pdo->prepare("SELECT master_id FROM lawyers_master WHERE national_id = ?");
+                $stmt->execute([$national_id]);
+                $lawyerMaster = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if (!$lawyerMaster) {
+                    $message = "<p class='error'>❌ لا يمكن إنشاء الحساب، الرقم الوطني غير موجود في سجل المزاولين.</p>";
                 } else {
-                    // 3️⃣ تنفيذ عملية الإدخال
                     $pdo->beginTransaction();
 
-                    // إدخال المستخدم في جدول users
                     $insertUser = $pdo->prepare("
                         INSERT INTO users (full_name, national_id, phone, email, address, password, role)
                         VALUES (?, ?, ?, ?, ?, ?, 'lawyer')
@@ -40,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $insertUser->execute([$full_name, $national_id, $phone, $email, $address, $password]);
                     $user_id = $pdo->lastInsertId();
 
-                    // إدخال المحامي في جدول lawyers وربطه بـ lawyers_master
                     $insertLawyer = $pdo->prepare("
                         INSERT INTO lawyers (user_id, master_id, office_address, password, verified)
                         VALUES (?, ?, ?, ?, 1)
@@ -48,31 +47,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $insertLawyer->execute([$user_id, $lawyerMaster['master_id'], $address, $password]);
 
                     $pdo->commit();
-
                     $message = "<p class='success'>✅ تم التسجيل بنجاح كمزاول معتمد! يمكنك الآن تسجيل الدخول.</p>";
                 }
-            }
 
-        } else {
-            // 🔹 تسجيل طالب جديد
-            $checkUser = $pdo->prepare("SELECT user_id FROM users WHERE national_id = ?");
-            $checkUser->execute([$national_id]);
+            // 🎓 تسجيل طالب
+            } elseif ($role === 'student') {
 
-            if ($checkUser->rowCount() > 0) {
-                $message = "<p class='error'>⚠️ يوجد حساب بالفعل مرتبط بهذا الرقم الوطني.</p>";
-            } else {
                 $stmt = $pdo->prepare("
                     INSERT INTO users (full_name, national_id, phone, email, address, password, role)
                     VALUES (?, ?, ?, ?, ?, ?, 'student')
                 ");
                 $stmt->execute([$full_name, $national_id, $phone, $email, $address, $password]);
-
                 $message = "<p class='success'>✅ تم التسجيل بنجاح كطالب!</p>";
+
+            // 🧑‍💼 تسجيل مدير النظام
+            } elseif ($role === 'admin') {
+
+                $stmt = $pdo->prepare("
+                    INSERT INTO users (full_name, national_id, phone, email, address, password, role)
+                    VALUES (?, ?, ?, ?, ?, ?, 'admin')
+                ");
+                $stmt->execute([$full_name, $national_id, $phone, $email, $address, $password]);
+                $message = "<p class='success'>✅ تم إنشاء حساب المدير بنجاح!</p>";
+
             }
         }
 
     } catch (Exception $e) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         $message = "<p class='error'>حدث خطأ أثناء التسجيل: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }

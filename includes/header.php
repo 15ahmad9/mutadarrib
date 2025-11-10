@@ -13,7 +13,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <?php if (isset($_SESSION['user_id'])): ?>
       <?php 
-        $role_ar = ($_SESSION['role'] === 'lawyer') ? 'مزاول' : 'طالب';
+        $role = $_SESSION['role'];
+        $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'student') ? 'طالب' : 'مدير');
       ?>
       <li class="user-dropdown">
         <button class="user-toggle" id="userToggle">
@@ -21,6 +22,11 @@ if (session_status() === PHP_SESSION_NONE) {
         </button>
         <ul class="dropdown-menu" id="dropdownMenu">
           <li><a href="profile.php">الملف الشخصي</a></li>
+
+          <?php if ($role === 'admin'): ?>
+            <li><a href="admin/dashboard.php">📊 لوحة التحكم</a></li>
+          <?php endif; ?>
+
           <li><a href="./auth/logout.php">تسجيل الخروج</a></li>
         </ul>
       </li>
@@ -38,11 +44,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
   if (toggleBtn && dropdown) {
     toggleBtn.addEventListener("click", function(e) {
-      e.stopPropagation(); // منع إغلاق القائمة فور النقر
+      e.stopPropagation();
       dropdown.classList.toggle("show");
     });
 
-    // عند النقر في أي مكان خارج القائمة تُغلق
     document.addEventListener("click", function(e) {
       if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
         dropdown.classList.remove("show");

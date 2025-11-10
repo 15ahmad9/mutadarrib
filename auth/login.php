@@ -18,14 +18,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['full_name'] = $user['full_name'];
         $_SESSION['role'] = $user['role'];
 
-        header("Location: ../index.php");
+        // توجيه حسب نوع المستخدم
+        if ($user['role'] === 'admin') {
+            header("Location: ../admin/dashboard.php");
+        } else {
+            header("Location: ../index.php");
+        }
         exit;
+
     } else {
         $message = "<p class='error'>❌ الرقم الوطني أو كلمة المرور غير صحيحة.</p>";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>

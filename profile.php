@@ -42,7 +42,7 @@ if ($user && $user['role'] === 'lawyer') {
     <p><strong>رقم الهاتف:</strong> <?= htmlspecialchars($user['phone']) ?></p>
     <p><strong>البريد الإلكتروني:</strong> <?= htmlspecialchars($user['email']) ?></p>
     <p><strong>العنوان:</strong> <?= htmlspecialchars($user['address']) ?></p>
-    <p><strong>نوع الحساب:</strong> <?= ($user['role'] === 'lawyer') ? 'محامي مزاول' : 'طالب' ?></p>
+    <p><strong>نوع الحساب:</strong> <?= ($user['role'] === 'lawyer') ? 'محامي مزاول' : ( ($user['role'] === 'student') ? 'طالب' : 'مدير' ) ?></p>
 
     <a href="edit_profile.php" class="edit-btn">تعديل الملف الشخصي</a>
 
