@@ -32,23 +32,96 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+    direction: rtl;
 }
 nav .logo {
   font-size: 24px;
   font-weight: bold;
+
+    display: inline-block;
+  margin-right: 20px;
 }
+
+
 nav ul {
   list-style: none;
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 15px;
 }
-nav ul li a {
+nav ul li {
+  position: relative;
+}
+nav a {
   color: white;
   text-decoration: none;
-  font-weight: 600;
+  transition: 0.3s;
 }
-nav ul li a:hover {
-  text-decoration: underline;
+nav a:hover {
+  color: #00b4d8;
+}
+nav .login-btn,
+nav .register-btn {
+  background: #4b5e88;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: white;
+}
+nav .logout-btn {
+  background: crimson;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: white;
+}
+
+/* ===== USER DROPDOWN ===== */
+.user-dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.user-toggle {
+  background: #333;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 35px;
+  right: 0;
+  background: #333;
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 160px;
+  z-index: 10;
+}
+
+.dropdown-menu li {
+  border-bottom: 1px solid #444;
+}
+
+.dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+  background: #4b5e88;
+}
+
+/* إظهار القائمة عند التحويم */
+.user-dropdown:hover .dropdown-menu {
+  display: block;
 }
 
 /* ====== HERO SECTION ====== */
@@ -134,4 +207,65 @@ input, select, textarea {
   margin-top: 8px;
   border: 1px solid #ccc;
   border-radius: 8px;
+}
+
+
+
+
+
+/* ===== PROFILE PAGE ===== */
+.profile-page {
+  max-width: 700px;
+  margin: 50px auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  direction: rtl;
+}
+
+.profile-page h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--primary);
+}
+
+.profile-card p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.profile-card strong {
+  color: var(--primary);
+}
+
+.profile-card a.logout-btn {
+  display: inline-block;
+  background: crimson;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-top: 15px;
+}
+
+
+.profile-card a.edit-btn {
+  display: inline-block;
+  background: #4b5e88;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin:15px 0;
+}
+
+a.btn-cancel{
+  display: inline-block;
+  background: #4b5e88;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin:15px 0;
 }

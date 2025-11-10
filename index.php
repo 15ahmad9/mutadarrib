@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <?php include("includes/header.php"); ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
