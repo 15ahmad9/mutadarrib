@@ -11,27 +11,30 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $message = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $lawyer_name   = trim($_POST['lawyer_name']);
-    $national_id   = trim($_POST['national_id']);
-    $office_address = trim($_POST['office_address']);
-    $phone         = trim($_POST['phone']);
-    $email         = trim($_POST['email']);
-    $address       = trim($_POST['address']);
-    $password  = trim($_POST['password']);
+
+    $lawyer_name     = trim($_POST['lawyer_name']);
+    $national_id     = trim($_POST['national_id']);
+    $office_address  = trim($_POST['office_address']);
+    $phone           = trim($_POST['phone']);
+    $email           = trim($_POST['email']);
+    $address         = trim($_POST['address']);
+    $password        = trim($_POST['password']);
     $password_hashed = password_hash($password, PASSWORD_BCRYPT);
 
     try {
-        // التأكد من عدم وجود الرقم الوطني مسبقًا في أي من الجداول
+
+        // التأكد من عدم وجود الرقم الوطني مسبقًا في جدول النقابة
         $check = $pdo->prepare("SELECT * FROM lawyers_master WHERE national_id = ?");
         $check->execute([$national_id]);
 
         if ($check->rowCount() > 0) {
-            $message = "<p style='color:red;'>⚠️ يوجد محامي بهذا الرقم الوطني مسبقًا في سجل النقابة!</p>";
+            $message = "<p style='color:red;'>المحامي موجود مسبقًا في سجل النقابة!</p>";
         } else {
-            // بدء معاملة
+
+            // بدء المعاملة
             $pdo->beginTransaction();
 
-            // 1️⃣ إدخال المحامي في جدول النقابة (lawyers_master)
+            // إضافة المحامي إلى جدول النقابة
             $stmt1 = $pdo->prepare("
                 INSERT INTO lawyers_master (lawyer_name, national_id, office_address, phone, email, created_at)
                 VALUES (?, ?, ?, ?, ?, NOW())
@@ -39,39 +42,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt1->execute([$lawyer_name, $national_id, $office_address, $phone, $email]);
             $master_id = $pdo->lastInsertId();
 
-            // 2️⃣ إدخاله في جدول المستخدمين (users)
+            // إضافة المستخدم في جدول المستخدمين (users) — كلمة السر مشفرة ✔
             $stmt2 = $pdo->prepare("
                 INSERT INTO users (full_name, national_id, phone, email, address, password, role)
                 VALUES (?, ?, ?, ?, ?, ?, 'lawyer')
             ");
-            $stmt2->execute([$lawyer_name, $national_id, $phone, $email, $office_address, $password]);
+            $stmt2->execute([
+                $lawyer_name, 
+                $national_id, 
+                $phone, 
+                $email, 
+                $address, 
+                $password_hashed
+            ]);
             $user_id = $pdo->lastInsertId();
 
-            // 3️⃣ إدخاله في جدول المحامين المزاولين (lawyers)
+            // إضافة المحامي إلى جدول (lawyers)
             $stmt3 = $pdo->prepare("
-                INSERT INTO lawyers (user_id, master_id, office_address, verified, created_at)
-                VALUES (?, ?, ?, 1, NOW())
+                INSERT INTO lawyers (user_id, master_id, office_address, Password, verified, created_at)
+                VALUES (?, ?, ?, ?, 1, NOW())
             ");
-            $stmt3->execute([$user_id, $master_id, $office_address]);
+            $stmt3->execute([$user_id, $master_id, $office_address, $password_hashed]);
 
-            // تأكيد العملية
+            // تأكيد
             $pdo->commit();
 
-            $message = "<p style='color:green;'>✅ تم إضافة المحامي بنجاح إلى جميع الجداول!</p>";
+            $message = "<p style='color:green;'>تمت إضافة المحامي بنجاح إلى جميع الجداول!</p>";
         }
+
     } catch (Exception $e) {
-        // إلغاء العملية إذا حدث خطأ
         if ($pdo->inTransaction()) $pdo->rollBack();
-        $message = "<p style='color:red;'>❌ حدث خطأ أثناء الإضافة: " . htmlspecialchars($e->getMessage()) . "</p>";
+        $message = "<p style='color:red;'>خطأ: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>➕ إضافة محامي جديد</title>
+<title>إضافة محامي جديد</title>
 <link rel="stylesheet" href="../../assets/css/admin.css">
 <style>
 form {
@@ -101,7 +112,7 @@ button:hover { opacity: 0.9; }
 </head>
 <body>
 
-<h2 style="text-align:center;">➕ إضافة محامي جديد إلى النظام</h2>
+<h2 style="text-align:center;">إضافة محامي جديد إلى النظام</h2>
 <div style="text-align:center;"><?= $message ?></div>
 
 <form method="POST">
@@ -126,10 +137,10 @@ button:hover { opacity: 0.9; }
   <label>كلمة المرور (للدخول للنظام):</label>
   <input type="password" name="password" required>
 
-  <button type="submit">💾 حفظ البيانات</button>
+  <button type="submit">حفظ البيانات</button>
 </form>
 
-<a href="master_lawyers.php" class="back-link">⬅️ العودة إلى قائمة المحامين</a>
+<a href="master_lawyers.php" class="back-link">العودة إلى قائمة المحامين</a>
 
 </body>
 </html>

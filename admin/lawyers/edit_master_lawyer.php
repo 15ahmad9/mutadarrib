@@ -28,7 +28,7 @@ $stmt->execute([$id]);
 $lawyer = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$lawyer) {
-    die("❌ لم يتم العثور على المحامي.");
+    die("لم يتم العثور على المحامي.");
 }
 
 $message = "";
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $pdo->commit();
-        $message = "<p style='color:green;'>✅ تم تحديث بيانات المحامي بنجاح!</p>";
+        $message = "<p style='color:green;'>تم تحديث بيانات المحامي بنجاح!</p>";
 
         // إعادة تحميل البيانات بعد التحديث
         $stmt->execute([$id]);
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } catch (Exception $e) {
         if ($pdo->inTransaction()) $pdo->rollBack();
-        $message = "<p style='color:red;'>❌ حدث خطأ أثناء التحديث: " . htmlspecialchars($e->getMessage()) . "</p>";
+        $message = "<p style='color:red;'>حدث خطأ أثناء التحديث: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }
 ?>
@@ -109,7 +109,7 @@ button:hover { opacity: 0.9; }
 <?php include("../includes/header.php"); ?>
 
 <div class="container">
-  <h2>✏️ تعديل بيانات المحامي</h2>
+  <h2>تعديل بيانات المحامي</h2>
   <?= $message ?>
   <form method="POST">
     <label>الاسم الكامل:</label>

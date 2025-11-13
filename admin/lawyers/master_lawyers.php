@@ -25,9 +25,23 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>📋 قائمة المحامين المسجلين في النقابة</title>
+  <title>قائمة المحامين المسجلين في النقابة</title>
   <link rel="stylesheet" href="../../assets/css/admin.css">
   <style>
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+th {
+    background: #0077b6;
+    color: white;
+}
     a.btn {
       padding: 5px 10px;
       border-radius: 6px;
@@ -77,15 +91,15 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <td><?= htmlspecialchars($lawyer['office_address']) ?></td>
               <td><?= htmlspecialchars($lawyer['created_at'] ?? '-') ?></td>
               <td>
-                <a href="edit_master_lawyer.php?id=<?= $lawyer['master_id'] ?>" class="btn edit-btn">✏️ تعديل</a>
-                <a href="delete_master_lawyer.php?id=<?= $lawyer['master_id'] ?>" class="btn delete-btn" onclick="return confirm('هل أنت متأكد من حذف هذا المحامي؟')">🗑 حذف</a>
+                <a href="edit_master_lawyer.php?id=<?= $lawyer['master_id'] ?>" class="btn edit-btn">تعديل</a>
+                <a href="delete_master_lawyer.php?id=<?= $lawyer['master_id'] ?>" class="btn delete-btn" onclick="return confirm('هل أنت متأكد من حذف هذا المحامي؟')">حذف</a>
               </td>
             </tr>
           <?php endforeach; ?>
         </tbody>
       </table>
     <?php else: ?>
-      <p class="no-data">❌ لا توجد بيانات مطابقة لبحثك.</p>
+      <p class="no-data">لا توجد بيانات مطابقة لبحثك.</p>
     <?php endif; ?>
   </div>
 </div>

@@ -24,7 +24,7 @@ if (session_status() === PHP_SESSION_NONE) {
           <li><a href="profile.php">الملف الشخصي</a></li>
 
           <?php if ($role === 'admin'): ?>
-            <li><a href="admin/dashboard.php">📊 لوحة التحكم</a></li>
+            <li><a href="admin/dashboard.php">لوحة التحكم</a></li>
           <?php endif; ?>
 
           <li><a href="./auth/logout.php">تسجيل الخروج</a></li>
