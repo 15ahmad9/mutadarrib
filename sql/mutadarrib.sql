@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 14, 2025 at 12:46 AM
+-- Generation Time: Nov 14, 2025 at 09:28 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -51,15 +51,31 @@ CREATE TABLE `lawyers` (
   `password` varchar(255) NOT NULL,
   `verified` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `full_name` varchar(200) DEFAULT NULL,
+  `first_name` varchar(100) DEFAULT NULL,
+  `father_name` varchar(100) DEFAULT NULL,
+  `grandfather_name` varchar(100) DEFAULT NULL,
+  `family_name` varchar(100) DEFAULT NULL,
+  `national_id` varchar(30) DEFAULT NULL,
+  `phone` varchar(30) DEFAULT NULL,
+  `email` varchar(150) DEFAULT NULL,
+  `home_address` varchar(255) DEFAULT NULL,
+  `no_conviction_doc` varchar(255) DEFAULT NULL,
+  `good_conduct_doc` varchar(255) DEFAULT NULL,
+  `social_security` enum('نعم','لا') DEFAULT 'لا',
+  `highschool_certificate` varchar(10) DEFAULT 'لا',
+  `university_degree` varchar(10) DEFAULT 'لا',
+  `social_security_number` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `lawyers`
 --
 
-INSERT INTO `lawyers` (`lawyer_id`, `user_id`, `master_id`, `office_address`, `password`, `verified`, `created_at`, `updated_at`) VALUES
-(1, 3, 1, 'عمان', '$2y$10$j3ACPUVlqG8KtWvMaDVtWeXbNHvoSkmSFC9KbtBBMUHoTGtvIocCm', 1, '2025-11-12 00:22:59', '2025-11-12 00:22:59');
+INSERT INTO `lawyers` (`lawyer_id`, `user_id`, `master_id`, `office_address`, `password`, `verified`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `highschool_certificate`, `university_degree`, `social_security_number`) VALUES
+(1, 3, 1, 'عمان', '$2y$10$j3ACPUVlqG8KtWvMaDVtWeXbNHvoSkmSFC9KbtBBMUHoTGtvIocCm', 1, '2025-11-12 00:22:59', '2025-11-14 16:18:20', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', '1111111111', '0790000000', 'lawyer1@example.com', '', NULL, NULL, 'لا', 'لا', 'لا', NULL),
+(9, 24, 6, 'عمان', '$2y$10$RnYhv5X6LSTC0SK1qh.Gdef66TtFxFonlqlo5gJiy5Q7yN57MytR2', 1, '2025-11-14 21:21:18', '2025-11-14 21:21:18', 'سارة علي محمد المحامية', 'سارة', 'علي', 'محمد', 'المحامية', '7878787878', '0787878787', 'sara@example.com', 'عمان', '', '', 'نعم', 'نعم', 'ماجستير', '7878787878');
 
 -- --------------------------------------------------------
 
@@ -75,15 +91,28 @@ CREATE TABLE `lawyers_master` (
   `phone` varchar(30) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
   `notes` text DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `full_name` varchar(200) DEFAULT NULL,
+  `first_name` varchar(100) DEFAULT NULL,
+  `father_name` varchar(100) DEFAULT NULL,
+  `grandfather_name` varchar(100) DEFAULT NULL,
+  `family_name` varchar(100) DEFAULT NULL,
+  `highschool_certificate` enum('نعم','لا') DEFAULT 'لا',
+  `university_degree` enum('بكالوريوس','ماجستير','دكتوراه') DEFAULT NULL,
+  `no_conviction_doc` varchar(255) DEFAULT NULL,
+  `good_conduct_doc` varchar(255) DEFAULT NULL,
+  `social_security` enum('نعم','لا') DEFAULT 'لا',
+  `social_security_number` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `lawyers_master`
 --
 
-INSERT INTO `lawyers_master` (`master_id`, `lawyer_name`, `national_id`, `office_address`, `phone`, `email`, `notes`, `created_at`) VALUES
-(1, 'محمد المحامي', '1111111111', 'عمان', '0790000000', 'lawyer1@example.com', 'مسجل لدى النقابة', '2025-11-12 00:18:50');
+INSERT INTO `lawyers_master` (`master_id`, `lawyer_name`, `national_id`, `office_address`, `phone`, `email`, `notes`, `created_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `highschool_certificate`, `university_degree`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `social_security_number`) VALUES
+(1, 'محمد المحامي', '1111111111', 'عمان', '0790000000', 'lawyer1@example.com', 'مسجل لدى النقابة', '2025-11-12 00:18:50', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', 'لا', '', '', '', 'نعم', '1111111111'),
+(6, '', '7878787878', 'عمان', '0787878787', 'sara@example.com', NULL, '2025-11-14 21:21:18', 'سارة علي محمد المحامية', 'سارة', 'علي', 'محمد', 'المحامية', 'نعم', 'ماجستير', '', '', 'نعم', '7878787878'),
+(7, '', '5455445544', 'عمان', '0787778889', 'bilal@example.com', NULL, '2025-11-14 21:25:24', 'بلال علي لؤي المحامي', 'بلال', 'علي', 'لؤي', 'المحامي', 'نعم', 'ماجستير', '', '', 'نعم', '5455445544');
 
 -- --------------------------------------------------------
 
@@ -101,8 +130,24 @@ CREATE TABLE `students` (
   `social_security` enum('نعم','لا') NOT NULL DEFAULT 'لا',
   `social_security_number` varchar(100) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `full_name` varchar(200) DEFAULT NULL,
+  `first_name` varchar(100) DEFAULT NULL,
+  `father_name` varchar(100) DEFAULT NULL,
+  `grandfather_name` varchar(100) DEFAULT NULL,
+  `family_name` varchar(100) DEFAULT NULL,
+  `national_id` varchar(30) DEFAULT NULL,
+  `phone` varchar(30) DEFAULT NULL,
+  `email` varchar(150) DEFAULT NULL,
+  `home_address` varchar(255) DEFAULT NULL
 ) ;
+
+--
+-- Dumping data for table `students`
+--
+
+INSERT INTO `students` (`student_id`, `user_id`, `highschool_certificate`, `university_degree`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `social_security_number`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`) VALUES
+(2, 12, 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL, '2025-11-14 14:05:13', '2025-11-14 15:06:16', 'ريم', 'ريم', NULL, NULL, NULL, '0505050505', '0780505050', 'reem@example.com', 'عمان');
 
 -- --------------------------------------------------------
 
@@ -186,17 +231,32 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` enum('student','lawyer','admin') NOT NULL DEFAULT 'student',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `first_name` varchar(100) DEFAULT NULL,
+  `father_name` varchar(100) DEFAULT NULL,
+  `grandfather_name` varchar(100) DEFAULT NULL,
+  `family_name` varchar(100) DEFAULT NULL,
+  `home_address` varchar(255) DEFAULT NULL,
+  `office_address` varchar(255) DEFAULT NULL,
+  `highschool_certificate` enum('نعم','لا') DEFAULT 'لا',
+  `university_degree` enum('بكالوريوس','ماجستير','دكتوراه') DEFAULT NULL,
+  `no_conviction_doc` varchar(255) DEFAULT NULL,
+  `good_conduct_doc` varchar(255) DEFAULT NULL,
+  `social_security` enum('نعم','لا') DEFAULT 'لا',
+  `social_security_number` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `address`, `password`, `role`, `created_at`, `updated_at`) VALUES
-(1, 'admin', '0000000000', '0790000000', 'admin@example.com', 'Head Office', '$2y$10$btXC0u5ep0CjLg87dlFAjOzJHipd54ijGMDmFsEGGQetAtgx6ObDi', 'admin', '2025-11-12 00:28:19', '2025-11-14 01:19:45'),
-(3, 'محمد المحامي', '1111111111', '0790000000', 'mohammad@example.com', 'عمان', '$2y$10$OH8WwE9dJabllN0kT.ynEOHomQxBRHn4cih49dQLb1/0LRztCTGwC', 'lawyer', '2025-11-12 00:22:59', '2025-11-14 01:19:42'),
-(5, 'أحمد الطالب', '2222222222', '0791111111', 'ahmad@example.com', 'عمان', '$2y$10$z/87SIISLj0ME4KbA2h5/ez7pggFS/r/7m0ms1narI5/uorrnA4Oq', 'student', '2025-11-12 00:35:59', '2025-11-14 01:19:39');
+INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `address`, `password`, `role`, `created_at`, `updated_at`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `home_address`, `office_address`, `highschool_certificate`, `university_degree`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `social_security_number`) VALUES
+(1, 'admin', '0000000000', '0790000000', 'admin@example.com', 'Head Office', '$2y$10$btXC0u5ep0CjLg87dlFAjOzJHipd54ijGMDmFsEGGQetAtgx6ObDi', 'admin', '2025-11-12 00:28:19', '2025-11-14 01:19:45', NULL, NULL, NULL, NULL, NULL, NULL, 'لا', NULL, NULL, NULL, 'لا', NULL),
+(3, 'محمد احمد محمد المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '$2y$10$OH8WwE9dJabllN0kT.ynEOHomQxBRHn4cih49dQLb1/0LRztCTGwC', 'lawyer', '2025-11-12 00:22:59', '2025-11-14 16:23:20', 'محمد', 'احمد', 'محمد', 'المحامي', '', 'عمان', 'لا', '', '', '', 'نعم', '1111111111'),
+(5, 'أحمد الطالب', '2222222222', '0791111111', 'ahmad@example.com', 'عمان', '$2y$10$z/87SIISLj0ME4KbA2h5/ez7pggFS/r/7m0ms1narI5/uorrnA4Oq', 'student', '2025-11-12 00:35:59', '2025-11-14 01:19:39', NULL, NULL, NULL, NULL, NULL, NULL, 'لا', NULL, NULL, NULL, 'لا', NULL),
+(12, 'ريم', '0505050505', '0780505050', 'reem@example.com', 'عمان', '$2y$10$nr/n4S58QGWNHzwI9d11jOgnFXKVbQqTh3QZ1J0SD5h6alMQR6WLi', 'student', '2025-11-14 14:05:13', '2025-11-14 14:05:13', NULL, NULL, NULL, NULL, NULL, NULL, 'لا', NULL, NULL, NULL, 'لا', NULL),
+(24, 'سارة علي محمد المحامية', '7878787878', '0787878787', 'sara@example.com', NULL, '$2y$10$RnYhv5X6LSTC0SK1qh.Gdef66TtFxFonlqlo5gJiy5Q7yN57MytR2', 'lawyer', '2025-11-14 21:21:18', '2025-11-14 21:21:18', 'سارة', 'علي', 'محمد', 'المحامية', 'عمان', 'عمان', 'نعم', 'ماجستير', '', '', 'نعم', '7878787878'),
+(25, 'بلال علي لؤي المحامي', '5455445544', '0787778889', 'bilal@example.com', NULL, '$2y$10$C5/InYK1mecXyS1en.L6wurbtjiSYLeTgg9K3QYPoj2L05/uXOXpe', 'lawyer', '2025-11-14 21:25:24', '2025-11-14 21:25:24', 'بلال', 'علي', 'لؤي', 'المحامي', 'عمان', 'عمان', 'نعم', 'ماجستير', '', '', 'نعم', '5455445544');
 
 --
 -- Indexes for dumped tables
@@ -271,13 +331,13 @@ ALTER TABLE `audit_logs`
 -- AUTO_INCREMENT for table `lawyers`
 --
 ALTER TABLE `lawyers`
-  MODIFY `lawyer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `lawyer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `lawyers_master`
 --
 ALTER TABLE `lawyers_master`
-  MODIFY `master_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `master_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `students`
@@ -301,7 +361,7 @@ ALTER TABLE `training_applications`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Constraints for dumped tables

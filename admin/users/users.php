@@ -12,98 +12,86 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 // البحث
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
+// جلب كل بيانات المستخدمين
+$query = "SELECT * FROM users";
+$params = [];
+
 if ($search) {
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE full_name LIKE ?");
-    $stmt->execute(["%$search%"]);
-} else {
-    $stmt = $pdo->query("SELECT * FROM users ORDER BY full_name ASC");
+    $query .= " WHERE full_name LIKE :s OR email LIKE :s OR phone LIKE :s";
+    $params = [":s" => "%$search%"];
 }
+
+$query .= " ORDER BY full_name ASC";
+$stmt = $pdo->prepare($query);
+$stmt->execute($params);
 
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>قائمة المستخدمين</title>
-  <link rel="stylesheet" href="../../assets/css/admin.css">
-
-  <style>
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-th, td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: center;
-}
-th {
-    background: #0077b6;
-    color: white;
-}
-a.btn {
-    padding: 5px 10px;
-    border-radius: 6px;
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-}
+<meta charset="UTF-8">
+<title>قائمة المستخدمين</title>
+<link rel="stylesheet" href="../../assets/css/admin.css">
+<style>
+table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size:14px; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+th { background: #0077b6; color: white; }
+a.btn { padding: 5px 10px; border-radius: 6px; color: white; text-decoration: none; }
 .edit-btn { background-color: #00b4d8; }
 .delete-btn { background-color: #d62828; }
 .btn:hover { opacity: 0.8; }
-  </style>
+</style>
 </head>
 <body>
 
-<h2>👥 قائمة المستخدمين</h2>
+<h2>قائمة المستخدمين</h2>
 
-<form method="GET" action="">
-  <input type="text" name="search" placeholder="ابحث باسم المستخدم أو اسم الدخول..." 
-         value="<?= htmlspecialchars($search) ?>">
-  <button type="submit">🔍 بحث</button>
+<form method="GET">
+    <input type="text" name="search" placeholder="ابحث بالاسم، اسم المستخدم، البريد أو الهاتف..." value="<?= htmlspecialchars($search) ?>">
+    <button type="submit">🔍 بحث</button>
 </form>
 
 <div class="admin-container">
-  <?php include("../includes/sidebar.php"); ?>
+<?php include("../includes/sidebar.php"); ?>
+<div class="container">
 
-  <div class="container">
+<?php if ($users): ?>
+<table>
+<thead>
+<tr>
+    <th>#</th>
+    <th>الاسم الكامل</th>
+    <th>البريد</th>
+    <th>الهاتف</th>
+    <th>الدور</th>
+    <th>تاريخ التسجيل</th>
+    <th>الإجراءات</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach ($users as $i => $u): ?>
+<tr>
+    <td><?= $i+1 ?></td>
+    <td><?= htmlspecialchars($u['full_name']) ?></td>
+    <td><?= htmlspecialchars($u['email'] ?? '-') ?></td>
+    <td><?= htmlspecialchars($u['phone'] ?? '-') ?></td>
+    <td><?= htmlspecialchars($u['role']) ?></td>
+    <td><?= htmlspecialchars($u['created_at'] ?? '-') ?></td>
+    <td>
+        <a href="edit_user.php?id=<?= $u['user_id'] ?>" class="btn edit-btn">تعديل</a>
+        <a href="delete_user.php?id=<?= $u['user_id'] ?>" class="btn delete-btn" onclick="return confirm('هل أنت متأكد من حذف هذا المستخدم؟')">حذف</a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+<?php else: ?>
+<p class="no-data">لا توجد نتائج مطابقة.</p>
+<?php endif; ?>
 
-    <?php if (count($users) > 0): ?>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>الاسم الكامل</th>
-            <th>الدور</th>
-            <th>الإجراءات</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <?php foreach ($users as $index => $u): ?>
-            <tr>
-              <td><?= $index + 1 ?></td>
-              <td><?= htmlspecialchars($u['full_name']) ?></td>
-              <td><?= htmlspecialchars($u['role']) ?></td>
-
-              <td>
-                <a href="edit_user.php?id=<?= $u['user_id'] ?>" class="btn edit-btn">تعديل</a>
-                <a href="delete_user.php?id=<?= $u['user_id'] ?>" class="btn delete-btn"
-                   onclick="return confirm('هل أنت متأكد من حذف هذا المستخدم؟')">حذف</a>
-              </td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-
-    <?php else: ?>
-      <p class="no-data">لا توجد نتائج مطابقة.</p>
-    <?php endif; ?>
-
-  </div>
 </div>
-
+</div>
 </body>
 </html>

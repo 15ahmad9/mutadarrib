@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
 $dbname = "mutadarrib";
-$username = "root";   // عدّل حسب إعدادك
+$username = "root";  
 $password = "";
 
 try {

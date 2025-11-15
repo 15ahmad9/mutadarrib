@@ -2,7 +2,6 @@
 session_start();
 require_once("../../config/db.php");
 
-// حماية الصفحة
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../../auth/login.php");
     exit;
@@ -12,62 +11,79 @@ $message = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $lawyer_name     = trim($_POST['lawyer_name']);
+    $first_name      = trim($_POST['first_name']);
+    $father_name     = trim($_POST['father_name']);
+    $grandfather_name= trim($_POST['grandfather_name']);
+    $family_name     = trim($_POST['family_name']);
+    $full_name       = "$first_name $father_name $grandfather_name $family_name"; 
     $national_id     = trim($_POST['national_id']);
-    $office_address  = trim($_POST['office_address']);
     $phone           = trim($_POST['phone']);
     $email           = trim($_POST['email']);
-    $address         = trim($_POST['address']);
+    $home_address    = trim($_POST['home_address']);
+    $office_address  = trim($_POST['office_address']);
+    $highschool      = $_POST['highschool_certificate'] ?? 'لا';
+    $university      = $_POST['university_degree'] ?? null;
+    $no_conviction   = $_POST['no_conviction_doc'] ?? null;
+    $good_conduct    = $_POST['good_conduct_doc'] ?? null;
+    $social_security = $_POST['social_security'] ?? 'لا';
+    $social_number   = $_POST['social_security_number'] ?? null;
     $password        = trim($_POST['password']);
     $password_hashed = password_hash($password, PASSWORD_BCRYPT);
 
     try {
-
-        // التأكد من عدم وجود الرقم الوطني مسبقًا في جدول النقابة
+        // التأكد من عدم وجود الرقم الوطني مسبقًا
         $check = $pdo->prepare("SELECT * FROM lawyers_master WHERE national_id = ?");
         $check->execute([$national_id]);
-
         if ($check->rowCount() > 0) {
-            $message = "<p style='color:red;'>المحامي موجود مسبقًا في سجل النقابة!</p>";
+            $message = "<p style='color:red;'>المحامي موجود مسبقًا!</p>";
         } else {
-
-            // بدء المعاملة
             $pdo->beginTransaction();
 
-            // إضافة المحامي إلى جدول النقابة
+            // إضافة في جدول النقابة
             $stmt1 = $pdo->prepare("
-                INSERT INTO lawyers_master (lawyer_name, national_id, office_address, phone, email, created_at)
-                VALUES (?, ?, ?, ?, ?, NOW())
+                INSERT INTO lawyers_master 
+                (full_name, first_name, father_name, grandfather_name, family_name, national_id, phone, email, office_address,
+                 highschool_certificate, university_degree, no_conviction_doc, good_conduct_doc, social_security, social_security_number, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
             ");
-            $stmt1->execute([$lawyer_name, $national_id, $office_address, $phone, $email]);
+            $stmt1->execute([
+                $full_name, $first_name, $father_name, $grandfather_name, $family_name,
+                $national_id, $phone, $email, $office_address,
+                $highschool, $university, $no_conviction, $good_conduct, $social_security, $social_number
+            ]);
             $master_id = $pdo->lastInsertId();
 
-            // إضافة المستخدم في جدول المستخدمين (users) — كلمة السر مشفرة ✔
+            // إضافة المستخدم
             $stmt2 = $pdo->prepare("
-                INSERT INTO users (full_name, national_id, phone, email, address, password, role)
-                VALUES (?, ?, ?, ?, ?, ?, 'lawyer')
+                INSERT INTO users
+                (full_name, first_name, father_name, grandfather_name, family_name, national_id, phone, email, home_address, office_address,
+                 highschool_certificate, university_degree, no_conviction_doc, good_conduct_doc, social_security, social_security_number, password, role)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'lawyer')
             ");
             $stmt2->execute([
-                $lawyer_name, 
-                $national_id, 
-                $phone, 
-                $email, 
-                $address, 
-                $password_hashed
+                $full_name, $first_name, $father_name, $grandfather_name, $family_name,
+                $national_id, $phone, $email, $home_address, $office_address,
+                $highschool, $university, $no_conviction, $good_conduct, $social_security, $social_number, $password_hashed
             ]);
             $user_id = $pdo->lastInsertId();
 
-            // إضافة المحامي إلى جدول (lawyers)
+            // إضافة المحامي في جدول lawyers
             $stmt3 = $pdo->prepare("
-                INSERT INTO lawyers (user_id, master_id, office_address, Password, verified, created_at)
-                VALUES (?, ?, ?, ?, 1, NOW())
+                INSERT INTO lawyers
+                (full_name, first_name, father_name, grandfather_name, family_name, national_id, phone, email, home_address, office_address,
+                 highschool_certificate, university_degree, no_conviction_doc, good_conduct_doc, social_security, social_security_number,
+                 password, master_id, user_id, verified, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW())
             ");
-            $stmt3->execute([$user_id, $master_id, $office_address, $password_hashed]);
+            $stmt3->execute([
+                $full_name, $first_name, $father_name, $grandfather_name, $family_name,
+                $national_id, $phone, $email, $home_address, $office_address,
+                $highschool, $university, $no_conviction, $good_conduct, $social_security, $social_number,
+                $password_hashed, $master_id, $user_id
+            ]);
 
-            // تأكيد
             $pdo->commit();
-
-            $message = "<p style='color:green;'>تمت إضافة المحامي بنجاح إلى جميع الجداول!</p>";
+            $message = "<p style='color:green;'>تمت إضافة المحامي بنجاح!</p>";
         }
 
     } catch (Exception $e) {
@@ -76,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -116,14 +133,20 @@ button:hover { opacity: 0.9; }
 <div style="text-align:center;"><?= $message ?></div>
 
 <form method="POST">
-  <label>الاسم الكامل:</label>
-  <input type="text" name="lawyer_name" required>
+  <label>الاسم الأول:</label>
+  <input type="text" name="first_name" required>
+
+  <label>اسم الأب:</label>
+  <input type="text" name="father_name" required>
+
+  <label>اسم الجد:</label>
+  <input type="text" name="grandfather_name" required>
+
+  <label>اسم العائلة:</label>
+  <input type="text" name="family_name" required>
 
   <label>الرقم الوطني:</label>
   <input type="text" name="national_id" required>
-
-  <label>عنوان المكتب:</label>
-  <input type="text" name="office_address">
 
   <label>رقم الهاتف:</label>
   <input type="text" name="phone">
@@ -132,13 +155,54 @@ button:hover { opacity: 0.9; }
   <input type="email" name="email" required>
 
   <label>عنوان السكن:</label>
-  <input type="text" name="address">
+  <input type="text" name="home_address">
 
-  <label>كلمة المرور (للدخول للنظام):</label>
+  <label>عنوان المكتب:</label>
+  <input type="text" name="office_address">
+
+  <label>شهادة ثانوية:</label>
+  <select name="highschool_certificate">
+      <option value="نعم">نعم</option>
+      <option value="لا" selected>لا</option>
+  </select>
+
+  <label>شهادة جامعية:</label>
+  <select name="university_degree">
+      <option value="">---</option>
+      <option value="بكالوريوس">بكالوريوس</option>
+      <option value="ماجستير">ماجستير</option>
+      <option value="دكتوراه">دكتوراه</option>
+  </select>
+
+  <label>عدم محكومية (رابط الصورة):</label>
+  <input type="text" name="no_conviction_doc">
+
+  <label>حسن السيرة والسلوك (رابط الصورة):</label>
+  <input type="text" name="good_conduct_doc">
+
+  <label>الضمان الاجتماعي:</label>
+  <select name="social_security" id="social_security" onchange="toggleSocialNumber()">
+      <option value="لا" selected>لا</option>
+      <option value="نعم">نعم</option>
+  </select>
+
+  <label>رقم الضمان الاجتماعي:</label>
+  <input type="text" name="social_security_number" id="social_number" disabled>
+
+  <label>كلمة المرور:</label>
   <input type="password" name="password" required>
 
   <button type="submit">حفظ البيانات</button>
 </form>
+
+<script>
+function toggleSocialNumber() {
+    const ss = document.getElementById('social_security');
+    const num = document.getElementById('social_number');
+    num.disabled = (ss.value !== 'نعم');
+}
+</script>
+
 
 <a href="master_lawyers.php" class="back-link">العودة إلى قائمة المحامين</a>
 

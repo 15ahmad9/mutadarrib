@@ -13,21 +13,28 @@ $search = $_GET['search'] ?? "";
 
 // جلب بيانات الطلاب مع بيانات المستخدم
 $query = "
-    SELECT s.*, u.full_name, u.national_id, u.phone, u.email
+    SELECT s.*, u.full_name, u.first_name, u.father_name, u.grandfather_name, u.family_name,
+           u.national_id, u.phone, u.email, u.home_address
     FROM students s
     JOIN users u ON s.user_id = u.user_id
 ";
 
+// إذا تم البحث نضيف شرط WHERE
 if ($search) {
     $query .= " WHERE u.full_name LIKE :s OR u.national_id LIKE :s ";
 }
 
-$query .= " ORDER BY u.full_name ASC ";
+$query .= " ORDER BY u.full_name ASC";
 
 $stmt = $pdo->prepare($query);
-$stmt->execute(["s" => "%$search%"]);
-$students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+if ($search) {
+    $stmt->execute([":s" => "%$search%"]);
+} else {
+    $stmt->execute();
+}
+
+$students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -37,8 +44,8 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <title>قائمة الطلاب</title>
 <link rel="stylesheet" href="../../assets/css/admin.css">
 <style>
-table { width:100%; border-collapse:collapse; margin-top:20px; }
-th,td { padding:10px; border:1px solid #ccc; text-align:center; }
+table { width:100%; border-collapse:collapse; margin-top:20px; font-size:14px; }
+th, td { padding:8px; border:1px solid #ccc; text-align:center; }
 th { background:#0077b6; color:#fff; }
 .btn { padding:6px 10px; border-radius:6px; color:white; text-decoration:none; }
 .edit-btn { background:#0096c7; }
@@ -47,10 +54,10 @@ th { background:#0077b6; color:#fff; }
 </head>
 <body>
 
-<h2>🎓 قائمة الطلاب</h2>
+<h2>قائمة الطلاب</h2>
 
 <form method="GET">
-    <input type="text" name="search" placeholder="بحث بالاسم أو الرقم الوطني..." value="<?= $search ?>">
+    <input type="text" name="search" placeholder="بحث بالاسم أو الرقم الوطني..." value="<?= htmlspecialchars($search) ?>">
     <button type="submit">🔍 بحث</button>
     <a href="add_student.php" class="btn" style="background:#52b788;">➕ إضافة طالب جديد</a>
 </form>
@@ -64,12 +71,19 @@ th { background:#0077b6; color:#fff; }
 <thead>
 <tr>
     <th>#</th>
-    <th>الاسم</th>
+    <th>الاسم الكامل</th>
+    <th>الاسم الأول</th>
+    <th>اسم الأب</th>
+    <th>اسم الجد</th>
+    <th>اسم العائلة</th>
     <th>الرقم الوطني</th>
     <th>الهاتف</th>
     <th>البريد</th>
-    <th>الشهادة الجامعية</th>
+    <th>العنوان</th>
+    <th>الشهادة الثانوية</th>
+    <th>الدرجة الجامعية</th>
     <th>الضمان الاجتماعي</th>
+    <th>رقم الضمان</th>
     <th>الإجراءات</th>
 </tr>
 </thead>
@@ -79,15 +93,22 @@ th { background:#0077b6; color:#fff; }
 <tr>
     <td><?= $i+1 ?></td>
     <td><?= htmlspecialchars($s['full_name']) ?></td>
+    <td><?= htmlspecialchars($s['first_name']) ?></td>
+    <td><?= htmlspecialchars($s['father_name']) ?></td>
+    <td><?= htmlspecialchars($s['grandfather_name']) ?></td>
+    <td><?= htmlspecialchars($s['family_name']) ?></td>
     <td><?= htmlspecialchars($s['national_id']) ?></td>
     <td><?= htmlspecialchars($s['phone']) ?></td>
     <td><?= htmlspecialchars($s['email']) ?></td>
+    <td><?= htmlspecialchars($s['home_address']) ?></td>
+    <td><?= htmlspecialchars($s['highschool_certificate']) ?></td>
     <td><?= htmlspecialchars($s['university_degree']) ?></td>
     <td><?= htmlspecialchars($s['social_security']) ?></td>
+    <td><?= htmlspecialchars($s['social_security_number']) ?></td>
 
     <td>
-        <a class="btn edit-btn" href="edit_student.php?id=<?= $s['student_id'] ?>">✏️ تعديل</a>
-        <a class="btn delete-btn" onclick="return confirm('هل أنت متأكد من حذف هذا الطالب؟')" href="delete_student.php?id=<?= $s['student_id'] ?>">🗑 حذف</a>
+        <a class="btn edit-btn" href="edit_student.php?id=<?= $s['student_id'] ?>">تعديل</a>
+        <a class="btn delete-btn" onclick="return confirm('هل أنت متأكد من حذف هذا الطالب؟')" href="delete_student.php?id=<?= $s['student_id'] ?>">حذف</a>
     </td>
 </tr>
 <?php endforeach; ?>
