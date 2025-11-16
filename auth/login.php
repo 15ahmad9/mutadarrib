@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <button type="submit">تسجيل الدخول</button>
   </form>
-  <p>ليس لديك حساب؟ <a href="register.php">إنشاء حساب</a></p>
+  <p>ليس لديك حساب؟ <a href="choose_specialization.php">إنشاء حساب</a></p>
 </div>
 </body>
 </html>

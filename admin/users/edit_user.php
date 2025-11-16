@@ -98,7 +98,7 @@ button:hover { opacity: 0.8; }
     <select name="role">
       <option value="admin" <?= $user['role']=='admin'?'selected':'' ?>>مدير</option>
       <option value="lawyer" <?= $user['role']=='lawyer'?'selected':'' ?>>محامي</option>
-      <option value="student" <?= $user['role']=='student'?'selected':'' ?>>طالب</option>
+      <option value="trainee" <?= $user['role']=='trainee'?'selected':'' ?>>متدرب</option>
     </select>
 
     <label>كلمة المرور (اتركها فارغة إذا لا ترغب بتغييرها):</label>

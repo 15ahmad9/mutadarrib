@@ -14,7 +14,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <?php if (isset($_SESSION['user_id'])): ?>
       <?php 
         $role = $_SESSION['role'];
-        $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'student') ? 'طالب' : 'مدير');
+        $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'متدرب' : 'مدير');
       ?>
       <li class="user-dropdown">
         <button class="user-toggle" id="userToggle">
@@ -32,7 +32,7 @@ if (session_status() === PHP_SESSION_NONE) {
       </li>
     <?php else: ?>
       <li><a href="./auth/login.php" class="login-btn">تسجيل الدخول</a></li>
-      <li><a href="./auth/register.php" class="register-btn">إنشاء حساب</a></li>
+      <li><a href="./auth/choose_specialization.php" class="register-btn">إنشاء حساب</a></li>
     <?php endif; ?>
   </ul>
 </nav>

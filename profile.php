@@ -42,14 +42,14 @@ if ($user && $user['role'] === 'lawyer') {
     <p><strong>رقم الهاتف:</strong> <?= htmlspecialchars($user['phone']) ?></p>
     <p><strong>البريد الإلكتروني:</strong> <?= htmlspecialchars($user['email']) ?></p>
     <p><strong>العنوان:</strong> <?= htmlspecialchars($user['address']) ?></p>
-    <p><strong>نوع الحساب:</strong> <?= ($user['role'] === 'lawyer') ? 'محامي مزاول' : ( ($user['role'] === 'student') ? 'طالب' : 'مدير' ) ?></p>
+    <p><strong>نوع الحساب:</strong> <?= ($user['role'] === 'lawyer') ? 'محامي مزاول' : ( ($user['role'] === 'trainee') ? 'متدرب' : 'مدير' ) ?></p>
 
     <a href="edit_profile.php" class="edit-btn">تعديل الملف الشخصي</a>
 
     <?php if ($lawyer): ?>
       <hr>
       <h3>⚖️ معلومات المزاول</h3>
-      <p><strong>رقم السجل:</strong> <?= htmlspecialchars($lawyer['master_id']) ?></p>
+      <p><strong>رقم السجل:</strong> <?= htmlspecialchars($lawyer['syndicate_id']) ?></p>
       <p><strong>عنوان المكتب:</strong> <?= htmlspecialchars($lawyer['office_address']) ?></p>
       <p><strong>الحالة:</strong> <?= ($lawyer['verified']) ? '✅ موثّق' : '⏳ قيد التحقق' ?></p>
     <?php endif; ?>

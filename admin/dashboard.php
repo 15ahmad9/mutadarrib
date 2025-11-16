@@ -34,7 +34,7 @@ include("includes/auth_check.php");
   <div class="quick-links">
     <a href="users/users.php" class="btn">إدارة المستخدمين</a>
     <a href="lawyers/lawyers.php" class="btn">إدارة المحامين</a>
-    <a href="lawyers/master_lawyers.php" class="btn">سجل المزاولين</a>
+    <a href="lawyers/syndicate_lawyers.php" class="btn">سجل المزاولين</a>
   </div>
 </div>
 
