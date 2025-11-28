@@ -70,17 +70,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         // تحديث جدول users إذا موجود
-        if ($lawyer['user_id']) {
-            $fields = "full_name=?, first_name=?, father_name=?, grandfather_name=?, family_name=?,
-                       national_id=?, phone=?, email=?, home_address=?, office_address=?,
-                       highschool_certificate=?, university_degree=?, no_conviction_doc=?, good_conduct_doc=?,
-                       social_security=?, social_security_number=?";
-            $params = [
-                $full_name, $first_name, $father_name, $grandfather_name, $family_name,
-                $national_id, $phone, $email, $home_address, $office_address,
-                $highschool, $university, $no_conviction, $good_conduct,
-                $social_security, $social_number
-            ];
+if ($lawyer['user_id']) {
+
+    // الحقول الموجودة فعلياً في جدول users فقط
+    $fields = "full_name=?, national_id=?, phone=?, email=?, address=?";
+
+    $params = [
+        $full_name,
+        $national_id,
+        $phone,
+        $email,
+        $home_address // address في users
+    ];
+
+    $updateUser = $pdo->prepare("
+        UPDATE users SET $fields WHERE user_id=?
+    ");
 
             if (!empty($password)) {
                 $fields .= ", password=?";

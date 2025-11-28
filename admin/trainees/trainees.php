@@ -13,8 +13,7 @@ $search = $_GET['search'] ?? "";
 
 // جلب بيانات الطلاب مع بيانات المستخدم
 $query = "
-    SELECT s.*, u.full_name, u.first_name, u.father_name, u.grandfather_name, u.family_name,
-           u.national_id, u.phone, u.email, u.home_address
+    SELECT s.*, u.full_name, u.national_id, u.phone, u.email
     FROM trainees s
     JOIN users u ON s.user_id = u.user_id
 ";

@@ -14,15 +14,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $grandfather_name  = trim($_POST['grandfather_name']);
     $family_name       = trim($_POST['family_name']);
 
-    $full_name = "$first_name $father_name $grandfather_name $family_name";
+    // full_name تلقائي
+    $full_name = trim("$first_name $father_name $grandfather_name $family_name");
 
     $has_social_security = $_POST['has_social_security'] ?? 'لا';
     $social_security = ($has_social_security === "نعم") ? trim($_POST['social_security']) : '';
 
     $home_address = trim($_POST['home_address']);
     $office_address = trim($_POST['office_address']);
-    $highschool_certificate = $_POST['highschool_certificate'];
-    $university_degree = $_POST['university_degree'];
+    $highschool_certificate = $_POST['highschool_certificate'] ?? 'لا';
+    $university_degree = $_POST['university_degree'] ?? '';
     $phone = trim($_POST['phone']);
     $email = trim($_POST['email']);
 
@@ -46,39 +47,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $pdo->beginTransaction();
 
-                // إنشاء المستخدم
+                // إنشاء المستخدم في جدول users
                 $insertUser = $pdo->prepare("
-                    INSERT INTO users (full_name, national_id, phone, email, home_address, password, role)
-                    VALUES (?, ?, ?, ?, ?, ?, 'lawyer')
+                    INSERT INTO users (full_name, national_id, phone, email, password, role)
+                    VALUES (?, ?, ?, ?, ?, 'lawyer')
                 ");
 
                 $insertUser->execute([
-                    $full_name ?: $lawyer['first_name'] . " " . $lawyer['father_name'],
+                    $full_name ?: trim($lawyer['first_name'] . " " . $lawyer['father_name']),
                     $national_id,
                     $phone ?: $lawyer['phone'],
                     $email ?: $lawyer['email'],
-                    $home_address ?: $lawyer['residence_address'],
                     $password
                 ]);
 
                 $user_id = $pdo->lastInsertId();
 
-                // تسجيل معلومات المحامي كاملة
+                // إنشاء سجل المحامي في جدول lawyers
                 $insertLawyer = $pdo->prepare("
                     INSERT INTO lawyers (
-                        user_id, syndicate_id, first_name, father_name, grandfather_name, family_name,
+                        user_id, syndicate_id, full_name, first_name, father_name, grandfather_name, family_name, national_id,
                         social_security, home_address, office_address,
                         highschool_certificate, university_degree, phone, email, password, verified
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
                 ");
 
                 $insertLawyer->execute([
                     $user_id,
                     $lawyer['syndicate_id'],
+                    $full_name ?: trim($lawyer['first_name'] . " " . $lawyer['father_name'] . " " . $lawyer['grandfather_name'] . " " . $lawyer['family_name']),
                     $first_name ?: $lawyer['first_name'],
                     $father_name ?: $lawyer['father_name'],
                     $grandfather_name ?: $lawyer['grandfather_name'],
                     $family_name ?: $lawyer['family_name'],
+                    $national_id,
                     $social_security ?: $lawyer['social_security'],
                     $home_address ?: $lawyer['residence_address'],
                     $office_address ?: $lawyer['office_address'],
@@ -90,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
 
                 $pdo->commit();
-
                 $message = "<p class='success'>🎉 تم إنشاء حساب المحامي بنجاح!</p>";
             }
         }
@@ -101,8 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -115,26 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 input, select { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:6px; }
 button { margin-top:15px; padding:10px; background:#0077b6; color:white; border:none; border-radius:6px; cursor:pointer; }
 button:hover { opacity:0.9; }
+.container { width:450px; margin:40px auto; background:white; padding:20px; border-radius:8px; box-shadow:0 0 10px #ccc; }
 </style>
-
-<style>
-input, select {
-    width:100%; padding:8px; margin-top:5px;
-    border:1px solid #ccc; border-radius:6px;
-}
-button {
-    margin-top:15px; padding:10px; background:#0077b6;
-    color:white; border:none; border-radius:6px; cursor:pointer;
-}
-button:hover { opacity:.9; }
-.container {
-    width:450px; margin:40px auto; background:white;
-    padding:20px; border-radius:8px; box-shadow:0 0 10px #ccc;
-}
-</style>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 </head>
 <body>
 
@@ -158,6 +139,9 @@ button:hover { opacity:.9; }
 
     <label>اسم العائلة:</label>
     <input type="text" name="family_name" id="family_name">
+
+    <label>الاسم الكامل:</label>
+    <input type="text" name="full_name" id="full_name" readonly style="background:#f0f0f0;">
 
     <label>هل يوجد ضمان اجتماعي؟</label>
     <select id="has_social_security" name="has_social_security">
@@ -203,8 +187,17 @@ button:hover { opacity:.9; }
 </form>
 </div>
 
-
 <script>
+function updateFullName() {
+    const first = $("#first_name").val().trim();
+    const father = $("#father_name").val().trim();
+    const grand = $("#grandfather_name").val().trim();
+    const family = $("#family_name").val().trim();
+    $("#full_name").val([first, father, grand, family].filter(Boolean).join(' '));
+}
+
+$("#first_name, #father_name, #grandfather_name, #family_name").on('input', updateFullName);
+
 $("#has_social_security").change(function(){
     if($(this).val() === "نعم"){
         $("#social_security").prop("disabled", false);
@@ -213,20 +206,19 @@ $("#has_social_security").change(function(){
     }
 });
 
-// جلب بيانات المحامي تلقائياً
+// جلب بيانات المحامي تلقائياً من جدول النقابة
 $("#national_id").on("keyup change", function(){
-
     let national_id = $(this).val().trim();
     if(national_id.length < 5) return;
 
     $.post("fetch_lawyer.php", { national_id: national_id }, function(res){
-
         if(!res.found) return;
 
         $("#first_name").val(res.first_name);
         $("#father_name").val(res.father_name);
         $("#grandfather_name").val(res.grandfather_name);
         $("#family_name").val(res.family_name);
+        updateFullName();
 
         $("#home_address").val(res.residence_address);
         $("#office_address").val(res.office_address);
@@ -235,7 +227,6 @@ $("#national_id").on("keyup change", function(){
         $("#highschool_certificate").val(res.highschool_certificate);
         $("#university_degree").val(res.university_degree);
 
-        // الضمان
         if(res.social_security){
             $("#has_social_security").val("نعم");
             $("#social_security").val(res.social_security).prop("disabled", false);
@@ -243,7 +234,6 @@ $("#national_id").on("keyup change", function(){
             $("#has_social_security").val("لا");
             $("#social_security").val("").prop("disabled", true);
         }
-
     }, "json");
 });
 </script>

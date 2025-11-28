@@ -44,7 +44,7 @@ CREATE TABLE `audit_logs` (
 --
 
 CREATE TABLE `lawyers` (
-  `lawyer_id` int(11) NOT NULL,
+  `lawyer_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `user_id` int(11) NOT NULL,
   `syndicate_id` int(11) DEFAULT NULL,
   `office_address` varchar(255) DEFAULT NULL,
@@ -222,41 +222,31 @@ DELIMITER ;
 --
 
 CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL,
-  `full_name` varchar(200) NOT NULL,
-  `national_id` varchar(30) NOT NULL,
-  `phone` varchar(30) DEFAULT NULL,
-  `email` varchar(150) NOT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` enum('trainee','lawyer','admin') NOT NULL DEFAULT 'trainee',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `first_name` varchar(100) DEFAULT NULL,
-  `father_name` varchar(100) DEFAULT NULL,
-  `grandfather_name` varchar(100) DEFAULT NULL,
-  `family_name` varchar(100) DEFAULT NULL,
-  `home_address` varchar(255) DEFAULT NULL,
-  `office_address` varchar(255) DEFAULT NULL,
-  `highschool_certificate` enum('نعم','لا') DEFAULT 'لا',
-  `university_degree` enum('بكالوريوس','ماجستير','دكتوراه') DEFAULT NULL,
-  `no_conviction_doc` varchar(255) DEFAULT NULL,
-  `good_conduct_doc` varchar(255) DEFAULT NULL,
-  `social_security` enum('نعم','لا') DEFAULT 'لا',
-  `social_security_number` varchar(100) DEFAULT NULL
+  `user_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `full_name` VARCHAR(200) NOT NULL,
+  `national_id` VARCHAR(30) NOT NULL UNIQUE,
+  `phone` VARCHAR(30) DEFAULT NULL,
+  `email` VARCHAR(150) DEFAULT NULL,
+  `address` VARCHAR(255) DEFAULT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `role` ENUM('trainee','lawyer','admin') NOT NULL DEFAULT 'trainee',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `address`, `password`, `role`, `created_at`, `updated_at`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `home_address`, `office_address`, `highschool_certificate`, `university_degree`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `social_security_number`) VALUES
-(1, 'admin', '0000000000', '0790000000', 'admin@example.com', 'Head Office', '$2y$10$btXC0u5ep0CjLg87dlFAjOzJHipd54ijGMDmFsEGGQetAtgx6ObDi', 'admin', '2025-11-12 00:28:19', '2025-11-14 01:19:45', NULL, NULL, NULL, NULL, NULL, NULL, 'لا', NULL, NULL, NULL, 'لا', NULL),
-(3, 'محمد احمد محمد المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '$2y$10$OH8WwE9dJabllN0kT.ynEOHomQxBRHn4cih49dQLb1/0LRztCTGwC', 'lawyer', '2025-11-12 00:22:59', '2025-11-14 16:23:20', 'محمد', 'احمد', 'محمد', 'المحامي', '', 'عمان', 'لا', '', '', '', 'نعم', '1111111111'),
-(5, 'أحمد الطالب', '2222222222', '0791111111', 'ahmad@example.com', 'عمان', '$2y$10$z/87SIISLj0ME4KbA2h5/ez7pggFS/r/7m0ms1narI5/uorrnA4Oq', 'trainee', '2025-11-12 00:35:59', '2025-11-14 01:19:39', NULL, NULL, NULL, NULL, NULL, NULL, 'لا', NULL, NULL, NULL, 'لا', NULL),
-(12, 'ريم', '0505050505', '0780505050', 'reem@example.com', 'عمان', '$2y$10$nr/n4S58QGWNHzwI9d11jOgnFXKVbQqTh3QZ1J0SD5h6alMQR6WLi', 'trainee', '2025-11-14 14:05:13', '2025-11-14 14:05:13', NULL, NULL, NULL, NULL, NULL, NULL, 'لا', NULL, NULL, NULL, 'لا', NULL),
-(24, 'سارة علي محمد المحامية', '7878787878', '0787878787', 'sara@example.com', NULL, '$2y$10$RnYhv5X6LSTC0SK1qh.Gdef66TtFxFonlqlo5gJiy5Q7yN57MytR2', 'lawyer', '2025-11-14 21:21:18', '2025-11-14 21:21:18', 'سارة', 'علي', 'محمد', 'المحامية', 'عمان', 'عمان', 'نعم', 'ماجستير', '', '', 'نعم', '7878787878'),
-(25, 'بلال علي لؤي المحامي', '5455445544', '0787778889', 'bilal@example.com', NULL, '$2y$10$C5/InYK1mecXyS1en.L6wurbtjiSYLeTgg9K3QYPoj2L05/uXOXpe', 'lawyer', '2025-11-14 21:25:24', '2025-11-14 21:25:24', 'بلال', 'علي', 'لؤي', 'المحامي', 'عمان', 'عمان', 'نعم', 'ماجستير', '', '', 'نعم', '5455445544');
+INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `address`, `password`, `role`, `created_at`, `updated_at`) VALUES
+(1, 'admin', '0000000000', '0790000000', 'admin@example.com', 'Head Office', '$2y$10$btXC0u5ep0CjLg87dlFAjOzJHipd54ijGMDmFsEGGQetAtgx6ObDi', 'admin', '2025-11-12 00:28:19', '2025-11-14 01:19:45'),
+(3, 'محمد احمد محمد المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '$2y$10$OH8WwE9dJabllN0kT.ynEOHomQxBRHn4cih49dQLb1/0LRztCTGwC', 'lawyer', '2025-11-12 00:22:59', '2025-11-14 16:23:20'),
+(5, 'أحمد الطالب', '2222222222', '0791111111', 'ahmad@example.com', 'عمان', '$2y$10$z/87SIISLj0ME4KbA2h5/ez7pggFS/r/7m0ms1narI5/uorrnA4Oq', 'trainee', '2025-11-12 00:35:59', '2025-11-14 01:19:39'),
+(12, 'ريم', '0505050505', '0780505050', 'reem@example.com', 'عمان', '$2y$10$nr/n4S58QGWNHzwI9d11jOgnFXKVbQqTh3QZ1J0SD5h6alMQR6WLi', 'trainee', '2025-11-14 14:05:13', '2025-11-14 14:05:13'),
+(24, 'سارة علي محمد المحامية', '7878787878', '0787878787', 'sara@example.com', NULL, '$2y$10$RnYhv5X6LSTC0SK1qh.Gdef66TtFxFonlqlo5gJiy5Q7yN57MytR2', 'lawyer', '2025-11-14 21:21:18', '2025-11-14 21:21:18'),
+(25, 'بلال علي لؤي المحامي', '5455445544', '0787778889', 'bilal@example.com', NULL, '$2y$10$C5/InYK1mecXyS1en.L6wurbtjiSYLeTgg9K3QYPoj2L05/uXOXpe', 'lawyer', '2025-11-14 21:25:24', '2025-11-14 21:25:24');
 
 --
 -- Indexes for dumped tables
@@ -403,3 +393,5 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+

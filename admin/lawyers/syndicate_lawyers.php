@@ -14,8 +14,7 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 // جلب المحامين مع بيانات المستخدم المرتبط (إن وجد)
 $query = "
-    SELECT lm.*, u.full_name, u.first_name, u.father_name, u.grandfather_name, u.family_name,
-           u.national_id AS user_national_id, u.phone, u.email, u.home_address
+    SELECT lm.*, u.full_name, u.national_id AS user_national_id, u.phone, u.email
     FROM lawyers_syndicate lm
     LEFT JOIN lawyers l ON lm.syndicate_id = l.syndicate_id
     LEFT JOIN users u ON l.user_id = u.user_id
