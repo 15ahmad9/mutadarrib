@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         } else {
 
-            $_SESSION['user_id']   = $lawyer['user_id']; // ✅ USER_ID الصحيح
+            $_SESSION['user_id']   = $lawyer['user_id']; 
             $_SESSION['role']      = 'lawyer';
             $_SESSION['full_name'] = $lawyer['full_name'];
 

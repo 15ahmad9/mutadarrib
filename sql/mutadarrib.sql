@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 14, 2025 at 09:28 PM
+-- Generation Time: Nov 29, 2025 at 09:47 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -44,7 +44,7 @@ CREATE TABLE `audit_logs` (
 --
 
 CREATE TABLE `lawyers` (
-  `lawyer_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `lawyer_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `syndicate_id` int(11) DEFAULT NULL,
   `office_address` varchar(255) DEFAULT NULL,
@@ -74,8 +74,8 @@ CREATE TABLE `lawyers` (
 --
 
 INSERT INTO `lawyers` (`lawyer_id`, `user_id`, `syndicate_id`, `office_address`, `password`, `verified`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `highschool_certificate`, `university_degree`, `social_security_number`) VALUES
-(1, 3, 1, 'عمان', '$2y$10$j3ACPUVlqG8KtWvMaDVtWeXbNHvoSkmSFC9KbtBBMUHoTGtvIocCm', 1, '2025-11-12 00:22:59', '2025-11-14 16:18:20', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', '1111111111', '0790000000', 'lawyer1@example.com', '', NULL, NULL, 'لا', 'لا', 'لا', NULL),
-(9, 24, 6, 'عمان', '$2y$10$RnYhv5X6LSTC0SK1qh.Gdef66TtFxFonlqlo5gJiy5Q7yN57MytR2', 1, '2025-11-14 21:21:18', '2025-11-14 21:21:18', 'سارة علي محمد المحامية', 'سارة', 'علي', 'محمد', 'المحامية', '7878787878', '0787878787', 'sara@example.com', 'عمان', '', '', 'نعم', 'نعم', 'ماجستير', '7878787878');
+(10, 26, 1, 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 1, '2025-11-29 17:26:12', '2025-11-29 17:26:12', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', NULL, NULL, '', 'لا', 'دكتوراه', NULL),
+(11, 28, 9, 'إربد – وسط البلد', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 1, '2025-11-29 20:37:07', '2025-11-29 20:37:07', 'يوسف محمود علي الديري', 'يوسف', 'محمود', 'علي', 'الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', NULL, NULL, '', 'نعم', 'بكالوريوس', NULL);
 
 -- --------------------------------------------------------
 
@@ -84,7 +84,7 @@ INSERT INTO `lawyers` (`lawyer_id`, `user_id`, `syndicate_id`, `office_address`,
 --
 
 CREATE TABLE `lawyers_syndicate` (
-  `syndicate_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `syndicate_id` int(11) NOT NULL,
   `lawyer_name` varchar(200) NOT NULL,
   `national_id` varchar(30) NOT NULL,
   `office_address` varchar(255) DEFAULT NULL,
@@ -112,7 +112,16 @@ CREATE TABLE `lawyers_syndicate` (
 INSERT INTO `lawyers_syndicate` (`syndicate_id`, `lawyer_name`, `national_id`, `office_address`, `phone`, `email`, `notes`, `created_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `highschool_certificate`, `university_degree`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `social_security_number`) VALUES
 (1, 'محمد المحامي', '1111111111', 'عمان', '0790000000', 'lawyer1@example.com', 'مسجل لدى النقابة', '2025-11-12 00:18:50', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', 'لا', '', '', '', 'نعم', '1111111111'),
 (6, '', '7878787878', 'عمان', '0787878787', 'sara@example.com', NULL, '2025-11-14 21:21:18', 'سارة علي محمد المحامية', 'سارة', 'علي', 'محمد', 'المحامية', 'نعم', 'ماجستير', '', '', 'نعم', '7878787878'),
-(7, '', '5455445544', 'عمان', '0787778889', 'bilal@example.com', NULL, '2025-11-14 21:25:24', 'بلال علي لؤي المحامي', 'بلال', 'علي', 'لؤي', 'المحامي', 'نعم', 'ماجستير', '', '', 'نعم', '5455445544');
+(8, 'محمد أحمد الخطيب', '1000000001', 'عمّان – جبل الحسين', '0790000001', 'lawyer1@test.com', NULL, '2025-11-29 19:50:19', 'محمد أحمد مصطفى الخطيب', 'محمد', 'أحمد', 'مصطفى', 'الخطيب', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '1000000001'),
+(9, 'يوسف محمود الديري', '1000000002', 'إربد – وسط البلد', '0790000002', 'lawyer2@test.com', NULL, '2025-11-29 19:50:19', 'يوسف محمود علي الديري', 'يوسف', 'محمود', 'علي', 'الديري', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '1000000002'),
+(10, 'خالد صالح الرواشدة', '1000000003', 'الزرقاء – الجديدة', '0790000003', 'lawyer3@test.com', NULL, '2025-11-29 19:50:19', 'خالد صالح محمد الرواشدة', 'خالد', 'صالح', 'محمد', 'الرواشدة', 'نعم', 'ماجستير', NULL, NULL, 'نعم', '1000000003'),
+(11, 'أنس فواز الطراونة', '1000000004', 'الكرك – وسط المدينة', '0790000004', 'lawyer4@test.com', NULL, '2025-11-29 19:50:19', 'أنس فواز عادل الطراونة', 'أنس', 'فواز', 'عادل', 'الطراونة', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '1000000004'),
+(12, 'رامي حسن الخليفات', '1000000005', 'مأدبا – البلد', '0790000005', 'lawyer5@test.com', NULL, '2025-11-29 19:50:19', 'رامي حسن فهد الخليفات', 'رامي', 'حسن', 'فهد', 'الخليفات', 'نعم', 'ماجستير', NULL, NULL, 'نعم', '1000000005'),
+(13, 'طارق أمين الزعبي', '1000000006', 'إربد – الحصن', '0790000006', 'lawyer6@test.com', NULL, '2025-11-29 19:50:19', 'طارق أمين شاكر الزعبي', 'طارق', 'أمين', 'شاكر', 'الزعبي', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
+(14, 'علي وائل المناصير', '1000000007', 'عمّان – خلدا', '0790000007', 'lawyer7@test.com', NULL, '2025-11-29 19:50:19', 'علي وائل كريم المناصير', 'علي', 'وائل', 'كريم', 'المناصير', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
+(15, 'سامر يوسف المحادين', '1000000008', 'السلط – المدينة', '0790000008', 'lawyer8@test.com', NULL, '2025-11-29 19:50:19', 'سامر يوسف جابر المحادين', 'سامر', 'يوسف', 'جابر', 'المحادين', 'نعم', 'ماجستير', NULL, NULL, 'لا', NULL),
+(16, 'سامي عارف الكساسبة', '1000000009', 'العقبة – الجنوب', '0790000009', 'lawyer9@test.com', NULL, '2025-11-29 19:50:19', 'سامي عارف سالم الكساسبة', 'سامي', 'عارف', 'سالم', 'الكساسبة', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
+(17, 'بهاء ناصر العجارمة', '1000000010', 'عمّان – تلاع العلي', '0790000010', 'lawyer10@test.com', NULL, '2025-11-29 19:50:19', 'بهاء ناصر طلال العجارمة', 'بهاء', 'ناصر', 'طلال', 'العجارمة', 'نعم', 'دكتوراه', NULL, NULL, 'لا', NULL);
 
 -- --------------------------------------------------------
 
@@ -140,14 +149,15 @@ CREATE TABLE `trainees` (
   `phone` varchar(30) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
   `home_address` varchar(255) DEFAULT NULL
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `trainees`
 --
 
 INSERT INTO `trainees` (`trainee_id`, `user_id`, `highschool_certificate`, `university_degree`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `social_security_number`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`) VALUES
-(2, 12, 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL, '2025-11-14 14:05:13', '2025-11-14 15:06:16', 'ريم', 'ريم', NULL, NULL, NULL, '0505050505', '0780505050', 'reem@example.com', 'عمان');
+(2, 12, 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL, '2025-11-14 14:05:13', '2025-11-14 15:06:16', 'ريم', 'ريم', NULL, NULL, NULL, '0505050505', '0780505050', 'reem@example.com', 'عمان'),
+(0, 27, 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '1000000001', '2025-11-29 19:53:21', '2025-11-29 19:53:21', 'محمد أحمد مصطفى الخطيب', 'محمد', 'أحمد', 'مصطفى', 'الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان');
 
 -- --------------------------------------------------------
 
@@ -170,6 +180,15 @@ CREATE TABLE `trainings` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `trainings`
+--
+
+INSERT INTO `trainings` (`training_id`, `lawyer_id`, `title`, `description`, `duration_months`, `location`, `start_date`, `end_date`, `status`, `seats`, `created_at`, `updated_at`) VALUES
+(1, 10, 'تدريب قانوني في القضايا المدنية', 'تدريب عملي في مكتب محاماة', 3, 'عمان', NULL, NULL, 'open', 4, '2025-11-29 22:04:44', '2025-11-29 23:40:00'),
+(2, 26, 'تدريب تيست', 'تدريب تيست تدريب تيست', 6, 'Amman', '2025-12-01', '2026-05-30', 'open', 3, '2025-11-29 22:32:32', '2025-11-29 22:32:32'),
+(3, 28, 'تدريب تيست', 'تدريب تيست تدريب تيست', 12, 'Amman', '2025-12-01', '2026-12-30', 'open', 3, '2025-11-29 22:34:00', '2025-11-29 22:34:00');
+
 -- --------------------------------------------------------
 
 --
@@ -185,6 +204,13 @@ CREATE TABLE `training_applications` (
   `reviewed_at` datetime DEFAULT NULL,
   `notes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `training_applications`
+--
+
+INSERT INTO `training_applications` (`application_id`, `trainee_id`, `training_id`, `status`, `applied_at`, `reviewed_at`, `notes`) VALUES
+(3, 0, 1, 'accepted', '2025-11-29 23:34:55', '2025-11-29 23:40:00', NULL);
 
 --
 -- Triggers `training_applications`
@@ -222,16 +248,16 @@ DELIMITER ;
 --
 
 CREATE TABLE `users` (
-  `user_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `full_name` VARCHAR(200) NOT NULL,
-  `national_id` VARCHAR(30) NOT NULL UNIQUE,
-  `phone` VARCHAR(30) DEFAULT NULL,
-  `email` VARCHAR(150) DEFAULT NULL,
-  `address` VARCHAR(255) DEFAULT NULL,
-  `password` VARCHAR(255) NOT NULL,
-  `role` ENUM('trainee','lawyer','admin') NOT NULL DEFAULT 'trainee',
-  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `user_id` int(11) NOT NULL,
+  `full_name` varchar(200) NOT NULL,
+  `national_id` varchar(30) NOT NULL,
+  `phone` varchar(30) DEFAULT NULL,
+  `email` varchar(150) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('trainee','lawyer','admin') NOT NULL DEFAULT 'trainee',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -240,11 +266,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `address`, `password`, `role`, `created_at`, `updated_at`) VALUES
 (1, 'admin', '0000000000', '0790000000', 'admin@example.com', 'Head Office', '$2y$10$btXC0u5ep0CjLg87dlFAjOzJHipd54ijGMDmFsEGGQetAtgx6ObDi', 'admin', '2025-11-12 00:28:19', '2025-11-14 01:19:45'),
-(3, 'محمد احمد محمد المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '$2y$10$OH8WwE9dJabllN0kT.ynEOHomQxBRHn4cih49dQLb1/0LRztCTGwC', 'lawyer', '2025-11-12 00:22:59', '2025-11-14 16:23:20'),
-(5, 'أحمد الطالب', '2222222222', '0791111111', 'ahmad@example.com', 'عمان', '$2y$10$z/87SIISLj0ME4KbA2h5/ez7pggFS/r/7m0ms1narI5/uorrnA4Oq', 'trainee', '2025-11-12 00:35:59', '2025-11-14 01:19:39'),
-(12, 'ريم', '0505050505', '0780505050', 'reem@example.com', 'عمان', '$2y$10$nr/n4S58QGWNHzwI9d11jOgnFXKVbQqTh3QZ1J0SD5h6alMQR6WLi', 'trainee', '2025-11-14 14:05:13', '2025-11-14 14:05:13'),
-(24, 'سارة علي محمد المحامية', '7878787878', '0787878787', 'sara@example.com', NULL, '$2y$10$RnYhv5X6LSTC0SK1qh.Gdef66TtFxFonlqlo5gJiy5Q7yN57MytR2', 'lawyer', '2025-11-14 21:21:18', '2025-11-14 21:21:18'),
-(25, 'بلال علي لؤي المحامي', '5455445544', '0787778889', 'bilal@example.com', NULL, '$2y$10$C5/InYK1mecXyS1en.L6wurbtjiSYLeTgg9K3QYPoj2L05/uXOXpe', 'lawyer', '2025-11-14 21:25:24', '2025-11-14 21:25:24');
+(26, 'محمد احمد محمد المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 'lawyer', '2025-11-29 17:26:12', '2025-11-29 17:26:12'),
+(27, 'محمد أحمد مصطفى الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', '$2y$10$KiNjGQHAmt4wCVQPzEZlAODYuM0tRreeUdbZ9.aSkz/u9R.nhiV0a', 'trainee', '2025-11-29 19:53:21', '2025-11-29 19:53:21'),
+(28, 'يوسف محمود علي الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 'lawyer', '2025-11-29 20:37:07', '2025-11-29 20:37:07');
 
 --
 -- Indexes for dumped tables
@@ -261,146 +285,68 @@ ALTER TABLE `audit_logs`
 -- Indexes for table `lawyers`
 --
 ALTER TABLE `lawyers`
-  ADD PRIMARY KEY (`lawyer_id`),
-  ADD UNIQUE KEY `ux_lawyers_user_id` (`user_id`),
-  ADD KEY `fk_lawyers_syndicate` (`syndicate_id`);
+  ADD PRIMARY KEY (`lawyer_id`);
 
 --
 -- Indexes for table `lawyers_syndicate`
 --
 ALTER TABLE `lawyers_syndicate`
-  ADD PRIMARY KEY (`syndicate_id`),
-  ADD UNIQUE KEY `ux_lm_national_id` (`national_id`);
-
---
--- Indexes for table `trainees`
---
-ALTER TABLE `trainees`
-  ADD PRIMARY KEY (`trainee_id`),
-  ADD UNIQUE KEY `ux_trainees_user_id` (`user_id`);
+  ADD PRIMARY KEY (`syndicate_id`);
 
 --
 -- Indexes for table `trainings`
 --
 ALTER TABLE `trainings`
-  ADD PRIMARY KEY (`training_id`),
-  ADD KEY `ix_trainings_status` (`status`),
-  ADD KEY `ix_trainings_lawyer` (`lawyer_id`);
+  ADD PRIMARY KEY (`training_id`);
 
 --
 -- Indexes for table `training_applications`
 --
 ALTER TABLE `training_applications`
-  ADD PRIMARY KEY (`application_id`),
-  ADD KEY `ix_apps_status` (`status`),
-  ADD KEY `ix_apps_trainee` (`trainee_id`),
-  ADD KEY `ix_apps_training` (`training_id`);
+  ADD PRIMARY KEY (`application_id`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `ux_users_national_id` (`national_id`),
-  ADD UNIQUE KEY `ux_users_email` (`email`),
-  ADD KEY `ix_users_role` (`role`);
+  ADD UNIQUE KEY `national_id` (`national_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `audit_logs`
---
-ALTER TABLE `audit_logs`
-  MODIFY `log_id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `lawyers`
 --
 ALTER TABLE `lawyers`
-  MODIFY `lawyer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `lawyer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `lawyers_syndicate`
 --
 ALTER TABLE `lawyers_syndicate`
-  MODIFY `syndicate_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `trainees`
---
-ALTER TABLE `trainees`
-  MODIFY `trainee_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `syndicate_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `trainings`
 --
 ALTER TABLE `trainings`
-  MODIFY `training_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `training_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `training_applications`
 --
 ALTER TABLE `training_applications`
-  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `audit_logs`
---
-ALTER TABLE `audit_logs`
-  ADD CONSTRAINT `fk_audit_user` FOREIGN KEY (`performed_by`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Constraints for table `lawyers`
---
-ALTER TABLE `lawyers`
-  ADD CONSTRAINT `fk_lawyers_syndicate` FOREIGN KEY (`syndicate_id`) REFERENCES `lawyers_syndicate` (`syndicate_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_lawyers_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `trainees`
---
-ALTER TABLE `trainees`
-  ADD CONSTRAINT `fk_trainees_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `trainings`
---
-ALTER TABLE `trainings`
-  ADD CONSTRAINT `fk_trainings_lawyer` FOREIGN KEY (`lawyer_id`) REFERENCES `lawyers` (`lawyer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `training_applications`
---
-ALTER TABLE `training_applications`
-  ADD CONSTRAINT `fk_apps_trainee` FOREIGN KEY (`trainee_id`) REFERENCES `trainees` (`trainee_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_apps_training` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
-ALTER TABLE `training_applications`
-ADD PRIMARY KEY (`application_id`);
-
-ALTER TABLE `training_applications`
-MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `training_applications`
-ADD UNIQUE KEY `unique_application` (`trainee_id`, `training_id`);
-
-
-ALTER TABLE trainees MODIFY trainee_id INT AUTO_INCREMENT;

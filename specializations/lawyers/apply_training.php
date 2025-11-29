@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // ==============================
-// الدور يجب أن يكون trainee
+// التحقق من دور المستخدم
 // ==============================
 if ($_SESSION['role'] !== 'trainee') {
     die("❌ فقط المتدربين يمكنهم التقديم على التدريب.");
@@ -25,14 +25,15 @@ if (!$lawyer_id) {
     die("❌ رقم المكتب غير صالح.");
 }
 
-// ======== التأكد من صلاحية المتدرب ========
+// ==============================
+// التأكد من وجود سجل متدرب
+// ==============================
 $stmt = $pdo->prepare("
     SELECT trainee_id
     FROM trainees
     WHERE user_id = ?
     LIMIT 1
 ");
-
 $stmt->execute([$user_id]);
 $trainee = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -42,16 +43,26 @@ if (!$trainee) {
 
 $trainee_id = $trainee['trainee_id'];
 
+
 // ==============================
-// جلب تدريب مفتوح لدى هذا المكتب
+// التأكد من وجود تدريب مفتوح ومقاعد متاحة
 // ==============================
 $stmt = $pdo->prepare("
-    SELECT training_id
-    FROM trainings
-    WHERE lawyer_id = ?
-    AND status = 'open'
+    SELECT 
+        t.training_id,
+        t.seats,
+        COUNT(a.application_id) AS applied
+    FROM trainings t
+    LEFT JOIN training_applications a 
+        ON a.training_id = t.training_id 
+        AND a.status IN ('pending','accepted')
+    WHERE t.lawyer_id = ?
+      AND t.status = 'open'
+    GROUP BY t.training_id
+    HAVING applied < t.seats
     LIMIT 1
 ");
+
 $stmt->execute([$lawyer_id]);
 $training = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -61,8 +72,9 @@ if (!$training) {
 
 $training_id = $training['training_id'];
 
+
 // ==============================
-// منع التكرار
+// منع التقديم المكرر
 // ==============================
 $stmt = $pdo->prepare("
     SELECT application_id
@@ -76,6 +88,7 @@ if ($stmt->fetch()) {
     die("⚠ لقد قمت بالتقديم مسبقًا على هذا التدريب.");
 }
 
+
 // ==============================
 // تسجيل الطلب
 // ==============================
@@ -85,6 +98,7 @@ $stmt = $pdo->prepare("
     VALUES (?, ?)
 ");
 $stmt->execute([$trainee_id, $training_id]);
+
 ?>
 
 <div class="container">
@@ -92,8 +106,8 @@ $stmt->execute([$trainee_id, $training_id]);
     <h2>✅ تم تقديم طلبك بنجاح</h2>
 
     <p>
-        تم إرسال طلب التدريب وهو الآن قيد المراجعة من قبل المكتب المختار.
-        سيتم إشعارك فور اتخاذ القرار.
+        تم إرسال طلب التدريب وهو الآن قيد المراجعة من قبل المكتب.
+        سيتم إشعارك فور صدور القرار.
     </p>
 
     <a class="btn" href="lawyers_offices.php">

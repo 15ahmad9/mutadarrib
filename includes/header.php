@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 ?>
 <link rel="stylesheet" href="../../assets/css/style.css">
 <nav class="navbar">
-  <div class="logo">⚖️ متدرب</div>
+  <div class="logo">متدرب</div>
   <ul class="nav-links">
     <li><a href="index.php">الرئيسية</a></li>
     <li><a href="#about">من نحن</a></li>
