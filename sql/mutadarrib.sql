@@ -84,7 +84,7 @@ INSERT INTO `lawyers` (`lawyer_id`, `user_id`, `syndicate_id`, `office_address`,
 --
 
 CREATE TABLE `lawyers_syndicate` (
-  `syndicate_id` int(11) NOT NULL,
+  `syndicate_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `lawyer_name` varchar(200) NOT NULL,
   `national_id` varchar(30) NOT NULL,
   `office_address` varchar(255) DEFAULT NULL,
@@ -222,7 +222,7 @@ DELIMITER ;
 --
 
 CREATE TABLE `users` (
-  `user_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `full_name` VARCHAR(200) NOT NULL,
   `national_id` VARCHAR(30) NOT NULL UNIQUE,
   `phone` VARCHAR(30) DEFAULT NULL,
@@ -231,9 +231,7 @@ CREATE TABLE `users` (
   `password` VARCHAR(255) NOT NULL,
   `role` ENUM('trainee','lawyer','admin') NOT NULL DEFAULT 'trainee',
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  
-  PRIMARY KEY (`user_id`)
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -395,3 +393,14 @@ COMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 
+ALTER TABLE `training_applications`
+ADD PRIMARY KEY (`application_id`);
+
+ALTER TABLE `training_applications`
+MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `training_applications`
+ADD UNIQUE KEY `unique_application` (`trainee_id`, `training_id`);
+
+
+ALTER TABLE trainees MODIFY trainee_id INT AUTO_INCREMENT;

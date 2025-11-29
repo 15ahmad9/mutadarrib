@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
-
+<link rel="stylesheet" href="../../assets/css/style.css">
 <nav class="navbar">
   <div class="logo">⚖️ متدرب</div>
   <ul class="nav-links">
@@ -26,7 +26,9 @@ if (session_status() === PHP_SESSION_NONE) {
           <?php if ($role === 'admin'): ?>
             <li><a href="admin/dashboard.php">لوحة التحكم</a></li>
           <?php endif; ?>
-
+<?php if ($role === 'lawyer'): ?>
+            <li><a href="lawyer/dashboard.php">لوحة التحكم</a></li>
+          <?php endif; ?>
           <li><a href="./auth/logout.php">تسجيل الخروج</a></li>
         </ul>
       </li>

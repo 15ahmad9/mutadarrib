@@ -27,62 +27,164 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = trim($_POST['phone']);
     $email = trim($_POST['email']);
 
-    try {
+try {
 
-        // تحقق من أن المستخدم لم يُسجل مسبقاً
-        $checkUser = $pdo->prepare("SELECT user_id FROM users WHERE national_id = ?");
-        $checkUser->execute([$national_id]);
-        if ($checkUser->rowCount() > 0) {
-            $message = "<p class='error'>⚠ يوجد حساب بهذا الرقم الوطني.</p>";
-        } else {
+    // تحقق من عدم وجود حساب مسبق
+    $checkUser = $pdo->prepare("SELECT user_id FROM users WHERE national_id = ?");
+    $checkUser->execute([$national_id]);
+    if ($checkUser->rowCount() > 0) {
+        $message = "<p class='error'>⚠ يوجد حساب بهذا الرقم الوطني.</p>";
+    } else {
 
-            // جلب بيانات المحامي من جدول النقابة
+        $pdo->beginTransaction();
+
+        // ==============================
+        // ===== تسجيل المتدرب trainee ===
+        // ==============================
+if ($_POST['role'] === 'trainee') {
+
+    // التحقق من وجوده في جدول النقابة
+    $stmt = $pdo->prepare("
+        SELECT * 
+        FROM lawyers_syndicate 
+        WHERE national_id = ?
+    ");
+    $stmt->execute([$national_id]);
+    $traineeRef = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$traineeRef) {
+        $pdo->rollBack();
+        $message = "<p class='error'>❌ الرقم الوطني غير موجود بسجلات الجهة المعتمدة للتدريب</p>";
+    } else {
+
+// إنشاء المستخدم (متدرب)
+$insertUser = $pdo->prepare("
+    INSERT INTO users 
+    (full_name, national_id, phone, email, address, password, role)
+    VALUES (?, ?, ?, ?, ?, ?, 'trainee')
+");
+
+$insertUser->execute([
+    $full_name,
+    $national_id,
+    $phone,
+    $email,
+    $home_address,   // هذا يذهب إلى address
+    $password
+]);
+
+$user_id = $pdo->lastInsertId();
+
+        // إنشاء سجل المتدرب
+        $insertTrainee = $pdo->prepare("
+            INSERT INTO trainees (
+                user_id,
+                full_name,
+                first_name,
+                father_name,
+                grandfather_name,
+                family_name,
+                national_id,
+                phone,
+                email,
+                home_address,
+                highschool_certificate,
+                university_degree,
+                social_security,
+                social_security_number
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+
+        $insertTrainee->execute([
+            $user_id,
+            $full_name ?: $traineeRef['full_name'],
+            $first_name ?: $traineeRef['first_name'],
+            $father_name ?: $traineeRef['father_name'],
+            $grandfather_name ?: $traineeRef['grandfather_name'],
+            $family_name ?: $traineeRef['family_name'],
+            $national_id,
+            $phone ?: $traineeRef['phone'],
+            $email ?: $traineeRef['email'],
+            $home_address ?: $traineeRef['home_address'],
+            $highschool_certificate,
+            $university_degree,
+            $has_social_security,
+            $social_security
+        ]);
+
+        $pdo->commit();
+        $message = "<p class='success'>✅ تم إنشاء حساب المتدرب بنجاح!</p>";
+    }
+}
+
+        // =============================
+        // ===== تسجيل المحامي lawyer ===
+        // =============================
+        else {
+
             $stmt = $pdo->prepare("SELECT * FROM lawyers_syndicate WHERE national_id = ?");
             $stmt->execute([$national_id]);
             $lawyer = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$lawyer) {
+                $pdo->rollBack();
                 $message = "<p class='error'>❌ الرقم الوطني غير موجود في جدول النقابة.</p>";
             } else {
 
-                $pdo->beginTransaction();
+// إنشاء المستخدم (محامي)
+$insertUser = $pdo->prepare("
+    INSERT INTO users 
+    (full_name, national_id, phone, email, address, password, role)
+    VALUES (?, ?, ?, ?, ?, ?, 'lawyer')
+");
 
-                // إنشاء المستخدم في جدول users
-                $insertUser = $pdo->prepare("
-                    INSERT INTO users (full_name, national_id, phone, email, password, role)
-                    VALUES (?, ?, ?, ?, ?, 'lawyer')
-                ");
+$insertUser->execute([
+    $full_name ?: trim($lawyer['first_name']." ".$lawyer['father_name']),
+    $national_id,
+    $phone ?: $lawyer['phone'],
+    $email ?: $lawyer['email'],
+    $home_address ?: ($lawyer['home_address'] ?? null), // العنوان
+    $password
+]);
 
-                $insertUser->execute([
-                    $full_name ?: trim($lawyer['first_name'] . " " . $lawyer['father_name']),
-                    $national_id,
-                    $phone ?: $lawyer['phone'],
-                    $email ?: $lawyer['email'],
-                    $password
-                ]);
+$user_id = $pdo->lastInsertId();
 
-                $user_id = $pdo->lastInsertId();
-
-                // إنشاء سجل المحامي في جدول lawyers
+                // إنشاء سجل المحامي
                 $insertLawyer = $pdo->prepare("
                     INSERT INTO lawyers (
-                        user_id, syndicate_id, full_name, first_name, father_name, grandfather_name, family_name, national_id,
-                        social_security, home_address, office_address,
-                        highschool_certificate, university_degree, phone, email, password, verified
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+                        user_id,
+                        syndicate_id,
+                        full_name,
+                        first_name,
+                        father_name,
+                        grandfather_name,
+                        family_name,
+                        national_id,
+                        social_security,
+                        home_address,
+                        office_address,
+                        highschool_certificate,
+                        university_degree,
+                        phone,
+                        email,
+                        password,
+                        verified
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
                 ");
 
                 $insertLawyer->execute([
                     $user_id,
                     $lawyer['syndicate_id'],
-                    $full_name ?: trim($lawyer['first_name'] . " " . $lawyer['father_name'] . " " . $lawyer['grandfather_name'] . " " . $lawyer['family_name']),
+                    $full_name,
                     $first_name ?: $lawyer['first_name'],
                     $father_name ?: $lawyer['father_name'],
                     $grandfather_name ?: $lawyer['grandfather_name'],
                     $family_name ?: $lawyer['family_name'],
                     $national_id,
                     $social_security ?: $lawyer['social_security'],
-                    $home_address ?: $lawyer['residence_address'],
+                    $home_address ?: $lawyer['home_address'],
                     $office_address ?: $lawyer['office_address'],
                     $highschool_certificate ?: $lawyer['highschool_certificate'],
                     $university_degree ?: $lawyer['university_degree'],
@@ -95,11 +197,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = "<p class='success'>🎉 تم إنشاء حساب المحامي بنجاح!</p>";
             }
         }
-
-    } catch (Exception $e) {
-        if ($pdo->inTransaction()) $pdo->rollBack();
-        $message = "<p class='error'>خطأ: " . $e->getMessage() . "</p>";
     }
+
+} catch (Exception $e) {
+    if ($pdo->inTransaction()) $pdo->rollBack();
+    $message = "<p class='error'>❌ خطأ: {$e->getMessage()}</p>";
+}
 }
 ?>
 
@@ -120,11 +223,17 @@ button:hover { opacity:0.9; }
 <body>
 
 <div class="container">
-<h2>تسجيل محامي</h2>
+<h2>إنشاء حساب</h2>
 <?= $message ?>
 
 <form method="POST">
 
+<label>نوع الحساب:</label>
+<select name="role" id="role" required>
+    <option value="">اختر</option>
+    <option value="trainee">متدرب</option>
+    <option value="lawyer">محامي مزاول</option>
+</select>
     <label>الرقم الوطني:</label>
     <input type="text" name="national_id" id="national_id" required>
 
