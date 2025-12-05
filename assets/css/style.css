@@ -269,3 +269,22 @@ a.btn-cancel{
   text-decoration: none;
   margin:15px 0;
 }
+
+
+.notification{
+    padding:10px;
+    border-radius:6px;
+    margin:10px 0;
+}
+
+.notification.new{
+    background:#e9f7ff;
+    border-right:4px solid #0b5ed7;
+}
+
+.notification.read{
+    background:#f6f6f6;
+    color:#666;
+}
+
+
