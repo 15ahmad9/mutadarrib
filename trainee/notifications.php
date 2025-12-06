@@ -48,6 +48,14 @@ $updateSeen = $pdo->prepare("
 ");
 $updateSeen->execute([$trainee_id]);
 
+// هل يوجد طلب مكتمل (جاهز للامتحان)؟
+$hasCompleted = false;
+foreach ($applications as $row) {
+    if ($row['status'] === 'completed') {
+        $hasCompleted = true;
+        break;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -55,6 +63,20 @@ $updateSeen->execute([$trainee_id]);
 <meta charset="UTF-8">
 <title>إشعاراتي</title>
 <link rel="stylesheet" href="../assets/css/style.css">
+<style>
+.alert-exam {
+    background:#e6ffed;
+    border:1px solid #16a34a;
+    padding:10px 15px;
+    border-radius:8px;
+    margin-bottom:15px;
+    color:#166534;
+    font-weight:bold;
+}
+.unread-row {
+    background:#fff8e1;
+}
+</style>
 </head>
 <body>
 
@@ -62,6 +84,12 @@ $updateSeen->execute([$trainee_id]);
 
 <div class="container">
     <h2>🔔 إشعارات التدريب</h2>
+
+    <?php if ($hasCompleted): ?>
+        <div class="alert-exam">
+            🎓 لقد أنهيت فترة التدريب، وأنت الآن جاهز للتقدم لامتحان المزاولة لدى النقابة.
+        </div>
+    <?php endif; ?>
 
     <?php if (empty($applications)): ?>
         <p>لا يوجد طلبات تدريب حتى الآن.</p>
@@ -86,12 +114,12 @@ $updateSeen->execute([$trainee_id]);
                     <?php if ($row['status'] == 'pending'): ?>
                         ⏳ قيد المراجعة
                     <?php elseif ($row['status'] == 'accepted'): ?>
-                       ✅ تم القبول، بانتظار انتهاء فترة التدريب
+                        ✅ تم القبول — بانتظار إنهاء فترة التدريب
                     <?php elseif ($row['status'] == 'rejected'): ?>
                         ❌ تم الرفض
-                        <?php elseif ($row['status'] == 'completed'): ?>
-        🏅 تم إنهاء فترة التدريب بنجاح. يمكنك مراجعة النقابة لاستكمال إجراءاتك كمحامٍ مزاول.
-    <?php else: ?>
+                    <?php elseif ($row['status'] == 'completed'): ?>
+                        🏁 لقد أنهيت فترة التدريب وأنت جاهز لامتحان المزاولة
+                    <?php else: ?>
                         <?= htmlspecialchars($row['status']) ?>
                     <?php endif; ?>
                 </td>

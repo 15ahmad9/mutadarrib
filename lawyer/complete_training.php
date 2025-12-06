@@ -52,15 +52,13 @@ $stmt = $pdo->prepare("
 
         u.password      AS user_password,
 
-        -- ✅ إحضار syndicate_id من جدول النقابة بناءً على الرقم الوطني للمتدرب
-        ls.syndicate_id AS syndicate_id
+        lw.syndicate_id AS syndicate_id
 
     FROM training_applications ta
-    JOIN trainings        t   ON ta.training_id = t.training_id
-    JOIN trainees         tr  ON ta.trainee_id = tr.trainee_id
-    JOIN users            u   ON tr.user_id   = u.user_id
-    LEFT JOIN lawyers     lw  ON t.lawyer_id  = lw.lawyer_id
-    LEFT JOIN lawyers_syndicate ls ON ls.national_id = tr.national_id
+    JOIN trainings t   ON ta.training_id = t.training_id
+    JOIN trainees  tr  ON ta.trainee_id = tr.trainee_id
+    JOIN users    u    ON tr.user_id = u.user_id
+    JOIN lawyers  lw   ON t.lawyer_id = lw.lawyer_id  
     WHERE ta.application_id = ?
       AND t.lawyer_id = ?
 ");
@@ -80,122 +78,41 @@ try {
     $pdo->beginTransaction();
 
     $trainee_user_id = (int) $app['trainee_user_id'];
+    $trainee_id      = (int) $app['trainee_id'];
 
-    // 4) تحديث حالة الطلب إلى completed + إعادة إشعار المتدرب
+    // 4) تحديث حالة الطلب إلى completed + إعادة إشعار المتدرب + إشعار النقابة
     $up1 = $pdo->prepare("
         UPDATE training_applications
         SET status = 'completed',
             reviewed_at = NOW(),
-            trainee_seen = 0
+            trainee_seen = 0,
+            syndicate_notified = 1
         WHERE application_id = ?
     ");
     $up1->execute([$app_id]);
 
-    // 5) ترقية المستخدم في جدول users إلى محامي
-    $up2 = $pdo->prepare("
-        UPDATE users
-        SET role = 'lawyer'
-        WHERE user_id = ?
+    /*
+      ⚠️ ملاحظة مهمة:
+      - لا نقوم هنا بتغيير role في جدول users
+      - ولا ننشئ أو نعدّل سجلاً في جدول lawyers
+      النقابة لاحقًا (عبر لوحة خاصة بها) هي من تقوم بترقية المتدرب بعد اجتياز الامتحان.
+    */
+
+    // 5) إدخال سجل في جدول طلبات الامتحان للنقابة
+    // تأكد أنك أنشأت الجدول التالي تقريبًا:
+    // CREATE TABLE syndicate_exam_requests (
+    //   id INT AUTO_INCREMENT PRIMARY KEY,
+    //   application_id INT NOT NULL,
+    //   trainee_id INT NOT NULL,
+    //   lawyer_id INT NOT NULL,
+    //   status ENUM('waiting_exam','passed','failed') NOT NULL DEFAULT 'waiting_exam',
+    //   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    // );
+    $insExam = $pdo->prepare("
+        INSERT INTO syndicate_exam_requests (application_id, trainee_id, lawyer_id, status)
+        VALUES (?, ?, ?, 'waiting_exam')
     ");
-    $up2->execute([$trainee_user_id]);
-
-    // 6) التأكد هل له سجل سابق في جدول lawyers
-    $chk = $pdo->prepare("SELECT lawyer_id FROM lawyers WHERE user_id = ? LIMIT 1");
-    $chk->execute([$trainee_user_id]);
-    $existingLawyerId = $chk->fetchColumn();
-
-    if ($existingLawyerId) {
-        // ✅ تحديث السجل القديم من بيانات المتدرب + إضافة syndicate_id
-        $updLawyer = $pdo->prepare("
-            UPDATE lawyers
-            SET 
-                syndicate_id          = ?,   -- ✅ إضافة syndicate_id
-                full_name             = ?,
-                first_name            = ?,
-                father_name           = ?,
-                grandfather_name      = ?,
-                family_name           = ?,
-                national_id           = ?,
-                phone                 = ?,
-                email                 = ?,
-                home_address          = ?,
-                no_conviction_doc     = ?,
-                good_conduct_doc      = ?,
-                social_security       = ?,
-                highschool_certificate = ?,
-                university_degree     = ?,
-                social_security_number = ?,
-                password              = ?
-            WHERE lawyer_id = ?
-        ");
-
-        $updLawyer->execute([
-            $app['syndicate_id'],          // <-- من جدول النقابة
-            $app['trainee_full_name'],
-            $app['first_name'],
-            $app['father_name'],
-            $app['grandfather_name'],
-            $app['family_name'],
-            $app['national_id'],
-            $app['phone'],
-            $app['email'],
-            $app['home_address'],
-            $app['no_conviction_doc'],
-            $app['good_conduct_doc'],
-            $app['social_security'],
-            $app['highschool_certificate'],
-            $app['university_degree'],
-            $app['social_security_number'],
-            $app['user_password'],  // نفس الباسوورد المشفّر
-            $existingLawyerId
-        ]);
-
-    } else {
-        // ✅ إنشاء سجل جديد في جدول المحامين من بيانات المتدرب + syndicate_id
-        $insLawyer = $pdo->prepare("
-            INSERT INTO lawyers (
-                user_id,
-                syndicate_id,         
-                full_name,
-                first_name,
-                father_name,
-                grandfather_name,
-                family_name,
-                national_id,
-                phone,
-                email,
-                home_address,
-                no_conviction_doc,
-                good_conduct_doc,
-                social_security,
-                highschool_certificate,
-                university_degree,
-                social_security_number,
-                password
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ");
-
-        $insLawyer->execute([
-            $trainee_user_id,
-            $app['syndicate_id'],          // <-- من جدول lawyers_syndicate
-            $app['trainee_full_name'],
-            $app['first_name'],
-            $app['father_name'],
-            $app['grandfather_name'],
-            $app['family_name'],
-            $app['national_id'],
-            $app['phone'],
-            $app['email'],
-            $app['home_address'],
-            $app['no_conviction_doc'],
-            $app['good_conduct_doc'],
-            $app['social_security'],
-            $app['highschool_certificate'],
-            $app['university_degree'],
-            $app['social_security_number'],
-            $app['user_password']  // نفس الباسوورد المشفّر من جدول users
-        ]);
-    }
+    $insExam->execute([$app_id, $trainee_id, $lawyer_id]);
 
     $pdo->commit();
 
@@ -225,12 +142,12 @@ try {
 
     <p>
         تم تغيير حالة الطلب إلى <strong>completed</strong>، 
-        وتم إشعار المتدرب من خلال صفحة الإشعارات الخاصة به.
+        وتم إشعار المتدرب من خلال صفحة الإشعارات الخاصة به بأنه جاهز لامتحان المزاولة.
     </p>
 
     <p>
-        كما تم نسخ <strong>syndicate_id</strong> من جدول <code>lawyers_syndicate</code>
-        إلى سجل المحامي الجديد في جدول <code>lawyers</code> لتكون بياناته مكتملة.
+        كما تم إرسال بياناته إلى جدول <strong>syndicate_exam_requests</strong> 
+        لتقوم النقابة لاحقًا بتحديد موعد الامتحان واعتماد النتيجة وترقيته إلى محامٍ مزاول.
     </p>
 
     <a class="btn" href="applications.php">العودة إلى طلبات التدريب</a>

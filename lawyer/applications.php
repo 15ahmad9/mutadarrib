@@ -97,7 +97,7 @@ $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php elseif ($row['status'] == 'accepted'): ?>
                     <!-- زر إنهاء التدريب -->
                     <a class="btn complete" href="complete_training.php?id=<?= $row['application_id'] ?>">
-                        إنهاء التدريب وإشعار وترقية المتدرب
+                        إنهاء التدريب وإشعار المتدرب لتقديم إمتحان المزاولة
                     </a>
 
                 <?php elseif ($row['status'] == 'completed'): ?>

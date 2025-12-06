@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2025 at 09:34 PM
+-- Generation Time: Dec 06, 2025 at 10:39 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -75,8 +75,7 @@ CREATE TABLE `lawyers` (
 
 INSERT INTO `lawyers` (`lawyer_id`, `user_id`, `syndicate_id`, `office_address`, `password`, `verified`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `highschool_certificate`, `university_degree`, `social_security_number`) VALUES
 (10, 26, 1, 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 1, '2025-11-29 17:26:12', '2025-11-29 17:26:12', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', NULL, NULL, '', 'لا', 'دكتوراه', NULL),
-(11, 28, 9, 'إربد – وسط البلد', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 1, '2025-11-29 20:37:07', '2025-11-29 20:37:07', 'يوسف محمود علي الديري', 'يوسف', 'محمود', 'علي', 'الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', NULL, NULL, '', 'نعم', 'بكالوريوس', NULL),
-(18, 27, 8, NULL, '$2y$10$KiNjGQHAmt4wCVQPzEZlAODYuM0tRreeUdbZ9.aSkz/u9R.nhiV0a', 0, '2025-12-06 22:49:58', '2025-12-06 22:49:58', 'محمد أحمد مصطفى الخطيب', 'محمد', 'أحمد', 'مصطفى', 'الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', NULL, NULL, 'نعم', 'نعم', 'بكالوريوس', '1000000001');
+(11, 28, 9, 'إربد – وسط البلد', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 1, '2025-11-29 20:37:07', '2025-11-29 20:37:07', 'يوسف محمود علي الديري', 'يوسف', 'محمود', 'علي', 'الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', NULL, NULL, '', 'نعم', 'بكالوريوس', NULL);
 
 -- --------------------------------------------------------
 
@@ -141,6 +140,29 @@ CREATE TABLE `notifications` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `syndicate_exam_requests`
+--
+
+CREATE TABLE `syndicate_exam_requests` (
+  `request_id` int(11) NOT NULL,
+  `application_id` int(11) NOT NULL,
+  `trainee_id` int(11) NOT NULL,
+  `lawyer_id` int(11) NOT NULL,
+  `status` enum('waiting_exam','scheduled','passed','failed') NOT NULL DEFAULT 'waiting_exam',
+  `exam_date` date DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `syndicate_exam_requests`
+--
+
+INSERT INTO `syndicate_exam_requests` (`request_id`, `application_id`, `trainee_id`, `lawyer_id`, `status`, `exam_date`, `created_at`) VALUES
+(4, 14, 0, 10, 'waiting_exam', NULL, '2025-12-07 00:35:19');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `trainees`
 --
 
@@ -200,7 +222,7 @@ CREATE TABLE `trainings` (
 --
 
 INSERT INTO `trainings` (`training_id`, `lawyer_id`, `title`, `description`, `duration_months`, `location`, `start_date`, `end_date`, `status`, `seats`, `created_at`, `updated_at`) VALUES
-(1, 10, 'تدريب قانوني في القضايا المدنية', 'تدريب عملي في مكتب محاماة', 3, 'عمان', NULL, NULL, 'open', 1, '2025-11-29 22:04:44', '2025-12-06 22:49:57'),
+(1, 10, 'تدريب قانوني في القضايا المدنية', 'تدريب عملي في مكتب محاماة', 3, 'عمان', NULL, NULL, 'open', 7, '2025-11-29 22:04:44', '2025-12-07 00:35:18'),
 (2, 26, 'تدريب تيست', 'تدريب تيست تدريب تيست', 6, 'Amman', '2025-12-01', '2026-05-30', 'open', 3, '2025-11-29 22:32:32', '2025-11-29 22:32:32'),
 (3, 28, 'تدريب تيست', 'تدريب تيست تدريب تيست', 12, 'Amman', '2025-12-01', '2026-12-30', 'open', 3, '2025-11-29 22:34:00', '2025-11-29 22:34:00');
 
@@ -227,36 +249,7 @@ CREATE TABLE `training_applications` (
 --
 
 INSERT INTO `training_applications` (`application_id`, `trainee_id`, `training_id`, `status`, `trainee_seen`, `applied_at`, `reviewed_at`, `notes`, `syndicate_notified`) VALUES
-(10, 0, 1, 'completed', 0, '2025-12-06 22:49:42', '2025-12-06 22:49:58', NULL, 0);
-
---
--- Triggers `training_applications`
---
-DELIMITER $$
-CREATE TRIGGER `trg_after_app_completed` AFTER UPDATE ON `training_applications` FOR EACH ROW BEGIN
-  DECLARE v_user_id INT DEFAULT NULL;
-  DECLARE v_exists INT DEFAULT 0;
-  -- نتحقق أن الحالة تحولت إلى 'completed' من حالة أخرى
-  IF (NEW.status = 'completed' AND OLD.status <> 'completed') THEN
-    -- نحصل على user_id من جدول trainees
-    SELECT user_id INTO v_user_id FROM trainees WHERE trainee_id = NEW.trainee_id LIMIT 1;
-    IF v_user_id IS NOT NULL THEN
-      -- نحدّد ما إذا كان المستخدم موجودًا بالفعل كمزاول
-      SELECT COUNT(*) INTO v_exists FROM lawyers WHERE user_id = v_user_id;
-      IF v_exists = 0 THEN
-        -- نعيد تحديث دور المستخدم إلى 'lawyer'
-        UPDATE users SET role = 'lawyer', updated_at = NOW() WHERE user_id = v_user_id AND role <> 'lawyer';
-        -- ندرج سجل في جدول lawyers (مع ترك syndicate_id فارغًا - يمكن ربطه لاحقًا بالتحقق)
-        INSERT INTO lawyers (user_id, office_address, verified, created_at) VALUES (v_user_id, NULL, 0, NOW());
-      ELSE
-        -- لو كان موجودًا كـ lawyer بالفعل، نضمن بأن الدور في users هو 'lawyer'
-        UPDATE users SET role = 'lawyer', updated_at = NOW() WHERE user_id = v_user_id AND role <> 'lawyer';
-      END IF;
-    END IF;
-  END IF;
-END
-$$
-DELIMITER ;
+(14, 0, 1, 'completed', 0, '2025-12-07 00:35:02', '2025-12-07 00:35:19', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -284,7 +277,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `address`, `password`, `role`, `created_at`, `updated_at`) VALUES
 (1, 'admin', '0000000000', '0790000000', 'admin@example.com', 'Head Office', '$2y$10$btXC0u5ep0CjLg87dlFAjOzJHipd54ijGMDmFsEGGQetAtgx6ObDi', 'admin', '2025-11-12 00:28:19', '2025-11-14 01:19:45'),
 (26, 'محمد احمد محمد المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 'lawyer', '2025-11-29 17:26:12', '2025-11-29 17:26:12'),
-(27, 'محمد أحمد مصطفى الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', '$2y$10$KiNjGQHAmt4wCVQPzEZlAODYuM0tRreeUdbZ9.aSkz/u9R.nhiV0a', 'lawyer', '2025-11-29 19:53:21', '2025-12-06 22:49:58'),
+(27, 'محمد أحمد مصطفى الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', '$2y$10$KiNjGQHAmt4wCVQPzEZlAODYuM0tRreeUdbZ9.aSkz/u9R.nhiV0a', 'trainee', '2025-11-29 19:53:21', '2025-12-07 00:22:39'),
 (28, 'يوسف محمود علي الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 'lawyer', '2025-11-29 20:37:07', '2025-11-29 20:37:07');
 
 --
@@ -317,6 +310,12 @@ ALTER TABLE `notifications`
   ADD PRIMARY KEY (`notification_id`);
 
 --
+-- Indexes for table `syndicate_exam_requests`
+--
+ALTER TABLE `syndicate_exam_requests`
+  ADD PRIMARY KEY (`request_id`);
+
+--
 -- Indexes for table `trainings`
 --
 ALTER TABLE `trainings`
@@ -343,7 +342,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `lawyers`
 --
 ALTER TABLE `lawyers`
-  MODIFY `lawyer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `lawyer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `lawyers_syndicate`
@@ -358,6 +357,12 @@ ALTER TABLE `notifications`
   MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `syndicate_exam_requests`
+--
+ALTER TABLE `syndicate_exam_requests`
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `trainings`
 --
 ALTER TABLE `trainings`
@@ -367,7 +372,7 @@ ALTER TABLE `trainings`
 -- AUTO_INCREMENT for table `training_applications`
 --
 ALTER TABLE `training_applications`
-  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `users`
