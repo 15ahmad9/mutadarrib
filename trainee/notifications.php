@@ -86,10 +86,12 @@ $updateSeen->execute([$trainee_id]);
                     <?php if ($row['status'] == 'pending'): ?>
                         ⏳ قيد المراجعة
                     <?php elseif ($row['status'] == 'accepted'): ?>
-                        ✅ تم القبول
+                       ✅ تم القبول، بانتظار انتهاء فترة التدريب
                     <?php elseif ($row['status'] == 'rejected'): ?>
                         ❌ تم الرفض
-                    <?php else: ?>
+                        <?php elseif ($row['status'] == 'completed'): ?>
+        🏅 تم إنهاء فترة التدريب بنجاح. يمكنك مراجعة النقابة لاستكمال إجراءاتك كمحامٍ مزاول.
+    <?php else: ?>
                         <?= htmlspecialchars($row['status']) ?>
                     <?php endif; ?>
                 </td>
