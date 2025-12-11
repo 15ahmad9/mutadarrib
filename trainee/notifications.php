@@ -21,7 +21,11 @@ if (!$trainee) {
 
 $trainee_id = $trainee['trainee_id'];
 
-// جلب كل الطلبات الخاصة بالمتدرب
+/*
+==========================================
+  1) جلب كل طلبات التدريب الخاصة بالمتدرب
+==========================================
+*/
 $stmt = $pdo->prepare("
     SELECT 
         ta.application_id,
@@ -39,7 +43,11 @@ $stmt = $pdo->prepare("
 $stmt->execute([$trainee_id]);
 $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// بعد فتح صفحة الإشعارات اعتبرها مقروءة
+/*
+==========================================
+  2) وضع جميع الطلبات كـ "مقروءة" بعد فتح الصفحة
+==========================================
+*/
 $updateSeen = $pdo->prepare("
     UPDATE training_applications
     SET trainee_seen = 1
@@ -48,12 +56,49 @@ $updateSeen = $pdo->prepare("
 ");
 $updateSeen->execute([$trainee_id]);
 
-// هل يوجد طلب مكتمل (جاهز للامتحان)؟
+/*
+==========================================
+  3) هل يوجد طلب مكتمل (جاهز للامتحان)؟
+==========================================
+*/
 $hasCompleted = false;
 foreach ($applications as $row) {
     if ($row['status'] === 'completed') {
         $hasCompleted = true;
         break;
+    }
+}
+
+/*
+==========================================
+  4) جلب آخر حالة لطلب امتحان النقابة (إن وجدت)
+==========================================
+*/
+$examStmt = $pdo->prepare("
+    SELECT 
+        status,
+        exam_date,
+        created_at
+    FROM syndicate_exam_requests
+    WHERE trainee_id = ?
+    ORDER BY created_at DESC
+    LIMIT 1
+");
+$examStmt->execute([$trainee_id]);
+$lastExam = $examStmt->fetch(PDO::FETCH_ASSOC);  // قد تكون false إذا لا يوجد طلب امتحان
+
+// هل يُسمح له بإرسال طلب امتحان جديد؟
+// نسمح إذا:
+//  - لديه تدريب مكتمل
+//  - ولا يوجد طلب امتحان بحالة waiting_exam أو scheduled أو passed
+$canRequestExam = false;
+if ($hasCompleted) {
+    if (!$lastExam) {
+        $canRequestExam = true;
+    } else {
+        if (in_array($lastExam['status'], ['failed'], true)) {
+            $canRequestExam = true;
+        }
     }
 }
 ?>
@@ -73,9 +118,38 @@ foreach ($applications as $row) {
     color:#166534;
     font-weight:bold;
 }
+.alert-exam-warning {
+    background:#fef3c7;
+    border:1px solid #d97706;
+    padding:10px 15px;
+    border-radius:8px;
+    margin-bottom:15px;
+    color:#92400e;
+    font-weight:bold;
+}
+.alert-exam-danger {
+    background:#fee2e2;
+    border:1px solid #b91c1c;
+    padding:10px 15px;
+    border-radius:8px;
+    margin-bottom:15px;
+    color:#991b1b;
+    font-weight:bold;
+}
 .unread-row {
     background:#fff8e1;
 }
+.btn-inline {
+    display:inline-block;
+    margin-top:8px;
+    padding:6px 12px;
+    border-radius:6px;
+    background:#2563eb;
+    color:#fff;
+    text-decoration:none;
+    font-size:13px;
+}
+.btn-inline:hover { opacity:0.9; }
 </style>
 </head>
 <body>
@@ -87,14 +161,45 @@ foreach ($applications as $row) {
 
     <?php if ($hasCompleted): ?>
         <div class="alert-exam">
-             لقد أنهيت فترة التدريب، وأنت الآن جاهز للتقدم لامتحان المزاولة لدى النقابة.
+            لقد أنهيت فترة التدريب، وأنت الآن مؤهل للتقدم لامتحان المزاولة لدى النقابة.
+            <?php if ($canRequestExam): ?>
+                <br>
+                <a href="request_exam.php" class="btn-inline">
+                    تقديم طلب امتحان المزاولة
+                </a>
+            <?php endif; ?>
         </div>
+    <?php endif; ?>
+
+    <?php if ($lastExam): ?>
+        <?php if ($lastExam['status'] === 'waiting_exam'): ?>
+            <div class="alert-exam-warning">
+                تم إرسال طلبك إلى نقابة المحامين، بانتظار تحديد موعد امتحان المزاولة.
+            </div>
+        <?php elseif ($lastExam['status'] === 'scheduled'): ?>
+            <div class="alert-exam-warning">
+                تم تحديد موعد امتحان المزاولة لك بتاريخ 
+                <strong><?= htmlspecialchars($lastExam['exam_date'] ?? '-') ?></strong>. 
+                يرجى الالتزام بالتعليمات الصادرة عن النقابة.
+            </div>
+        <?php elseif ($lastExam['status'] === 'passed'): ?>
+            <div class="alert-exam">
+                ✅ تهانينا! لقد اجتزت امتحان المزاولة بنجاح.  
+                سيتم اعتمادك كمحامٍ مزاول من قبل النقابة وفق إجراءاتها الداخلية.
+            </div>
+        <?php elseif ($lastExam['status'] === 'failed'): ?>
+            <div class="alert-exam-danger">
+                ❌ لم تجتز امتحان المزاولة.  
+                يمكنك مراجعة نقابة المحامين لمعرفة إمكانية إعادة التقديم في دورة لاحقة.
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 
     <?php if (empty($applications)): ?>
         <p>لا يوجد طلبات تدريب حتى الآن.</p>
     <?php else: ?>
 
+        
     <table class="table">
         <thead>
             <tr>
@@ -118,7 +223,7 @@ foreach ($applications as $row) {
                     <?php elseif ($row['status'] == 'rejected'): ?>
                         ❌ تم الرفض
                     <?php elseif ($row['status'] == 'completed'): ?>
-                         لقد أنهيت فترة التدريب وأنت جاهز لامتحان المزاولة
+                        🎓 لقد أنهيت فترة التدريب وأنت جاهز لامتحان المزاولة
                     <?php else: ?>
                         <?= htmlspecialchars($row['status']) ?>
                     <?php endif; ?>

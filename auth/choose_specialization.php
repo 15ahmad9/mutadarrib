@@ -8,6 +8,7 @@ body { font-family: Arial; background:#f4f4f4; }
 .container { width: 400px; margin: 70px auto; background:white; padding:20px; border-radius:8px; box-shadow:0 0 10px #ccc; }
 select, button { width:100%; padding:10px; margin-top:10px; border-radius:6px; border:1px solid #aaa; }
 button { background:#0077b6; color:white; cursor:pointer; }
+.disabled-option { color:#888; }
 </style>
 </head>
 <body>
@@ -18,12 +19,11 @@ button { background:#0077b6; color:white; cursor:pointer; }
     <label>اختر التخصص:</label>
     <select id="specialization" required>
         <option value="">اختر</option>
-        <option value="lawyer">محامي</option>
-        <option value="engineering">هندسة</option>
-        <option value="pharmacy">صيدلة</option>
-        <option value="nursing">تمريض</option>
-        <option value="it">تكنولوجيا معلومات</option>
-        <option value="trainee">متدرب</option>
+        <option value="lawyer" >محاماه</option>
+        <option value="it" class="disabled-option" disabled>تكنولوجيا معلومات  (غير متاح حاليًا)</option>
+        <option value="engineering" class="disabled-option" disabled>هندسة  (غير متاح حاليًا)</option>
+        <option value="pharmacy" class="disabled-option" disabled>صيدلة  (غير متاح حاليًا)</option>
+        <option value="nursing" class="disabled-option" disabled>تمريض  (غير متاح حاليًا)</option>
     </select>
 
     <button onclick="goToRegister()">متابعة</button>
@@ -58,10 +58,6 @@ function goToRegister() {
 
         case "it":
             window.location.href = "register_it.php";
-            break;
-
-        case "trainee":
-            window.location.href = "register_student.php";
             break;
 
         default:

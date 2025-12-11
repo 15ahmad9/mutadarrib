@@ -77,42 +77,21 @@ if ($app['app_status'] !== 'accepted') {
 try {
     $pdo->beginTransaction();
 
+    // ممكن نحتاجهم لاحقاً (لا مشكلة إن تُركوا)
     $trainee_user_id = (int) $app['trainee_user_id'];
     $trainee_id      = (int) $app['trainee_id'];
 
-    // 4) تحديث حالة الطلب إلى completed + إعادة إشعار المتدرب + إشعار النقابة
+    // 4) تحديث حالة الطلب إلى completed + إعادة إشعار المتدرب
+    //   ملاحظة: syndicate_notified = 0 لأن المتدرب هو من سيطلب الامتحان لاحقاً
     $up1 = $pdo->prepare("
         UPDATE training_applications
         SET status = 'completed',
             reviewed_at = NOW(),
             trainee_seen = 0,
-            syndicate_notified = 1
+            syndicate_notified = 0
         WHERE application_id = ?
     ");
     $up1->execute([$app_id]);
-
-    /*
-      ⚠️ ملاحظة مهمة:
-      - لا نقوم هنا بتغيير role في جدول users
-      - ولا ننشئ أو نعدّل سجلاً في جدول lawyers
-      النقابة لاحقًا (عبر لوحة خاصة بها) هي من تقوم بترقية المتدرب بعد اجتياز الامتحان.
-    */
-
-    // 5) إدخال سجل في جدول طلبات الامتحان للنقابة
-    // تأكد أنك أنشأت الجدول التالي تقريبًا:
-    // CREATE TABLE syndicate_exam_requests (
-    //   id INT AUTO_INCREMENT PRIMARY KEY,
-    //   application_id INT NOT NULL,
-    //   trainee_id INT NOT NULL,
-    //   lawyer_id INT NOT NULL,
-    //   status ENUM('waiting_exam','passed','failed') NOT NULL DEFAULT 'waiting_exam',
-    //   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-    // );
-    $insExam = $pdo->prepare("
-        INSERT INTO syndicate_exam_requests (application_id, trainee_id, lawyer_id, status)
-        VALUES (?, ?, ?, 'waiting_exam')
-    ");
-    $insExam->execute([$app_id, $trainee_id, $lawyer_id]);
 
     $pdo->commit();
 
@@ -142,12 +121,13 @@ try {
 
     <p>
         تم تغيير حالة الطلب إلى <strong>completed</strong>، 
-        وتم إشعار المتدرب من خلال صفحة الإشعارات الخاصة به بأنه جاهز لامتحان المزاولة.
+        وسيظهر للمتدرب في صفحة الإشعارات أنه أنهى فترة التدريب
+        وأصبح مؤهلاً لتقديم <strong>طلب امتحان المزاولة</strong> لدى النقابة.
     </p>
 
     <p>
-        كما تم إرسال بياناته إلى جدول <strong>syndicate_exam_requests</strong> 
-        لتقوم النقابة لاحقًا بتحديد موعد الامتحان واعتماد النتيجة وترقيته إلى محامٍ مزاول.
+        المتدرب يستطيع من خلال صفحة مخصصة (مثل <code>request_exam.php</code>) 
+        إرسال طلب رسمي للنقابة لتحديد موعد امتحان المزاولة.
     </p>
 
     <a class="btn" href="applications.php">العودة إلى طلبات التدريب</a>
