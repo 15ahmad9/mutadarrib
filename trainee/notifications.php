@@ -87,7 +87,7 @@ foreach ($applications as $row) {
 
     <?php if ($hasCompleted): ?>
         <div class="alert-exam">
-            🎓 لقد أنهيت فترة التدريب، وأنت الآن جاهز للتقدم لامتحان المزاولة لدى النقابة.
+             لقد أنهيت فترة التدريب، وأنت الآن جاهز للتقدم لامتحان المزاولة لدى النقابة.
         </div>
     <?php endif; ?>
 
@@ -118,7 +118,7 @@ foreach ($applications as $row) {
                     <?php elseif ($row['status'] == 'rejected'): ?>
                         ❌ تم الرفض
                     <?php elseif ($row['status'] == 'completed'): ?>
-                        🏁 لقد أنهيت فترة التدريب وأنت جاهز لامتحان المزاولة
+                         لقد أنهيت فترة التدريب وأنت جاهز لامتحان المزاولة
                     <?php else: ?>
                         <?= htmlspecialchars($row['status']) ?>
                     <?php endif; ?>

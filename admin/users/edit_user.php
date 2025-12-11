@@ -99,6 +99,7 @@ button:hover { opacity: 0.8; }
       <option value="admin" <?= $user['role']=='admin'?'selected':'' ?>>مدير</option>
       <option value="lawyer" <?= $user['role']=='lawyer'?'selected':'' ?>>محامي</option>
       <option value="trainee" <?= $user['role']=='trainee'?'selected':'' ?>>متدرب</option>
+      <option value="syndicate_admin" <?= $user['role']=='syndicate_admin'?'selected':'' ?>>مدير نقابة</option>
     </select>
 
     <label>كلمة المرور (اتركها فارغة إذا لا ترغب بتغييرها):</label>

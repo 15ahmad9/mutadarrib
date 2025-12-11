@@ -74,14 +74,14 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && $_SESSION['role']
 <nav class="navbar">
   <div class="logo">متدرب</div>
   <ul class="nav-links">
-    <li><a href="index.php">الرئيسية</a></li>
+    <li><a href="/mutadarrib/index.php">الرئيسية</a></li>
     <li><a href="#about">من نحن</a></li>
     <li><a href="#services">الخدمات</a></li>
 
     <?php if (isset($_SESSION['user_id'])): ?>
       <?php 
         $role = $_SESSION['role'];
-        $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'متدرب' : 'مدير');
+        $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'متدرب' : (($role === 'syndicate_admin') ? 'موظف النقابة' : 'مدير'));
       ?>
 
       <!-- 🔔 أيقونة إشعارات للمتدرب فقط -->
@@ -112,6 +112,10 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && $_SESSION['role']
           <?php if ($role === 'lawyer'): ?>
             <li><a href="lawyer/dashboard.php">لوحة المحامي</a></li>
           <?php endif; ?>
+
+          <?php if ($role === 'syndicate_admin'): ?>
+    <li><a href="syndicate/dashboard.php">لوحة النقابة</a></li>
+<?php endif; ?>
 
           <li><a href="/mutadarrib/auth/logout.php">تسجيل الخروج</a></li>
         </ul>

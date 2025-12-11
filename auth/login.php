@@ -10,30 +10,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password    = trim($_POST["password"]);
 
     /* ======================================
-            1) تسجيل دخول المدير Admin
+        1) تسجيل دخول المدير Admin
     ====================================== */
     $stmt = $pdo->prepare("
         SELECT *
         FROM users
         WHERE national_id = ?
           AND role = 'admin'
+        LIMIT 1
     ");
     $stmt->execute([$national_id]);
     $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($admin && password_verify($password, $admin['password'])) {
 
-        $_SESSION['user_id']  = $admin['user_id'];   // ✅ USER_ID الصحيح
-        $_SESSION['role']     = 'admin';
+        $_SESSION['user_id']   = (int) $admin['user_id'];   // ✅ USER_ID الصحيح
+        $_SESSION['role']      = 'admin';
         $_SESSION['full_name'] = $admin['full_name'];
 
         header("Location: ../admin/dashboard.php");
         exit;
     }
 
+    /* ======================================
+        2) تسجيل دخول موظف النقابة Syndicate Admin
+    ====================================== */
+    $stmt = $pdo->prepare("
+        SELECT *
+        FROM users
+        WHERE national_id = ?
+          AND role = 'syndicate_admin'
+        LIMIT 1
+    ");
+    $stmt->execute([$national_id]);
+    $syndicate = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($syndicate && password_verify($password, $syndicate['password'])) {
+
+        $_SESSION['user_id']   = (int) $syndicate['user_id'];
+        $_SESSION['role']      = 'syndicate_admin';
+        $_SESSION['full_name'] = $syndicate['full_name'];
+
+        header("Location: ../syndicate/dashboard.php");
+        exit;
+    }
 
     /* ======================================
-            2) تسجيل دخول المحامي Lawyer
+        3) تسجيل دخول المحامي Lawyer
     ====================================== */
     $stmt = $pdo->prepare("
         SELECT 
@@ -43,6 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         FROM lawyers l
         JOIN users u ON u.user_id = l.user_id
         WHERE l.national_id = ?
+        LIMIT 1
     ");
     $stmt->execute([$national_id]);
     $lawyer = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -54,6 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             SELECT syndicate_id
             FROM lawyers_syndicate
             WHERE national_id = ?
+            LIMIT 1
         ");
         $chk->execute([$national_id]);
         $inSyndicate = $chk->fetch(PDO::FETCH_ASSOC);
@@ -64,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         } else {
 
-            $_SESSION['user_id']   = $lawyer['user_id']; 
+            $_SESSION['user_id']   = (int) $lawyer['user_id']; 
             $_SESSION['role']      = 'lawyer';
             $_SESSION['full_name'] = $lawyer['full_name'];
 
@@ -73,9 +98,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-
     /* ======================================
-            3) تسجيل دخول المتدرب Trainee
+        4) تسجيل دخول المتدرب Trainee
     ====================================== */
     $stmt = $pdo->prepare("
         SELECT 
@@ -87,23 +111,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         JOIN users u ON u.user_id = t.user_id
         WHERE t.national_id = ?
           AND u.role = 'trainee'
+        LIMIT 1
     ");
     $stmt->execute([$national_id]);
     $trainee = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($trainee && password_verify($password, $trainee['password'])) {
 
-        $_SESSION["user_id"]  = $trainee['user_id']; // ✅ USER_ID الصحيح
-        $_SESSION["role"]     = "trainee";
-        $_SESSION["full_name"] = $trainee['full_name'];
+        $_SESSION['user_id']   = (int) $trainee['user_id']; // ✅ USER_ID الصحيح من جدول users
+        $_SESSION['role']      = 'trainee';
+        $_SESSION['full_name'] = $trainee['full_name'];
 
         header("Location: ../index.php");
         exit;
     }
 
-
     /* ======================================
-            فشل جميع محاولات الدخول
+        فشل جميع محاولات الدخول
     ====================================== */
     $message = "<p class='error'>❌ الرقم الوطني أو كلمة المرور غير صحيحة.</p>";
 }
