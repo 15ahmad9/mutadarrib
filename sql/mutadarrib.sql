@@ -393,3 +393,8 @@ ALTER TABLE `syndicate_exam_requests`
 
 ALTER TABLE `syndicate_exam_requests`
   MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+  ALTER TABLE trainees
+  ADD COLUMN is_archived TINYINT(1) NOT NULL DEFAULT 0,
+  ADD COLUMN archived_at DATETIME NULL;

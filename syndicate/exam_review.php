@@ -2,6 +2,11 @@
 require_once("includes/auth_check.php");
 require_once("../config/db.php");
 
+// يفضّل التأكد أن المستخدم موظف نقابة
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'syndicate_admin') {
+    die("❌ غير مصرح لك بالدخول إلى هذه الصفحة.");
+}
+
 $request_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($request_id <= 0) {
     die("❌ رقم الطلب غير صالح.");
@@ -50,7 +55,6 @@ if (!$req) {
 }
 
 // يمكن السماح بتعديل أي حالة أو منع تعديل passed/failed حسب رغبتك
-// هنا سنسمح بالتعديل، لكن يمكنك وضع شرط إذا أحببت
 // if ($req['req_status'] === 'passed' || $req['req_status'] === 'failed') { die("تمت معالجة هذا الطلب مسبقاً."); }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -78,25 +82,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $request_id
         ]);
 
-        // لو كانت النتيجة scheduled أو failed => لا ترقيه
+        // لو كانت النتيجة scheduled أو failed => لا ترقية ولا أرشفة
         if ($result !== 'passed') {
             $pdo->commit();
             header("Location: exams.php?updated=1");
             exit;
         }
 
-        // 2) في حالة النجاح: ترقية المستخدم إلى محامي + نقل البيانات لجدول lawyers
+        // 2) في حالة النجاح: ترقية المستخدم إلى محامي + نقل البيانات لجدول lawyers + أرشفة المتدرب
 
-        $user_id = (int) $req['trainee_user_id'];
+        $user_id    = (int) $req['trainee_user_id'];
+        $trainee_id = (int) $req['trainee_id'];
 
-        // تحديث role في جدول users
+        // 2-أ) تحديث role في جدول users إلى lawyer
         $pdo->prepare("
             UPDATE users
             SET role = 'lawyer'
             WHERE user_id = ?
         ")->execute([$user_id]);
 
-        // جلب syndicate_id من جدول النقابة (إن وجد بنفس الرقم الوطني)
+        // 2-ب) جلب syndicate_id من جدول النقابة (إن وجد بنفس الرقم الوطني)
         $synStmt = $pdo->prepare("
             SELECT syndicate_id
             FROM lawyers_syndicate
@@ -109,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $syndicate_id = null;
         }
 
-        // هل يوجد له سجل سابق في جدول lawyers؟
+        // 2-ج) هل يوجد له سجل سابق في جدول lawyers؟
         $chk = $pdo->prepare("SELECT lawyer_id FROM lawyers WHERE user_id = ? LIMIT 1");
         $chk->execute([$user_id]);
         $existingLawyerId = $chk->fetchColumn();
@@ -214,6 +219,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $req['social_security_number']
             ]);
         }
+
+        // 2-د) أرشفة سجل المتدرب بدلاً من حذفه (الطريقة أ)
+        // يتطلب أن يكون في جدول trainees الحقول:
+        //  is_archived TINYINT(1) DEFAULT 0
+        //  archived_at DATETIME NULL
+        $archiveStmt = $pdo->prepare("
+            UPDATE trainees
+            SET is_archived = 1,
+                archived_at = NOW()
+            WHERE trainee_id = ?
+        ");
+        $archiveStmt->execute([$trainee_id]);
 
         $pdo->commit();
 
