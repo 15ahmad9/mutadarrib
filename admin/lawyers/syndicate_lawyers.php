@@ -14,11 +14,34 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 // جلب المحامين مع بيانات المستخدم المرتبط (إن وجد)
 $query = "
-    SELECT lm.*, u.full_name, u.national_id AS user_national_id, u.phone, u.email
-    FROM lawyers_syndicate lm
-    LEFT JOIN lawyers l ON lm.syndicate_id = l.syndicate_id
-    LEFT JOIN users u ON l.user_id = u.user_id
+  SELECT
+    lm.syndicate_id,
+    lm.lawyer_name,
+    lm.full_name       AS synd_full_name,
+    lm.first_name      AS synd_first_name,
+    lm.father_name     AS synd_father_name,
+    lm.grandfather_name AS synd_grandfather_name,
+    lm.family_name     AS synd_family_name,
+    lm.national_id     AS synd_national_id,
+    lm.phone           AS synd_phone,
+    lm.email           AS synd_email,
+    lm.office_address  AS synd_office_address,
+    lm.created_at      AS synd_created_at,
+
+    l.lawyer_id,
+    l.user_id,
+    l.home_address     AS acc_home_address,
+    l.office_address   AS acc_office_address,
+
+    u.full_name        AS user_full_name,
+    u.national_id      AS user_national_id,
+    u.phone            AS user_phone,
+    u.email            AS user_email
+  FROM lawyers_syndicate lm
+  LEFT JOIN lawyers l ON lm.syndicate_id = l.syndicate_id
+  LEFT JOIN users u ON l.user_id = u.user_id
 ";
+
 
 if ($search) {
     $query .= " WHERE lm.lawyer_name LIKE :s OR lm.national_id LIKE :s OR u.full_name LIKE :s OR u.national_id LIKE :s ";
@@ -91,19 +114,21 @@ th { background:#0077b6; color:white; }
 <?php foreach ($lawyers as $i => $l): ?>
 <tr>
     <td><?= $i+1 ?></td>
-    <td><?= htmlspecialchars($l['full_name'] ?? $l['full_name']) ?></td>
-    <td><?= htmlspecialchars($l['first_name'] ?? '-') ?></td>
-    <td><?= htmlspecialchars($l['father_name'] ?? '-') ?></td>
-    <td><?= htmlspecialchars($l['grandfather_name'] ?? '-') ?></td>
-    <td><?= htmlspecialchars($l['family_name'] ?? '-') ?></td>
-    <td><?= htmlspecialchars($l['national_id'] ?? $l['user_national_id']) ?></td>
-    <td><?= htmlspecialchars($l['phone'] ?? '-') ?></td>
-    <td><?= htmlspecialchars($l['email'] ?? '-') ?></td>
-    <td><?= htmlspecialchars($l['home_address'] ?? '-') ?></td>
-    <td><?= htmlspecialchars($l['syndicate_id']) ?></td>
-    <td><?= htmlspecialchars($l['office_address'] ?? '-') ?></td>
-    <td><?= htmlspecialchars($l['created_at'] ?? '-') ?></td>
-    <td>
+<td><?= htmlspecialchars($l['synd_full_name'] ?: ($l['user_full_name'] ?: $l['lawyer_name'])) ?></td>
+<td><?= htmlspecialchars($l['synd_first_name'] ?? '-') ?></td>
+<td><?= htmlspecialchars($l['synd_father_name'] ?? '-') ?></td>
+<td><?= htmlspecialchars($l['synd_grandfather_name'] ?? '-') ?></td>
+<td><?= htmlspecialchars($l['synd_family_name'] ?? '-') ?></td>
+
+<td><?= htmlspecialchars($l['synd_national_id'] ?: ($l['user_national_id'] ?: '-')) ?></td>
+<td><?= htmlspecialchars($l['synd_phone'] ?: ($l['user_phone'] ?: '-')) ?></td>
+<td><?= htmlspecialchars($l['synd_email'] ?: ($l['user_email'] ?: '-')) ?></td>
+
+<td><?= htmlspecialchars($l['acc_home_address'] ?? '-') ?></td>
+<td><?= htmlspecialchars($l['syndicate_id']) ?></td>
+<td><?= htmlspecialchars($l['synd_office_address'] ?: ($l['acc_office_address'] ?: '-')) ?></td>
+<td><?= htmlspecialchars($l['synd_created_at'] ?? '-') ?></td>
+<td>
         <a href="edit_syndicate_lawyer.php?id=<?= $l['syndicate_id'] ?>" class="btn edit-btn">تعديل</a>
         <a href="delete_syndicate_lawyer.php?id=<?= $l['syndicate_id'] ?>" class="btn delete-btn" onclick="return confirm('هل أنت متأكد من حذف هذا المحامي؟')">حذف</a>
     </td>
