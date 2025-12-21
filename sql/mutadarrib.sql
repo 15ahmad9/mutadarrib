@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2025 at 09:40 PM
+-- Generation Time: Dec 20, 2025 at 04:38 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -75,8 +75,7 @@ CREATE TABLE `lawyers` (
 
 INSERT INTO `lawyers` (`lawyer_id`, `user_id`, `syndicate_id`, `office_address`, `password`, `verified`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `highschool_certificate`, `university_degree`, `social_security_number`) VALUES
 (10, 26, 1, 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 1, '2025-11-29 17:26:12', '2025-11-29 17:26:12', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', NULL, NULL, '', 'لا', 'دكتوراه', NULL),
-(11, 28, 9, 'إربد – وسط البلد', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 1, '2025-11-29 20:37:07', '2025-11-29 20:37:07', 'يوسف محمود علي الديري', 'يوسف', 'محمود', 'علي', 'الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', NULL, NULL, '', 'نعم', 'بكالوريوس', NULL),
-(23, 35, 19, NULL, '$2y$10$Azlsa2XqFhNZHWBkRwlT9.JlDKgcX/BrgpM5d/YgGZ1L1iTZVfAFe', 1, '2025-12-11 23:35:03', '2025-12-11 23:35:03', '', NULL, NULL, NULL, NULL, '0000000001', NULL, NULL, NULL, NULL, NULL, 'لا', 'لا', NULL, NULL);
+(11, 28, 9, 'إربد – وسط البلد', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 1, '2025-11-29 20:37:07', '2025-11-29 20:37:07', 'يوسف محمود علي الديري', 'يوسف', 'محمود', 'علي', 'الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', NULL, NULL, '', 'نعم', 'بكالوريوس', NULL);
 
 -- --------------------------------------------------------
 
@@ -159,7 +158,7 @@ CREATE TABLE `syndicate_exam_requests` (
 --
 
 INSERT INTO `syndicate_exam_requests` (`request_id`, `application_id`, `trainee_id`, `lawyer_id`, `status`, `exam_date`, `created_at`) VALUES
-(4, 14, 0, 10, 'waiting_exam', NULL, '2025-12-07 00:35:19');
+(5, 14, 0, 10, 'scheduled', '2025-12-31', '2025-12-12 00:49:20');
 
 -- --------------------------------------------------------
 
@@ -186,16 +185,18 @@ CREATE TABLE `trainees` (
   `national_id` varchar(30) DEFAULT NULL,
   `phone` varchar(30) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
-  `home_address` varchar(255) DEFAULT NULL
+  `home_address` varchar(255) DEFAULT NULL,
+  `is_archived` tinyint(1) NOT NULL DEFAULT 0,
+  `archived_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `trainees`
 --
 
-INSERT INTO `trainees` (`trainee_id`, `user_id`, `highschool_certificate`, `university_degree`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `social_security_number`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`) VALUES
-(2, 12, 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL, '2025-11-14 14:05:13', '2025-11-14 15:06:16', 'ريم', 'ريم', NULL, NULL, NULL, '0505050505', '0780505050', 'reem@example.com', 'عمان'),
-(0, 27, 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '1000000001', '2025-11-29 19:53:21', '2025-11-29 19:53:21', 'محمد أحمد مصطفى الخطيب', 'محمد', 'أحمد', 'مصطفى', 'الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان');
+INSERT INTO `trainees` (`trainee_id`, `user_id`, `highschool_certificate`, `university_degree`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `social_security_number`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`, `is_archived`, `archived_at`) VALUES
+(2, 12, 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL, '2025-11-14 14:05:13', '2025-11-14 15:06:16', 'ريم', 'ريم', NULL, NULL, NULL, '0505050505', '0780505050', 'reem@example.com', 'عمان', 0, NULL),
+(3, 27, 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '1000000001', '2025-11-29 19:53:21', '2025-12-12 18:08:04', 'محمد أحمد مصطفى الخطيب', 'محمد', 'أحمد', 'مصطفى', 'الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', 0, '2025-12-12 17:47:48');
 
 -- --------------------------------------------------------
 
@@ -277,10 +278,10 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `address`, `password`, `role`, `created_at`, `updated_at`) VALUES
 (1, 'admin', '0000000000', '0790000000', 'admin@example.com', 'Head Office', '$2y$10$btXC0u5ep0CjLg87dlFAjOzJHipd54ijGMDmFsEGGQetAtgx6ObDi', 'admin', '2025-11-12 00:28:19', '2025-11-14 01:19:45'),
+(3, 'موظف نقابة رقم 1', '9999999999', '0799999999', 'syndicate_admin@example.com', 'النقابة', '$2y$10$Azlsa2XqFhNZHWBkRwlT9.JlDKgcX/BrgpM5d/YgGZ1L1iTZVfAFe', 'syndicate_admin', '2025-12-11 23:35:03', '2025-12-12 17:48:52'),
 (26, 'محمد احمد محمد المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 'lawyer', '2025-11-29 17:26:12', '2025-11-29 17:26:12'),
-(27, 'محمد أحمد مصطفى الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', '$2y$10$KiNjGQHAmt4wCVQPzEZlAODYuM0tRreeUdbZ9.aSkz/u9R.nhiV0a', 'trainee', '2025-11-29 19:53:21', '2025-12-11 23:30:07'),
-(28, 'يوسف محمود علي الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 'lawyer', '2025-11-29 20:37:07', '2025-12-11 23:26:26'),
-(35, 'موظف نقابة رقم 1', '9999999999', '0799999999', 'syndicate_admin@example.com', 'النقابة', '$2y$10$Azlsa2XqFhNZHWBkRwlT9.JlDKgcX/BrgpM5d/YgGZ1L1iTZVfAFe', 'syndicate_admin', '2025-12-11 23:35:03', '2025-12-11 23:39:18');
+(27, 'محمد أحمد مصطفى الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', '$2y$10$KiNjGQHAmt4wCVQPzEZlAODYuM0tRreeUdbZ9.aSkz/u9R.nhiV0a', 'trainee', '2025-11-29 19:53:21', '2025-12-12 17:51:11'),
+(28, 'يوسف محمود علي الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 'lawyer', '2025-11-29 20:37:07', '2025-12-11 23:26:26');
 
 --
 -- Indexes for dumped tables
@@ -318,6 +319,12 @@ ALTER TABLE `syndicate_exam_requests`
   ADD PRIMARY KEY (`request_id`);
 
 --
+-- Indexes for table `trainees`
+--
+ALTER TABLE `trainees`
+  ADD PRIMARY KEY (`trainee_id`);
+
+--
 -- Indexes for table `trainings`
 --
 ALTER TABLE `trainings`
@@ -344,7 +351,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `lawyers`
 --
 ALTER TABLE `lawyers`
-  MODIFY `lawyer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `lawyer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `lawyers_syndicate`
@@ -362,7 +369,13 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `syndicate_exam_requests`
 --
 ALTER TABLE `syndicate_exam_requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `trainees`
+--
+ALTER TABLE `trainees`
+  MODIFY `trainee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `trainings`
@@ -388,13 +401,28 @@ COMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 
-ALTER TABLE `syndicate_exam_requests`
-  ADD PRIMARY KEY (`request_id`);
+CREATE TABLE `calendar_events` (
+  `event_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
 
-ALTER TABLE `syndicate_exam_requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
+  `title` VARCHAR(200) NOT NULL,
+  `description` TEXT DEFAULT NULL,
 
+  `start_at` DATETIME NOT NULL,
+  `end_at` DATETIME DEFAULT NULL,
+  `all_day` TINYINT(1) NOT NULL DEFAULT 0,
 
-  ALTER TABLE trainees
-  ADD COLUMN is_archived TINYINT(1) NOT NULL DEFAULT 0,
-  ADD COLUMN archived_at DATETIME NULL;
+  `type` ENUM('task','event') NOT NULL DEFAULT 'task',
+
+  -- تذكير قبل الموعد (بالدقائق). مثال: 10 = قبل 10 دقائق
+  `reminder_minutes` INT(11) DEFAULT NULL,
+
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  PRIMARY KEY (`event_id`),
+  KEY `idx_calendar_user_start` (`user_id`, `start_at`),
+  CONSTRAINT `fk_calendar_events_user`
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
