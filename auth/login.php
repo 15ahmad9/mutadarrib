@@ -93,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['role']      = 'lawyer';
             $_SESSION['full_name'] = $lawyer['full_name'];
 
-            header("Location: ../index.php");
+            header("Location: /mutadarrib/complete_profile.php");
             exit;
         }
     }
@@ -122,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['role']      = 'trainee';
         $_SESSION['full_name'] = $trainee['full_name'];
 
-        header("Location: ../index.php");
+        header("Location: /mutadarrib/complete_profile.php");
         exit;
     }
 

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("config/db.php");
+// require_once __DIR__ . "/includes/profile_gate.php";
 
 // التحقق من أن المستخدم مسجل دخول
 if (!isset($_SESSION['user_id'])) {
