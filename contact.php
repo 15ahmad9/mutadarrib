@@ -1,0 +1,159 @@
+<?php
+session_start();
+require_once __DIR__ . "/config/db.php";
+
+$errors = [];
+$success = "";
+
+// افتراضات مبدئية (تعبئة تلقائية إذا كان المستخدم مسجلاً)
+$prefillName  = $_SESSION['full_name'] ?? '';
+$prefillEmail = '';
+$prefillPhone = '';
+
+if (isset($_SESSION['user_id'])) {
+  $stmtU = $pdo->prepare("SELECT email, full_name, phone FROM users WHERE user_id = ? LIMIT 1");
+  $stmtU->execute([(int)$_SESSION['user_id']]);
+  $u = $stmtU->fetch(PDO::FETCH_ASSOC);
+  if ($u) {
+    $prefillName  = $u['full_name'] ?? $prefillName;
+    $prefillEmail = $u['email'] ?? '';
+    $prefillPhone = $u['phone'] ?? '';
+  }
+}
+
+// دالة بسيطة لتنظيف الهاتف
+function normalizePhone($phone) {
+  $phone = trim($phone);
+  // السماح بالأرقام و + والمسافات والشرطات
+  $phone = preg_replace('/[^\d\+\-\s]/u', '', $phone);
+  // إزالة تكرار المسافات
+  $phone = preg_replace('/\s+/', ' ', $phone);
+  return $phone;
+}
+
+// معالجة الإرسال
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $name    = trim($_POST['name'] ?? '');
+  $email   = trim($_POST['email'] ?? '');
+  $phone   = normalizePhone($_POST['phone'] ?? '');
+  $subject = trim($_POST['subject'] ?? '');
+  $message = trim($_POST['message'] ?? '');
+
+  if ($name === '' || mb_strlen($name) < 3) $errors[] = "الاسم مطلوب (3 أحرف على الأقل).";
+  if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "البريد الإلكتروني غير صحيح.";
+
+  // الهاتف: اجعله "مطلوب" إذا رغبت
+  // حاليًا: اختياري، لكن إن كُتب يجب أن يكون بطول منطقي
+  if ($phone !== '') {
+    if (mb_strlen($phone) < 8 || mb_strlen($phone) > 20) {
+      $errors[] = "رقم الهاتف غير صحيح (يجب أن يكون بين 8 و20 خانة تقريبًا).";
+    }
+  }
+
+  if ($subject === '' || mb_strlen($subject) < 3) $errors[] = "الموضوع مطلوب (3 أحرف على الأقل).";
+  if ($message === '' || mb_strlen($message) < 10) $errors[] = "الرسالة مطلوبة (10 أحرف على الأقل).";
+
+  if (!$errors) {
+    $userId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : null;
+
+    $stmt = $pdo->prepare("
+      INSERT INTO contact_messages (user_id, name, email, phone, subject, message)
+      VALUES (?, ?, ?, ?, ?, ?)
+    ");
+    $stmt->execute([$userId, $name, $email, ($phone !== '' ? $phone : null), $subject, $message]);
+
+    $success = "تم إرسال رسالتك بنجاح. سيتم الرد عليك في أقرب وقت.";
+
+    // تفريغ الحقول بعد الإرسال
+    $name = $email = $phone = $subject = $message = '';
+  }
+} else {
+  // القيم الافتراضية عند فتح الصفحة
+  $name    = $prefillName;
+  $email   = $prefillEmail;
+  $phone   = $prefillPhone;
+  $subject = '';
+  $message = '';
+}
+?>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تواصل معنا</title>
+  <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
+  <style>
+    .contact-wrap { max-width: 720px; margin: 30px auto; background:#fff; padding:18px; border-radius:12px; border:1px solid #e5e5e5; }
+    .contact-wrap h2 { margin: 0 0 12px 0; }
+    .contact-info { padding:12px; border:1px solid #eee; border-radius:10px; background:#fafafa; margin-bottom:12px; }
+    .form-row { margin-bottom: 12px; }
+    label { display:block; margin-bottom:6px; font-weight:600; }
+    input[type="text"], input[type="email"], textarea {
+      width:100%; padding:10px; border:1px solid #ccc; border-radius:10px; outline:none;
+    }
+    textarea { min-height: 140px; resize: vertical; }
+    button { width:100%; padding:10px; border:0; border-radius:10px; cursor:pointer; background:#0077b6; color:#fff; font-weight:600; }
+    .alert { padding:10px; border-radius:10px; margin-bottom:12px; }
+    .alert-success { background:#e7f7ee; border:1px solid #bfe7cf; color:#1b5e20; }
+    .alert-error { background:#fdeaea; border:1px solid #f5b5b5; color:#8a1c1c; }
+    .small-note { color:#666; font-size:13px; margin-top:8px; }
+    .contact-info a { text-decoration:none; }
+  </style>
+</head>
+<body>
+
+<?php include(__DIR__ . "/includes/header.php"); ?>
+
+<div class="contact-wrap">
+  <h2>تواصل معنا</h2>
+
+  <?php if ($success): ?>
+    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+  <?php endif; ?>
+
+  <?php if ($errors): ?>
+    <div class="alert alert-error">
+      <ul style="margin:0; padding-right:18px;">
+        <?php foreach ($errors as $e): ?>
+          <li><?= htmlspecialchars($e) ?></li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  <?php endif; ?>
+
+  <form method="POST">
+    <div class="form-row">
+      <label>الاسم</label>
+      <input type="text" name="name" value="<?= htmlspecialchars($name) ?>" required>
+    </div>
+
+    <div class="form-row">
+      <label>البريد الإلكتروني</label>
+      <input type="email" name="email" value="<?= htmlspecialchars($email) ?>" required>
+    </div>
+
+    <div class="form-row">
+      <label>رقم الهاتف (اختياري)</label>
+      <input type="text" name="phone" value="<?= htmlspecialchars($phone) ?>" placeholder="مثال: 079xxxxxxx أو +9627xxxxxxxx">
+      <div class="small-note">يساعدنا رقم الهاتف على التواصل معك بسرعة عند الحاجة.</div>
+    </div>
+
+    <div class="form-row">
+      <label>الموضوع</label>
+      <input type="text" name="subject" value="<?= htmlspecialchars($subject) ?>" required>
+    </div>
+
+    <div class="form-row">
+      <label>الرسالة</label>
+      <textarea name="message" required><?= htmlspecialchars($message) ?></textarea>
+      <div class="small-note">يرجى كتابة تفاصيل واضحة لتسهيل الرد.</div>
+    </div>
+
+    <button type="submit">إرسال</button>
+  </form>
+</div>
+
+<?php include(__DIR__ . "/includes/footer.php"); ?>
+
+</body>
+</html>

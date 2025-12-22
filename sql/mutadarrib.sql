@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 21, 2025 at 10:59 PM
+-- Generation Time: Dec 22, 2025 at 07:04 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -20,22 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `mutadarrib`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `audit_logs`
---
-
-CREATE TABLE `audit_logs` (
-  `log_id` bigint(20) NOT NULL,
-  `entity` varchar(100) DEFAULT NULL,
-  `entity_id` varchar(100) DEFAULT NULL,
-  `action` varchar(50) DEFAULT NULL,
-  `performed_by` int(11) DEFAULT NULL,
-  `details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`details`)),
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -64,6 +48,36 @@ CREATE TABLE `calendar_events` (
 INSERT INTO `calendar_events` (`event_id`, `user_id`, `title`, `description`, `start_at`, `end_at`, `all_day`, `type`, `reminder_minutes`, `created_at`, `updated_at`) VALUES
 (1, 27, 'تجربة', 'تجربة', '2025-12-21 21:05:00', '2025-12-22 00:00:00', 1, 'event', 10, '2025-12-21 20:21:43', '2025-12-21 20:53:49'),
 (2, 3, 'تجربة 2', 'تجربة 2تجربة 2تجربة 2تجربة 2', '2025-12-22 21:00:00', '2025-12-23 00:00:00', 1, 'task', 1440, '2025-12-21 20:59:50', '2025-12-21 20:59:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact_messages`
+--
+
+CREATE TABLE `contact_messages` (
+  `message_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `name` varchar(150) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `phone` varchar(10) DEFAULT NULL,
+  `subject` varchar(200) NOT NULL,
+  `message` text NOT NULL,
+  `status` enum('new','read','closed') NOT NULL DEFAULT 'new',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `contact_messages`
+--
+
+INSERT INTO `contact_messages` (`message_id`, `user_id`, `name`, `email`, `phone`, `subject`, `message`, `status`, `created_at`) VALUES
+(1, NULL, 'Ahmad Ghanem', 'ahmad@example.com', NULL, 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:41:08'),
+(2, NULL, 'Ahmad Ghanem', 'ahmad@example.com', NULL, 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:41:55'),
+(3, NULL, 'Ahmad Ghanem', 'ahmad@example.com', NULL, 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:42:14'),
+(4, NULL, 'Ahmad Ghanem', 'ahmad@example.com', NULL, 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:42:22'),
+(5, NULL, 'moh', 'moh@example.com', '+962780000', 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:42:34'),
+(6, NULL, 'moh', 'moh@example.com', '+962780000', 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:42:57');
 
 -- --------------------------------------------------------
 
@@ -102,7 +116,7 @@ CREATE TABLE `lawyers` (
 --
 
 INSERT INTO `lawyers` (`lawyer_id`, `user_id`, `syndicate_id`, `office_address`, `password`, `verified`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `highschool_certificate`, `university_degree`, `social_security_number`) VALUES
-(10, 26, 1, 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 1, '2025-11-29 17:26:12', '2025-12-22 00:40:50', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '', '', '', 'لا', 'دكتوراه', NULL),
+(10, 26, 1, 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 1, '2025-11-29 17:26:12', '2025-12-22 20:57:59', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '', '', '', 'لا', 'دكتوراه', NULL),
 (11, 28, 9, 'إربد – وسط البلد20', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 1, '2025-11-29 20:37:07', '2025-12-20 23:16:57', 'يوسف محمود علي الديري', 'يوسف', 'محمود', 'علي', 'الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', NULL, NULL, 'نعم', 'نعم', 'بكالوريوس', '1000000002');
 
 -- --------------------------------------------------------
@@ -150,20 +164,6 @@ INSERT INTO `lawyers_syndicate` (`syndicate_id`, `lawyer_name`, `national_id`, `
 (15, 'سامر يوسف المحادين', '1000000008', 'السلط – المدينة', '0790000008', 'lawyer8@test.com', NULL, '2025-11-29 19:50:19', 'سامر يوسف جابر المحادين', 'سامر', 'يوسف', 'جابر', 'المحادين', 'نعم', 'ماجستير', NULL, NULL, 'لا', NULL),
 (16, 'سامي عارف الكساسبة', '1000000009', 'العقبة – الجنوب', '0790000009', 'lawyer9@test.com', NULL, '2025-11-29 19:50:19', 'سامي عارف سالم الكساسبة', 'سامي', 'عارف', 'سالم', 'الكساسبة', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
 (17, 'بهاء ناصر العجارمة', '1000000010', 'عمّان – تلاع العلي', '0790000010', 'lawyer10@test.com', NULL, '2025-11-29 19:50:19', 'بهاء ناصر طلال العجارمة', 'بهاء', 'ناصر', 'طلال', 'العجارمة', 'نعم', 'دكتوراه', NULL, NULL, 'لا', NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `notifications`
---
-
-CREATE TABLE `notifications` (
-  `notification_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `message` text NOT NULL,
-  `is_read` tinyint(1) DEFAULT 0,
-  `created_at` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -310,7 +310,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `address`, `password`, `role`, `created_at`, `updated_at`, `profile_completed`, `profile_completed_at`) VALUES
 (1, 'admin', '0000000000', '0790000000', 'admin@example.com', 'Head Office', '$2y$10$btXC0u5ep0CjLg87dlFAjOzJHipd54ijGMDmFsEGGQetAtgx6ObDi', 'admin', '2025-11-12 00:28:19', '2025-11-14 01:19:45', 0, NULL),
 (3, 'موظف نقابة رقم 1', '9999999999', '0799999999', 'syndicate_admin@example.com', 'النقابة', '$2y$10$Azlsa2XqFhNZHWBkRwlT9.JlDKgcX/BrgpM5d/YgGZ1L1iTZVfAFe', 'syndicate_admin', '2025-12-11 23:35:03', '2025-12-12 17:48:52', 0, NULL),
-(26, 'محمد احمد محمد المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 'lawyer', '2025-11-29 17:26:12', '2025-12-22 00:41:05', 0, '0000-00-00 00:00:00'),
+(26, 'محمد احمد محمد المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 'lawyer', '2025-11-29 17:26:12', '2025-12-22 20:58:22', 0, '0000-00-00 00:00:00'),
 (27, 'محمد أحمد مصطفى الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', '$2y$10$KiNjGQHAmt4wCVQPzEZlAODYuM0tRreeUdbZ9.aSkz/u9R.nhiV0a', 'trainee', '2025-11-29 19:53:21', '2025-12-22 00:14:50', 0, '0000-00-00 00:00:00'),
 (28, 'يوسف محمود علي الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 'lawyer', '2025-11-29 20:37:07', '2025-12-11 23:26:26', 0, NULL);
 
@@ -319,18 +319,18 @@ INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `a
 --
 
 --
--- Indexes for table `audit_logs`
---
-ALTER TABLE `audit_logs`
-  ADD PRIMARY KEY (`log_id`),
-  ADD KEY `fk_audit_user` (`performed_by`);
-
---
 -- Indexes for table `calendar_events`
 --
 ALTER TABLE `calendar_events`
   ADD PRIMARY KEY (`event_id`),
   ADD KEY `idx_calendar_user_start` (`user_id`,`start_at`);
+
+--
+-- Indexes for table `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  ADD PRIMARY KEY (`message_id`),
+  ADD KEY `idx_user_id` (`user_id`);
 
 --
 -- Indexes for table `lawyers`
@@ -343,12 +343,6 @@ ALTER TABLE `lawyers`
 --
 ALTER TABLE `lawyers_syndicate`
   ADD PRIMARY KEY (`syndicate_id`);
-
---
--- Indexes for table `notifications`
---
-ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`notification_id`);
 
 --
 -- Indexes for table `syndicate_exam_requests`
@@ -392,6 +386,12 @@ ALTER TABLE `calendar_events`
   MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `lawyers`
 --
 ALTER TABLE `lawyers`
@@ -402,12 +402,6 @@ ALTER TABLE `lawyers`
 --
 ALTER TABLE `lawyers_syndicate`
   MODIFY `syndicate_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
-
---
--- AUTO_INCREMENT for table `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `syndicate_exam_requests`

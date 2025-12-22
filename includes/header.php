@@ -97,7 +97,7 @@ if (isset($_SESSION['user_id'])) {
   <div class="logo">متدرب</div>
   <ul class="nav-links">
     <li><a href="/mutadarrib/index.php">الرئيسية</a></li>
-    <li><a href="#about">من نحن</a></li>
+    <li><a href="/mutadarrib/contact.php">تواصل معنا</a></li>
     <li><a href="#services">الخدمات</a></li>
 
 <?php if (isset($_SESSION['user_id'])): ?>
