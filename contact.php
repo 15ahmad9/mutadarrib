@@ -81,25 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <title>تواصل معنا</title>
-  <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
-  <style>
-    .contact-wrap { max-width: 720px; margin: 30px auto; background:#fff; padding:18px; border-radius:12px; border:1px solid #e5e5e5; }
-    .contact-wrap h2 { margin: 0 0 12px 0; }
-    .contact-info { padding:12px; border:1px solid #eee; border-radius:10px; background:#fafafa; margin-bottom:12px; }
-    .form-row { margin-bottom: 12px; }
-    label { display:block; margin-bottom:6px; font-weight:600; }
-    input[type="text"], input[type="email"], textarea {
-      width:100%; padding:10px; border:1px solid #ccc; border-radius:10px; outline:none;
-    }
-    textarea { min-height: 140px; resize: vertical; }
-    button { width:100%; padding:10px; border:0; border-radius:10px; cursor:pointer; background:#0077b6; color:#fff; font-weight:600; }
-    .alert { padding:10px; border-radius:10px; margin-bottom:12px; }
-    .alert-success { background:#e7f7ee; border:1px solid #bfe7cf; color:#1b5e20; }
-    .alert-error { background:#fdeaea; border:1px solid #f5b5b5; color:#8a1c1c; }
-    .small-note { color:#666; font-size:13px; margin-top:8px; }
-    .contact-info a { text-decoration:none; }
-  </style>
-</head>
+  <link rel="stylesheet" href="/mutadarrib/assets/css/style.css"></head>
 <body>
 
 <?php include(__DIR__ . "/includes/header.php"); ?>
@@ -113,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <?php if ($errors): ?>
     <div class="alert alert-error">
-      <ul style="margin:0; padding-right:18px;">
+      <ul class="contact-list">
         <?php foreach ($errors as $e): ?>
           <li><?= htmlspecialchars($e) ?></li>
         <?php endforeach; ?>

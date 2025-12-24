@@ -229,14 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <title>تعديل بيانات المحامي</title>
-<link rel="stylesheet" href="../../assets/css/admin.css">
-<style>
-.container { width: 70%; margin: 30px auto; background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #ddd; }
-label { display:block; margin-top:10px; }
-input, select, button { width:100%; padding:8px; border-radius:6px; border:1px solid #ccc; margin-top:5px; }
-button { background:#0077b6; color:#fff; border:none; cursor:pointer; margin-top:15px; }
-</style>
-</head>
+<link rel="stylesheet" href="../../assets/css/admin.css"></head>
 <body>
 
 <div class="admin-container">

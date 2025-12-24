@@ -89,11 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <title>تعديل بيانات الطالب</title>
-<style>
-.container { width:60%; margin:40px auto; background:#fff; padding:25px; border-radius:10px; }
-input, select { width:100%; padding:8px; border-radius:6px; border:1px solid #ccc; margin-top:5px; }
-button { margin-top:15px; padding:10px; background:#0077b6; color:white; border:none; border-radius:6px; }
-</style>
+<link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
 </head>
 <body>
 

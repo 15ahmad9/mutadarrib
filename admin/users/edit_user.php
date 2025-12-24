@@ -62,25 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <title>تعديل المستخدم</title>
-
-<style>
-.container {
-  width: 60%; margin: 40px auto; background: #fff; padding: 25px; 
-  border-radius: 10px; box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-}
-label { display: block; margin-top: 10px; }
-input, select {
-  width: 100%; padding: 8px; border-radius: 6px;
-  border: 1px solid #ccc; margin-top: 5px;
-}
-button {
-  margin-top: 15px; padding: 10px;
-  background: #0077b6; color: white;
-  border: none; border-radius: 6px; cursor: pointer;
-}
-button:hover { opacity: 0.8; }
-</style>
-
+<link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
 </head>
 <body>
 

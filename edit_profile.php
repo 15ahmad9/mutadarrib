@@ -73,17 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <title>تعديل الملف الشخصي | <?= htmlspecialchars($user['full_name']) ?></title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <style>
-    .edit-profile-page { max-width: 600px; margin: 40px auto; background:#fff; padding:25px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
-    .edit-form label { display:block; margin-top:10px; }
-    .edit-form input { width:100%; padding:8px; border:1px solid #ccc; border-radius:6px; margin-top:5px; }
-    .btn { margin-top:15px; padding:10px 15px; background:#0077b6; color:#fff; border:none; border-radius:6px; cursor:pointer; }
-    .btn:hover { opacity:0.9; }
-    .btn-cancel { margin-left:10px; text-decoration:none; background:#6c757d; color:#fff; padding:10px 15px; border-radius:6px; }
-    .alert { margin-top:10px; color: green; }
-  </style>
-</head>
+  <link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
 
 <?php include("includes/header.php"); ?>

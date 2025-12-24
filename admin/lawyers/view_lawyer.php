@@ -93,35 +93,7 @@ $goodCondUrl = fileUrl($lawyer['good_conduct_doc'] ?? null);
 <head>
 <meta charset="UTF-8">
 <title>عرض بيانات المحامي</title>
-<link rel="stylesheet" href="../../assets/css/admin.css">
-<style>
-.admin-wrap { display:flex; gap:15px; }
-.container { width:100%; padding:10px; }
-.card {
-    background:#fff; border:1px solid #ddd; border-radius:10px;
-    padding:15px; margin-top:15px;
-}
-.grid {
-    display:grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap:10px;
-}
-.item { background:#f8f9fa; border:1px solid #eee; border-radius:8px; padding:10px; }
-.label { color:#444; font-weight:700; margin-bottom:5px; }
-.value { color:#111; }
-.badge { padding:3px 10px; border-radius:14px; color:#fff; font-size:12px; display:inline-block; }
-.badge-yes { background:#2d6a4f; }
-.badge-no { background:#d62828; }
-table { width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
-th, td { padding:8px; border:1px solid #ccc; text-align:center; }
-th { background:#0077b6; color:#fff; }
-.btn {
-    display:inline-block; padding:7px 12px; border-radius:8px;
-    color:#fff; text-decoration:none; background:#0077b6;
-}
-.btn-secondary { background:#6c757d; }
-a.file-link { color:#0b5ed7; text-decoration:underline; }
-</style>
-</head>
+<link rel="stylesheet" href="../../assets/css/admin.css"></head>
 <body>
 
 <div class="admin-container">

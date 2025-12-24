@@ -1,19 +1,15 @@
+<?php include("../includes/header.php"); ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>اختيار التخصص</title>
-<style>
-body { font-family: Arial; background:#f4f4f4; }
-.container { width: 400px; margin: 70px auto; background:white; padding:20px; border-radius:8px; box-shadow:0 0 10px #ccc; }
-select, button { width:100%; padding:10px; margin-top:10px; border-radius:6px; border:1px solid #aaa; }
-button { background:#0077b6; color:white; cursor:pointer; }
-.disabled-option { color:#888; }
-</style>
+<link rel="stylesheet" href="../assets/css/style.css">
+
 </head>
 <body>
 
-<div class="container">
+<div class="form-card auth-choice">
     <h2>اختر التخصص للتسجيل</h2>
 
     <label>اختر التخصص:</label>
@@ -68,3 +64,5 @@ function goToRegister() {
 
 </body>
 </html>
+
+<?php include("../includes/footer.php"); ?>

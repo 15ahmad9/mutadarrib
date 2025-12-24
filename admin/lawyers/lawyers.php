@@ -50,22 +50,7 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
 <meta charset="UTF-8">
 <title>إدارة المحامين</title>
-<link rel="stylesheet" href="../../assets/css/admin.css">
-<style>
-table { width:100%; border-collapse:collapse; margin-top:20px; font-size:14px; }
-th, td { padding:8px; border:1px solid #ccc; text-align:center; vertical-align:middle; }
-th { background:#0077b6; color:#fff; }
-.btn { padding:6px 10px; border-radius:6px; color:white; text-decoration:none; display:inline-block; }
-.edit-btn { background:#0096c7; }
-.verify-btn { background:#2d6a4f; }
-.unverify-btn { background:#6c757d; }
-.view-btn { background:#4c6ef5; }
-.badge { padding:3px 8px; border-radius:12px; color:#fff; font-size:12px; display:inline-block; }
-.badge-yes { background:#2d6a4f; }
-.badge-no { background:#d62828; }
-.actions a { margin:2px; }
-</style>
-</head>
+<link rel="stylesheet" href="../../assets/css/admin.css"></head>
 <body>
 
 <h2>إدارة المحامين</h2>

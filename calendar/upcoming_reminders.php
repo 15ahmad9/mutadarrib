@@ -68,21 +68,7 @@ function formatRemaining($startAt) {
 <head>
   <meta charset="UTF-8">
   <title>تذكيرات التقويم</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <style>
-    .wrap { max-width: 1100px; margin: 20px auto; background:#fff; border:1px solid #ddd; border-radius:10px; padding:15px; }
-    h2 { margin: 0 0 10px; }
-    .section { margin-top: 18px; }
-    table { width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
-    th, td { border:1px solid #ddd; padding:8px; text-align:center; vertical-align:middle; }
-    th { background:#0077b6; color:#fff; }
-    .badge { display:inline-block; padding:3px 10px; border-radius:12px; color:#fff; font-size:12px; }
-    .badge-now { background:#d62828; }
-    .badge-up { background:#2d6a4f; }
-    .muted { color:#666; font-size:13px; }
-    .actions a { text-decoration:none; color:#0077b6; }
-  </style>
-</head>
+  <link rel="stylesheet" href="../assets/css/style.css"></head>
 <body>
 
 <?php include("../includes/header.php"); ?>

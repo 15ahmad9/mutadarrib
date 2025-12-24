@@ -107,51 +107,7 @@ if ($hasCompleted) {
 <head>
 <meta charset="UTF-8">
 <title>إشعاراتي</title>
-<link rel="stylesheet" href="../assets/css/style.css">
-<style>
-.alert-exam {
-    background:#e6ffed;
-    border:1px solid #16a34a;
-    padding:10px 15px;
-    border-radius:8px;
-    margin-bottom:15px;
-    color:#166534;
-    font-weight:bold;
-}
-.alert-exam-warning {
-    background:#fef3c7;
-    border:1px solid #d97706;
-    padding:10px 15px;
-    border-radius:8px;
-    margin-bottom:15px;
-    color:#92400e;
-    font-weight:bold;
-}
-.alert-exam-danger {
-    background:#fee2e2;
-    border:1px solid #b91c1c;
-    padding:10px 15px;
-    border-radius:8px;
-    margin-bottom:15px;
-    color:#991b1b;
-    font-weight:bold;
-}
-.unread-row {
-    background:#fff8e1;
-}
-.btn-inline {
-    display:inline-block;
-    margin-top:8px;
-    padding:6px 12px;
-    border-radius:6px;
-    background:#2563eb;
-    color:#fff;
-    text-decoration:none;
-    font-size:13px;
-}
-.btn-inline:hover { opacity:0.9; }
-</style>
-</head>
+<link rel="stylesheet" href="../assets/css/style.css"></head>
 <body>
 
 <?php include("../includes/header.php"); ?>

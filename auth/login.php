@@ -1,6 +1,8 @@
 <?php
+
 session_start();
 require_once("../config/db.php");
+include("../includes/header.php");
 
 $message = "";
 
@@ -166,3 +168,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </body>
 </html>
+<?php include("../includes/footer.php"); ?>

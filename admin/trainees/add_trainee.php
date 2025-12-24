@@ -66,12 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <title>إضافة متدرب جديد</title>
-<style>
-.container { width:60%; margin:40px auto; background:#fff; padding:25px; border-radius:10px; }
-input, select { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:6px; }
-button { margin-top:15px; padding:10px; background:#0077b6; color:white; border:none; border-radius:6px; }
-</style>
-</head>
+<link rel="stylesheet" href="/mutadarrib/assets/css/admin.css"></head>
 <body>
 
 <div class="container">

@@ -125,35 +125,7 @@ if ($tab === 'trainees') {
   <meta charset="UTF-8">
   <title><?= htmlspecialchars($page_title) ?></title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
-    <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css">
-
-  <style>
-    .wrap { padding: 15px; }
-    .tabs a { padding:8px 12px; display:inline-block; text-decoration:none; border-radius:8px; border:1px solid #ddd; margin-left:6px; }
-    .tabs a.active { background:#0077b6; color:#fff; border-color:#0077b6; }
-
-    table { width:100%; border-collapse:collapse; margin-top:15px; font-size:14px; }
-    th, td { border:1px solid #ddd; padding:8px; text-align:center; vertical-align:middle; }
-    th { background:#0077b6; color:#fff; }
-
-    .badge { display:inline-block; padding:3px 10px; border-radius:12px; color:#fff; font-size:12px; }
-    .ok { background:#2d6a4f; }
-    .no { background:#d62828; }
-
-    .btn { padding:6px 10px; border-radius:7px; color:white; text-decoration:none; display:inline-block; margin:2px; }
-    .btn-view { background:#4c6ef5; }
-    .btn-dl { background:#2d6a4f; }
-    .btn-muted { background:#6c757d; }
-
-    .topbar { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
-    input[type="text"] { padding:8px; border:1px solid #ccc; border-radius:8px; min-width:260px; }
-    button { padding:8px 12px; border:0; border-radius:8px; background:#0077b6; color:#fff; cursor:pointer; }
-
-    .filter-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-    .check { display:flex; gap:6px; align-items:center; user-select:none; }
-    .muted { color:#666; font-size:13px; margin-top:6px; }
-  </style>
-</head>
+    <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css"></head>
 <body>
 
 <?php

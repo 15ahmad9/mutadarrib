@@ -18,7 +18,9 @@ if (!$user) {
 }
 ?>
 <html dir="rtl">
-<head><meta charset="utf-8"><title>تفاصيل المستخدم</title></head>
+<head><meta charset="utf-8"><title>تفاصيل المستخدم</title>
+<link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
+</head>
 <body>
 
 <div class="container">

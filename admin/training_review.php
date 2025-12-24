@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p><strong>تاريخ التقديم:</strong> <?= htmlspecialchars($app['applied_at']) ?></p>
     </div>
 
-    <form method="POST">
+    <form method="POST" style="padding: 15px;">
         <label>تحديث الحالة:</label>
         <select name="status" required>
             <option value="pending"   <?= $app['status']==='pending'?'selected':'' ?>>pending</option>

@@ -18,31 +18,7 @@ if (!isset($_SESSION['user_id'])) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 
-  <link rel="stylesheet" href="../assets/css/style.css">
-
-  <style>
-    .page-wrap { max-width: 1100px; margin: 20px auto; background:#fff; border:1px solid #ddd; border-radius:10px; padding:15px; }
-    #calendar { margin-top: 15px; }
-    .modal-backdrop {
-      display:none; position:fixed; inset:0; background:rgba(0,0,0,.45);
-      align-items:center; justify-content:center; z-index:9999;
-    }
-    .modal {
-      width:min(680px, 92vw); background:#fff; border-radius:12px; padding:16px; border:1px solid #ddd;
-    }
-    .row { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    label { display:block; margin-top:10px; font-weight:600; }
-    input, select, textarea { width:100%; padding:8px; border:1px solid #ccc; border-radius:8px; margin-top:6px; }
-    textarea { min-height:90px; resize:vertical; }
-    .actions { display:flex; gap:8px; justify-content:flex-start; margin-top:14px; flex-wrap:wrap; }
-    .btn { padding:9px 14px; border:none; border-radius:8px; cursor:pointer; }
-    .btn-primary { background:#0077b6; color:#fff; }
-    .btn-danger  { background:#d62828; color:#fff; }
-    .btn-muted   { background:#6c757d; color:#fff; }
-    .hint { font-size:12px; color:#666; margin-top:6px; }
-    .topbar { display:flex; align-items:center; justify-content:space-between; gap:10px; }
-  </style>
-</head>
+  <link rel="stylesheet" href="../assets/css/style.css"></head>
 <body>
 
 <?php include("../includes/header.php"); ?>

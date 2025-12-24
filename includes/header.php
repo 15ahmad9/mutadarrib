@@ -11,7 +11,6 @@ if (!isset($pdo)) {
 $notificationsCount = 0;
 
 if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && $_SESSION['role'] === 'trainee') {
-
   $userId = (int)$_SESSION['user_id'];
 
   $stmtNotif = $pdo->prepare("
@@ -58,91 +57,58 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 
-<link rel="stylesheet" href="../../assets/css/style.css">
-
-<!-- يمكن إضافة بعض التنسيقات البسيطة للإشعارات -->
-<style>
-  .nav-notifications {
-    position: relative;
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-
-  .nav-notifications a {
-    text-decoration: none;
-    font-size: 20px;
-    position: relative;
-  }
-
-  .nav-badge-link {
-    font-size: 14px;
-    color: inherit;
-  }
-
-  .notif-badge {
-    position: absolute;
-    top: -6px;
-    right: -10px;
-    background: red;
-    color: #fff;
-    font-size: 11px;
-    border-radius: 50%;
-    padding: 2px 6px;
-    min-width: 18px;
-    text-align: center;
-  }
-</style>
-
 <nav class="navbar">
   <div class="logo">متدرب</div>
+
   <ul class="nav-links">
     <li><a href="/mutadarrib/index.php">الرئيسية</a></li>
     <li><a href="/mutadarrib/contact.php">تواصل معنا</a></li>
-    <li><a href="#services">الخدمات</a></li>
+    <li><a href="/mutadarrib/index.php#services">الخدمات</a></li>
 
-<?php if (isset($_SESSION['user_id'])): ?>
+    <?php if (isset($_SESSION['user_id'])): ?>
 
-  <?php
-    $role = $_SESSION['role'];
-    $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'متدرب' : (($role === 'syndicate_admin') ? 'موظف النقابة' : 'مدير'));
-  ?>
+      <?php
+        $role = $_SESSION['role'] ?? '';
+        $role_ar = ($role === 'lawyer')
+          ? 'مزاول'
+          : (($role === 'trainee')
+              ? 'متدرب'
+              : (($role === 'syndicate_admin') ? 'موظف النقابة' : 'مدير'));
+      ?>
 
-  <?php if ($role === 'trainee'): ?>
-    <li><a href="/mutadarrib/trainee/training_progress.php">مدة التدريب</a></li>
-  <?php endif; ?>
-
-  <li><a href="/mutadarrib/calendar/calendar.php">التقويم</a></li>
-
-<?php if (isset($_SESSION['user_id'])): ?>
-  <li class="nav-notifications">
-    <a class="nav-badge-link" href="/mutadarrib/calendar/upcoming_reminders.php" title="تذكيرات التقويم القريبة">
-      تذكيرات
-      <?php if ($calendarRemindersCount > 0): ?>
-        <span class="notif-badge"><?= $calendarRemindersCount ?></span>
+      <?php if ($role === 'trainee'): ?>
+        <li><a href="/mutadarrib/trainee/training_progress.php">مدة التدريب</a></li>
       <?php endif; ?>
-    </a>
-  </li>
-<?php endif; ?>
 
+      <li><a href="/mutadarrib/calendar/calendar.php">التقويم</a></li>
 
-  <!-- إشعارات التدريب (متدرب فقط) -->
-  <?php if ($role === 'trainee'): ?>
-    <li class="nav-notifications">
-      <a href="/mutadarrib/trainee/notifications.php" title="إشعارات طلبات التدريب">
-        🔔
-        <?php if ($notificationsCount > 0): ?>
-          <span class="notif-badge"><?= $notificationsCount ?></span>
-        <?php endif; ?>
-      </a>
-    </li>
-  <?php endif; ?>
+      <li class="nav-notifications">
+        <a class="nav-badge-link" href="/mutadarrib/calendar/upcoming_reminders.php" title="تذكيرات التقويم القريبة">
+          تذكيرات
+          <?php if ($calendarRemindersCount > 0): ?>
+            <span class="notif-badge"><?= $calendarRemindersCount ?></span>
+          <?php endif; ?>
+        </a>
+      </li>
 
+      <!-- إشعارات التدريب (متدرب فقط) -->
+      <?php if ($role === 'trainee'): ?>
+        <li class="nav-notifications">
+          <a href="/mutadarrib/trainee/notifications.php" title="إشعارات طلبات التدريب">
+            🔔
+            <?php if ($notificationsCount > 0): ?>
+              <span class="notif-badge"><?= $notificationsCount ?></span>
+            <?php endif; ?>
+          </a>
+        </li>
+      <?php endif; ?>
 
       <!-- قائمة المستخدم -->
       <li class="user-dropdown">
         <button class="user-toggle" id="userToggle">
-          <?= htmlspecialchars($_SESSION['full_name']); ?> (<?= $role_ar; ?>) ▾
+          <?= htmlspecialchars($_SESSION['full_name'] ?? ''); ?> (<?= $role_ar; ?>) ▾
         </button>
+
         <ul class="dropdown-menu" id="dropdownMenu">
           <li><a href="/mutadarrib/profile.php">الملف الشخصي</a></li>
 
@@ -163,8 +129,8 @@ if (isset($_SESSION['user_id'])) {
       </li>
 
     <?php else: ?>
-      <li><a href="./auth/login.php" class="login-btn">تسجيل الدخول</a></li>
-      <li><a href="./auth/choose_specialization.php" class="register-btn">إنشاء حساب</a></li>
+      <li><a href="/mutadarrib/auth/login.php" class="login-btn">تسجيل الدخول</a></li>
+      <li><a href="/mutadarrib/auth/choose_specialization.php" class="register-btn">إنشاء حساب</a></li>
     <?php endif; ?>
   </ul>
 </nav>

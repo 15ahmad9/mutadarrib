@@ -1,5 +1,7 @@
-<?php
+<?php 
 require_once("../config/db.php");
+include("../includes/header.php");
+
 $message = "";
 
 // عند الضغط على تسجيل
@@ -212,17 +214,10 @@ $user_id = $pdo->lastInsertId();
 <meta charset="UTF-8">
 <title>تسجيل محامي</title>
 <link rel="stylesheet" href="../assets/css/style.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<style>
-input, select { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:6px; }
-button { margin-top:15px; padding:10px; background:#0077b6; color:white; border:none; border-radius:6px; cursor:pointer; }
-button:hover { opacity:0.9; }
-.container { width:450px; margin:40px auto; background:white; padding:20px; border-radius:8px; box-shadow:0 0 10px #ccc; }
-</style>
-</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head>
 <body>
 
-<div class="container">
+<div class="form-card">
 <h2>إنشاء حساب</h2>
 <?= $message ?>
 
@@ -250,7 +245,7 @@ button:hover { opacity:0.9; }
     <input type="text" name="family_name" id="family_name">
 
     <label>الاسم الكامل:</label>
-    <input type="text" name="full_name" id="full_name" readonly style="background:#f0f0f0;">
+    <input type="text" name="full_name" id="full_name" readonly class="readonly">
 
     <label>هل يوجد ضمان اجتماعي؟</label>
     <select id="has_social_security" name="has_social_security">
@@ -349,3 +344,4 @@ $("#national_id").on("keyup change", function(){
 
 </body>
 </html>
+<?php include("../includes/footer.php"); ?>

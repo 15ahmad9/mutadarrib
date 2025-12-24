@@ -15,7 +15,7 @@
 <section class="hero">
   <h1>مرحبًا بك في منصة <span style="color:#ffd700;">متدرب</span></h1>
   <p>منصة للتدريب المهني تربط الخريجين بجهات التدريب المعتمدة في مختلف التخصصات.</p>
-  <button onclick="window.location.href='choose_specialization.php'">ابدأ رحلتك المهنية</button>
+  <button onclick="window.location.href='auth/choose_specialization.php'">ابدأ رحلتك المهنية</button>
 </section>
 
 <!-- ========= ABOUT ========= -->
@@ -67,7 +67,7 @@
 </section>
 
 <!-- ========= SERVICES ========= -->
-<section class="services">
+<section id="services" class="services">
   <h2>خدماتنا</h2>
 
   <div class="cards">

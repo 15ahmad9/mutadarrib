@@ -1,152 +1,252 @@
-body {
-  font-family: "Cairo", sans-serif;
-  background-color: #f4f6f8;
-  direction: rtl;
-  margin: 0;
-  padding: 0;
-}
+@import url('./theme.css');
 
-.admin-container {
-  margin-right: 220px;
-  padding: 20px;
-}
-
-h1 {
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.stats {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-.card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  padding: 20px;
-  flex: 1;
-  text-align: center;
-  font-size: 18px;
-}
-
-.quick-links .btn {
-  display: inline-block;
-  background: #007bff;
-  color: white;
-  padding: 10px 20px;
-  margin: 5px;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: background 0.3s;
-}
-
-.quick-links .btn:hover {
-  background: #0056b3;
-}
-
-
-.admin-sidebar {
-  width: 200px;
-  background-color: #2c3e50;
-  color: white;
-  height: 100vh;
+/* ============================================
+   Admin dashboard + shared (admin/syndicate)
+   Sidebar: RTL on the right
+   ============================================ */
+body { padding-top: var(--header-h); }
+/* ---------- Header ---------- */
+.admin-header{
+  /* position: sticky; */
   position: fixed;
-  right: 0;
   top: 0;
-  padding-top: 60px;
+  z-index: 120;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 18px;
+  background: linear-gradient(250deg, #070031, #556ab1);
+  backdrop-filter: blur(10px);
+  left:0; 
+  right:0;
+  /* border-bottom: 1px solid var(--border); */
 }
-.admin-sidebar ul { list-style: none; padding: 0; }
-.admin-sidebar li { margin: 10px 0; }
-.admin-sidebar a {
-  color: white;
-  text-decoration: none;
-  display: block;
-  padding: 10px 20px;
+
+.admin-header h2{
+  margin: 0;
+  font-size: 18px;
+  color: var(--bg);
 }
-.admin-sidebar a:hover {
-  background-color: #1abc9c;
+
+.user-info{ color: var(--bg); font-weight: 700; }
+
+/* ---------- Mobile toggle (CSS-only) ---------- */
+.dash-sidebar-toggle{
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
 }
-.admin-header {
-  background-color: #34495e;
-  color: white;
-  padding: 15px;
-  text-align: right;
+
+.sidebar-toggle-btn{
+  display: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
-.logout {
-  float: left;
-  color: white;
-  text-decoration: none;
+
+.sidebar-toggle-btn:hover{ background: rgba(65,95,157,0.06); }
+
+.sidebar-backdrop{
+  display: none;
+  position: fixed;
+  inset: 0;
+  top: var(--header-h);
+  background: rgba(12,0,90,0.35);
+  z-index: 90;
 }
-.logout:hover { text-decoration: underline; }
 
+/* ---------- Sidebar ---------- */
+.admin-sidebar{
+  position: fixed;
+  top: var(--header-h);
+  right: 0;
+  left: auto;
+  width: var(--sidebar-w);
+  height: calc(100vh - var(--header-h));
+  background: linear-gradient(210deg, #070031, #556ab1);
+  border-left: 1px solid rgba(255,255,255,0.12);
+  box-shadow: var(--shadow-sm);
+  overflow: auto;
+  padding: 14px;
+  z-index: 110;
+  color: rgba(255,255,255,0.92);
 
-
-.container {
-      width: 90%;
-      margin: 40px auto;
-      background: #fff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
-    }
-    form {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input[type="text"] {
-      padding: 8px;
-      width: 300px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    button {
-      padding: 8px 12px;
-      background-color: #0077b6;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      padding: 10px;
-      text-align: center;
-      border-bottom: 1px solid #ddd;
-    }
-    th {
-      background-color: #0077b6;
-      color: white;
-    }
-    tr:hover {
-      background-color: #f1f1f1;
-    }
-    .no-data {
-      text-align: center;
-      color: #777;
-      margin-top: 20px;
-    }
-
-    .add-btn {
-  background-color: #38b000;
-  color: white;
-  padding: 7px 15px;
-  text-decoration: none;
-  border-radius: 6px;
-  margin-right: 10px;
-  font-weight: bold;
 }
-.add-btn:hover { opacity: 0.8; }
 
+.admin-sidebar ul{ list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
 
+.admin-sidebar a{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  color: rgba(255,255,255,0.92);
+  background: transparent;
+  font-weight: 700;
+}
+
+.admin-sidebar a:hover{
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.18);
+}
+
+/* ---------- Content layout ---------- */
+.admin-container{
+  padding: 18px;
+}
+
+/* Many admin pages render sidebar outside .admin-container, others render it inside.
+   In both cases, keep enough right space on desktop. */
+@media (min-width: 992px){
+  .admin-container{
+    margin-right: calc(var(--sidebar-w) + 16px);
+  }
+
+  /* Some admin pages render headings/search forms before the main container.
+     Ensure they appear "under" the sidebar (i.e., not behind it) on desktop. */
+  body > :is(h1,h2,h3,form[method="GET"],form.filter-row){
+    margin-right: calc(var(--sidebar-w) + 16px);
+    margin-left: 18px;
+  }
+}
+
+@media (max-width: 991px){
+  .sidebar-toggle-btn{ display: inline-flex; }
+
+  .admin-sidebar{
+    transform: translateX(110%);
+    transition: transform .22s ease;
+  }
+
+  .dash-sidebar-toggle:checked ~ .admin-sidebar,
+  .dash-sidebar-toggle:checked ~ .admin-container .admin-sidebar{
+    transform: translateX(0);
+  }
+
+  .dash-sidebar-toggle:checked ~ .sidebar-backdrop{ display: block; }
+
+  .admin-container{ margin-right: 0; }
+}
+
+/* ---------- Dashboard widgets ---------- */
+.stats{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.stats .card{
+  padding: 16px;
+  border-radius: var(--radius);
+}
+
+.quick-links{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.quick-links .btn{ border-radius: 999px; }
+
+/* ---------- Common admin page elements ---------- */
+.no-data{ color: var(--muted); margin-top: 12px; }
+
+.actions{ display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+.edit-btn{ background: #0ea5e9; }
+.edit-btn:hover{ background: #0284c7; }
+
+.view-btn{ background: var(--primary); }
+.view-btn:hover{ background: var(--primary-700); }
+
+.verify-btn{ background: #2d6a4f; }
+.verify-btn:hover{ background: #245842; }
+
+.unverify-btn{ background: #c1121f; }
+.unverify-btn:hover{ background: #a20f1a; }
+
+.delete-btn{ background: #c1121f; }
+.delete-btn:hover{ background: #a20f1a; }
+
+.back-link{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+/* Search/filter rows in admin listings */
+form[method="GET"],
+form.filter-row{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 10px 0;
+}
+
+form[method="GET"] input[type="text"],
+form.filter-row input[type="text"]{
+  width: min(420px, 100%);
+}
+
+/* ---------- Shared pages (documents/contact messages) ---------- */
+.wrap{ padding: 15px; }
+.tabs a{
+  padding: 8px 12px;
+  display: inline-block;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  margin-left: 6px;
+  background: rgba(255,255,255,0.65);
+}
+
+.tabs a.active{
+  background: var(--primary);
+  color: #fff;
+  border-color: rgba(65,95,157,0.5);
+}
+
+.status{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.status.new{ background: #7c3aed; }
+.status.read{ background: var(--primary); }
+.status.closed{ background: #6c757d; }
+.status.waiting_exam{ background: #7c3aed; }
+.status.scheduled{ background: var(--primary); }
+.status.passed{ background: #2d6a4f; }
+.status.failed{ background: #c1121f; }
+
+/* simple view grid in contact messages shared page */
+.view-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 720px){
+  .view-grid{ grid-template-columns: 1fr; }
+}

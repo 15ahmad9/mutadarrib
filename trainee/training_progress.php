@@ -92,25 +92,7 @@ $today = new DateTime('today');
 <head>
 <meta charset="UTF-8">
 <title>مدة التدريب والمتبقي</title>
-<link rel="stylesheet" href="../assets/css/admin.css"> <!-- أو trainee.css حسب مشروعك -->
-<style>
-.container { max-width: 1100px; margin: 20px auto; padding: 15px; background:#fff; border:1px solid #ddd; border-radius:10px; }
-.card { border:1px solid #eee; border-radius:10px; padding:15px; margin-top:15px; background:#fafafa; }
-.grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-.item { background:#fff; border:1px solid #eee; border-radius:8px; padding:10px; }
-.label { font-weight:700; color:#333; margin-bottom:4px; }
-.value { color:#111; }
-.progress-wrap { background:#e9ecef; border-radius:999px; overflow:hidden; height:14px; }
-.progress-bar { height:14px; width:0%; background:#0d6efd; }
-.badge { display:inline-block; padding:3px 10px; border-radius:12px; color:#fff; font-size:12px; }
-.badge-accepted { background:#2d6a4f; }
-.badge-completed { background:#0b7285; }
-.note { color:#666; font-size:13px; margin-top:8px; }
-table { width:100%; border-collapse:collapse; margin-top:12px; font-size:14px; }
-th, td { border:1px solid #ddd; padding:8px; text-align:center; }
-th { background:#0077b6; color:#fff; }
-</style>
-</head>
+<link rel="stylesheet" href="../assets/css/admin.css"> <!-- أو trainee.css حسب مشروعك --></head>
 <body>
 
 <div class="container">

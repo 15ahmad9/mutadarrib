@@ -33,17 +33,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
 <meta charset="UTF-8">
 <title>قائمة المستخدمين</title>
-<link rel="stylesheet" href="../../assets/css/admin.css">
-<style>
-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size:14px; }
-th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-th { background: #0077b6; color: white; }
-a.btn { padding: 5px 10px; border-radius: 6px; color: white; text-decoration: none; }
-.edit-btn { background-color: #00b4d8; }
-.delete-btn { background-color: #d62828; }
-.btn:hover { opacity: 0.8; }
-</style>
-</head>
+<link rel="stylesheet" href="../../assets/css/admin.css"></head>
 <body>
 
 <h2>قائمة المستخدمين</h2>

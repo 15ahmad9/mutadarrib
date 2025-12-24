@@ -152,15 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <title>إكمال الملف الشخصي</title>
-  <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
-  <style>
-    .wrap { max-width: 750px; margin: 25px auto; background:#fff; border:1px solid #ddd; border-radius:10px; padding:16px; }
-    label { display:block; margin-top:12px; font-weight:600; }
-    input[type="file"], button { width:100%; padding:10px; margin-top:6px; }
-    button { background:#0077b6; border:none; color:#fff; border-radius:8px; cursor:pointer; }
-    .note { font-size:13px; color:#666; margin-top:6px; }
-  </style>
-</head>
+  <link rel="stylesheet" href="/mutadarrib/assets/css/style.css"></head>
 <body>
 
 <?php include __DIR__ . "/includes/header.php"; ?>

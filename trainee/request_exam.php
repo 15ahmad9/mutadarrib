@@ -132,24 +132,7 @@ $completedApps = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
 <meta charset="UTF-8">
 <title>طلب امتحان المزاولة</title>
-<link rel="stylesheet" href="../assets/css/style.css">
-<style>
-.table { width:100%; border-collapse: collapse; margin-top:15px; }
-.table th, .table td { border:1px solid #ddd; padding:8px; text-align:right; }
-.table th { background:#f5f5f5; }
-.btn-small {
-    display:inline-block;
-    padding:6px 10px;
-    border-radius:6px;
-    border:none;
-    background:#2563eb;
-    color:#fff;
-    font-size:13px;
-    cursor:pointer;
-}
-.btn-small:hover { opacity:0.9; }
-</style>
-</head>
+<link rel="stylesheet" href="../assets/css/style.css"></head>
 <body>
 
 <?php include("../includes/header.php"); ?>

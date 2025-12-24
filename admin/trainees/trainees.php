@@ -41,16 +41,7 @@ $trainees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
 <meta charset="UTF-8">
 <title>قائمة الطلاب</title>
-<link rel="stylesheet" href="../../assets/css/admin.css">
-<style>
-table { width:100%; border-collapse:collapse; margin-top:20px; font-size:14px; }
-th, td { padding:8px; border:1px solid #ccc; text-align:center; }
-th { background:#0077b6; color:#fff; }
-.btn { padding:6px 10px; border-radius:6px; color:white; text-decoration:none; }
-.edit-btn { background:#0096c7; }
-.delete-btn { background:#d62828; }
-</style>
-</head>
+<link rel="stylesheet" href="../../assets/css/admin.css"></head>
 <body>
 
 <h2>قائمة الطلاب</h2>

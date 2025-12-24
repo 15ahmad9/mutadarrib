@@ -188,22 +188,7 @@ $hasGood   = ($roleRow && !empty($roleRow['good_conduct_doc']));
 <head>
   <meta charset="UTF-8">
   <title>الملف الشخصي | <?= htmlspecialchars($user['full_name']) ?></title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <style>
-    .doc-card { margin-top: 18px; padding: 14px; border: 1px solid #ddd; border-radius: 10px; background: #fff; }
-    .doc-row { display:flex; gap:12px; flex-wrap:wrap; }
-    .doc-col { flex:1; min-width: 240px; }
-    .badge { display:inline-block; padding:3px 10px; border-radius:12px; color:#fff; font-size:12px; }
-    .ok { background:#2d6a4f; }
-    .no { background:#d62828; }
-    .doc-actions { margin-top: 10px; display:flex; gap:10px; flex-wrap:wrap; }
-    .doc-actions a { text-decoration:none; padding:8px 12px; border-radius:8px; color:#fff; background:#4c6ef5; }
-    .doc-actions a.dl { background:#2d6a4f; }
-    .doc-form input[type="file"] { width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; background:#fafafa; }
-    .doc-form button { margin-top: 10px; padding:10px 14px; border:0; border-radius:8px; background:#0077b6; color:#fff; cursor:pointer; width:100%; }
-    .note { color:#666; font-size: 13px; margin-top: 6px; }
-  </style>
-</head>
+  <link rel="stylesheet" href="assets/css/style.css"></head>
 <body>
 
 <?php include("includes/header.php"); ?>
@@ -215,7 +200,7 @@ $hasGood   = ($roleRow && !empty($roleRow['good_conduct_doc']));
     <?= $message ?>
 
     <?php if ((int)($user['profile_completed'] ?? 0) === 0 && in_array($role, ['trainee','lawyer'], true)): ?>
-      <p style="color:#b00020;">
+      <p class="alert alert-error">
         حسابك غير مكتمل. يرجى رفع وثائق عدم المحكومية وحسن السيرة والسلوك لإكمال الملف.
       </p>
     <?php endif; ?>

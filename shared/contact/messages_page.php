@@ -151,46 +151,7 @@ if ($statusFilter !== 'all') $commonQS['status'] = $statusFilter;
   <meta charset="UTF-8">
   <title><?= h($page_title) ?></title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
-      <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css">
-  <style>
-    .wrap { padding: 15px; }
-    .topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
-    .filters { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    input[type="text"], select { padding:8px; border:1px solid #ccc; border-radius:8px; min-width:240px; }
-    button { padding:8px 12px; border:0; border-radius:8px; background:#0077b6; color:#fff; cursor:pointer; }
-
-    table { width:100%; border-collapse:collapse; margin-top:15px; font-size:14px; }
-    th, td { border:1px solid #ddd; padding:8px; text-align:center; vertical-align:middle; }
-    th { background:#0077b6; color:#fff; }
-
-    .badge { display:inline-block; padding:3px 10px; border-radius:12px; color:#fff; font-size:12px; }
-    .b-new { background:#d62828; }
-    .b-read { background:#6c757d; }
-    .b-closed { background:#2d6a4f; }
-
-    .btn { padding:6px 10px; border-radius:7px; color:#fff; text-decoration:none; display:inline-block; margin:2px; border:0; cursor:pointer; }
-    .btn-view { background:#4c6ef5; }
-    .btn-read { background:#6c757d; }
-    .btn-close { background:#2d6a4f; }
-    .btn-new { background:#d62828; }
-
-    .summary { margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; }
-    .card { background:#fff; border:1px solid #e5e5e5; border-radius:10px; padding:10px 12px; }
-    .muted { color:#666; font-size:13px; margin-top:5px; }
-
-    .flash-ok { background:#e7f7ee; border:1px solid #bfe7cf; color:#1b5e20; padding:10px; border-radius:10px; margin-top:10px; }
-    .flash-err { background:#fdeaea; border:1px solid #f5b5b5; color:#8a1c1c; padding:10px; border-radius:10px; margin-top:10px; }
-
-    .view-box { margin-top:15px; background:#fff; border:1px solid #e5e5e5; border-radius:12px; padding:12px; }
-    .view-grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    .view-grid > div { background:#fafafa; border:1px solid #eee; border-radius:10px; padding:10px; text-align:right; }
-    .view-msg { margin-top:10px; background:#fafafa; border:1px solid #eee; border-radius:10px; padding:10px; white-space:pre-wrap; text-align:right; }
-    .view-actions { margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .pager { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-    .pager a { text-decoration:none; padding:6px 10px; border:1px solid #ddd; border-radius:8px; }
-    .pager .active { background:#0077b6; color:#fff; border-color:#0077b6; }
-  </style>
-</head>
+      <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css"></head>
 <body>
 
 <?php

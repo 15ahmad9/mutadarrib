@@ -100,33 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <title>إضافة محامي جديد</title>
-<link rel="stylesheet" href="../../assets/css/admin.css">
-<style>
-form {
-  width: 60%;
-  margin: 40px auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-}
-input[type="text"], input[type="email"], input[type="password"], button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-button {
-  background: #0077b6;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-}
-button:hover { opacity: 0.9; }
-</style>
-</head>
+<link rel="stylesheet" href="../../assets/css/admin.css"></head>
 <body>
 
 <h2 style="text-align:center;">إضافة محامي جديد إلى النظام</h2>
