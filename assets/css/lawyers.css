@@ -207,8 +207,112 @@
 
 .profile-box .section-title{ margin-top: 10px; }
 
+/* Status badges (Arabic) */
+.badge { padding:3px 10px; border-radius:12px; color:#fff; font-size:12px; display:inline-block; }
+.b-open { background:#2d6a4f; }
+.b-closed { background:#6c757d; }
+
+/* Application status */
+.b-pending   { background:#f4a261; } /* قيد المراجعة */
+.b-accepted  { background:#2a9d8f; } /* مقبول */
+.b-rejected  { background:#e63946; } /* مرفوض */
+.b-completed { background:#457b9d; } /* مكتمل */
+
+/* Seats badge (optional) */
+.b-seats { background:#0077b6; }
+
+
 /* Small helpers */
 .hr{ border-top: 1px solid var(--border); margin: 14px 0; }
+
+    .trainings-wrap {
+      margin-top: 18px;
+    }
+
+    .training-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .training-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .training-title {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .badge {
+      padding: 3px 10px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 12px;
+      display: inline-block;
+    }
+
+    .b-open {
+      background: #2d6a4f;
+    }
+
+    .b-closed {
+      background: #6c757d;
+    }
+
+    .meta {
+      color: #444;
+      font-size: 13px;
+      margin-top: 6px;
+      line-height: 1.8;
+    }
+
+    .actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-apply {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      background: #0077b6;
+      color: #fff;
+    }
+
+    .btn-disabled {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #adb5bd;
+      color: #fff;
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+
+    .status-note {
+      font-size: 13px;
+      color: #333;
+    }
+
+    .alert {
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      color: #856404;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 12px 0;
+    }
+
 
 @media (max-width: 720px){
   .lawyers-grid,

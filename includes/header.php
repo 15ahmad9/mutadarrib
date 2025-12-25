@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="../../assets/css/style.css">
+<link rel="stylesheet" href="../../assets/css/lawyers.css">
 <?php
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
@@ -88,20 +90,11 @@ if (isset($_SESSION['user_id'])) {
           <?php if ($calendarRemindersCount > 0): ?>
             <span class="notif-badge"><?= $calendarRemindersCount ?></span>
           <?php endif; ?>
-        </a>
-      </li>
-
-      <!-- إشعارات التدريب (متدرب فقط) -->
-      <?php if ($role === 'trainee'): ?>
-        <li class="nav-notifications">
-          <a href="/mutadarrib/trainee/notifications.php" title="إشعارات طلبات التدريب">
-            🔔
-            <?php if ($notificationsCount > 0): ?>
+          <?php if ($notificationsCount > 0): ?>
               <span class="notif-badge"><?= $notificationsCount ?></span>
             <?php endif; ?>
-          </a>
-        </li>
-      <?php endif; ?>
+        </a>
+      </li>
 
       <!-- قائمة المستخدم -->
       <li class="user-dropdown">

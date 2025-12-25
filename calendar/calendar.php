@@ -57,10 +57,11 @@ if (!isset($_SESSION['user_id'])) {
         <label>تذكير قبل الموعد</label>
         <select id="reminder_minutes">
           <option value="">بدون</option>
-          <option value="5">قبل 5 دقائق</option>
-          <option value="10">قبل 10 دقائق</option>
+          <option value="1">قبل 1 دقائق</option>
+          <!-- <option value="10">قبل 10 دقائق</option> -->
           <option value="30">قبل 30 دقيقة</option>
           <option value="60">قبل ساعة</option>
+          <option value="570">قبل 12 ساعة</option>
           <option value="1440">قبل يوم</option>
         </select>
         <div class="hint">التذكير داخل التطبيق (يمكن لاحقًا إضافة بريد/رسائل).</div>

@@ -315,6 +315,7 @@ $("#national_id").on("keyup change", function(){
     let national_id = $(this).val().trim();
     if(national_id.length < 5) return;
 
+    
     $.post("fetch_lawyer.php", { national_id: national_id }, function(res){
         if(!res.found) return;
 

@@ -1,7 +1,8 @@
+
 <?php
 session_start();
-require_once("../config/db.php");   // عدّل المسار حسب مكان ملفك
-// include("includes/auth_check.php"); // إن كان لديك auth_check للمتدرب استخدمه
+require_once("../config/db.php"); 
+//  include("../includes/header.php");
 
 // حماية الدخول: متدرب فقط
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'trainee') {
@@ -82,7 +83,7 @@ function computeDates(array $r): array {
 function diffDays(?DateTime $a, ?DateTime $b): ?int {
     if (!$a || !$b) return null;
     $diff = $a->diff($b);
-    return (int)$diff->format('%r%a'); // ممكن تكون سالبة
+    return (int)$diff->format('%r%a'); 
 }
 
 $today = new DateTime('today');
@@ -92,7 +93,7 @@ $today = new DateTime('today');
 <head>
 <meta charset="UTF-8">
 <title>مدة التدريب والمتبقي</title>
-<link rel="stylesheet" href="../assets/css/admin.css"> <!-- أو trainee.css حسب مشروعك --></head>
+<link rel="stylesheet" href="../assets/css/admin.css"></head>
 <body>
 
 <div class="container">
@@ -223,3 +224,5 @@ $today = new DateTime('today');
 
 </body>
 </html>
+
+<?php include("../includes/footer.php"); ?>
