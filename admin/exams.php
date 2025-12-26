@@ -42,6 +42,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <?php include("includes/sidebar.php"); ?>
 
 <div class="admin-container">
+    <div class="container">
     <h2>طلبات امتحان المزاولة</h2>
 
     <?php if (empty($rows)): ?>
@@ -79,7 +80,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </table>
     <?php endif; ?>
 </div>
-
+</div>
 <?php include("includes/footer.php"); ?>
 </body>
 </html>

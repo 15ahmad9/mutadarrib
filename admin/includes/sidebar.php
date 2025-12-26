@@ -9,6 +9,7 @@
     <li><a href="/mutadarrib/admin/training_applications.php">طلبات التدريب</a></li>
     <li><a href="/mutadarrib/admin/exams.php">طلبات الامتحان</a></li>
     <li><a href="/mutadarrib/admin/documents/documents.php">وثائق المستخدمين</a></li>
+    <li><a href="/mutadarrib/admin/membership/requests.php">طلبات الانتساب</a></li>
     <li><a href="/mutadarrib/admin/contact/messages.php">رسائل تواصل معنا</a></li>
     <li><a href="/mutadarrib/admin/settings.php">الإعدادات</a></li>
     <li><a href="/mutadarrib/auth/logout.php">تسجيل الخروج</a></li>

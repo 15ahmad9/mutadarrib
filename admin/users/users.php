@@ -27,14 +27,19 @@ $stmt->execute($params);
 
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>قائمة المستخدمين</title>
-<link rel="stylesheet" href="../../assets/css/admin.css"></head>
+<link rel="stylesheet" href="../../assets/css/admin.css">
+<!-- <link rel="stylesheet" href="../../assets/css/theme.css"> -->
+</head>
 <body>
+
+<div class="admin-container">
+<?php include("../includes/sidebar.php"); ?>
+<div class="container">
 
 <h2>قائمة المستخدمين</h2>
 
@@ -42,10 +47,6 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <input type="text" name="search" placeholder="ابحث بالاسم، اسم المستخدم، البريد أو الهاتف..." value="<?= htmlspecialchars($search) ?>">
     <button type="submit">🔍 بحث</button>
 </form>
-
-<div class="admin-container">
-<?php include("../includes/sidebar.php"); ?>
-<div class="container">
 
 <?php if ($users): ?>
 <table>

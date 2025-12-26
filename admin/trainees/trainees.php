@@ -44,6 +44,12 @@ $trainees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <link rel="stylesheet" href="../../assets/css/admin.css"></head>
 <body>
 
+
+
+<div class="admin-container">
+<?php include("../includes/sidebar.php"); ?>
+<div class="container">
+
 <h2>قائمة الطلاب</h2>
 
 <form method="GET">
@@ -51,10 +57,6 @@ $trainees = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <button type="submit">🔍 بحث</button>
     <a href="add_trainee.php" class="btn" style="background:#52b788;">➕ إضافة متدرب جديد</a>
 </form>
-
-<div class="admin-container">
-<?php include("../includes/sidebar.php"); ?>
-<div class="container">
 
 <?php if ($trainees): ?>
 <table>

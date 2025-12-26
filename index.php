@@ -91,25 +91,25 @@
     <div class="card">
         <h3>🛠️ الهندسة</h3>
         <p>تدريب ميداني في المكاتب والمشاريع الهندسية.</p>
-        <a href="engineering/index.php" class="btn-card">دخول القسم</a>
+        <a href="/mutadarrib/soon.php" class="btn-card">دخول القسم</a>
     </div>
 
     <div class="card">
         <h3>💊 الصيدلة</h3>
         <p>تدريب عملي في الصيدليات والمصانع الطبية.</p>
-        <a href="pharmacy/index.php" class="btn-card">دخول القسم</a>
+        <a href="/mutadarrib/soon.php" class="btn-card">دخول القسم</a>
     </div>
 
     <div class="card">
         <h3>🩺 التمريض</h3>
         <p>تدريب مهني في المستشفيات والمراكز الطبية المعتمدة.</p>
-        <a href="nursing/index.php" class="btn-card">دخول القسم</a>
+        <a href="/mutadarrib/soon.php" class="btn-card">دخول القسم</a>
     </div>
 
     <div class="card">
         <h3>💻 تكنولوجيا المعلومات</h3>
         <p>تدريب برمجة، شبكات، دعم فني وتطوير أنظمة.</p>
-        <a href="it/index.php" class="btn-card">دخول القسم</a>
+        <a href="/mutadarrib/soon.php" class="btn-card">دخول القسم</a>
     </div>
 
   </div>

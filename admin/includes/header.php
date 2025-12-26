@@ -1,5 +1,4 @@
 <?php
-// UI-only: CSS-only sidebar toggle (no JS).
 ?>
 <input type="checkbox" id="dash-sidebar-toggle" class="dash-sidebar-toggle" aria-hidden="true">
 <label for="dash-sidebar-toggle" class="sidebar-backdrop" aria-hidden="true"></label>

@@ -125,7 +125,7 @@ if ($tab === 'trainees') {
   <meta charset="UTF-8">
   <title><?= htmlspecialchars($page_title) ?></title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
-    <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css"></head>
+    <!-- <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css"></head> -->
 <body>
 
 <?php
@@ -136,6 +136,7 @@ if ($layout_header_path && file_exists($layout_header_path)) {
 ?>
 
 <div class="admin-container">
+  <div class="container">
   <?php
   // sidebar من الـ wrapper
   if ($layout_sidebar_path && file_exists($layout_sidebar_path)) {
@@ -147,7 +148,6 @@ if ($layout_header_path && file_exists($layout_header_path)) {
     <div class="topbar">
       <div>
         <h2><?= htmlspecialchars($page_title) ?></h2>
-        <div class="muted">يمكنك فلترة غير مكتملين فقط حسب حالة profile_completed.</div>
       </div>
 
       <form method="GET" class="filter-row">
@@ -265,6 +265,6 @@ if ($layout_header_path && file_exists($layout_header_path)) {
 
   </div>
 </div>
-
+</div>
 </body>
 </html>

@@ -68,6 +68,12 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <link rel="stylesheet" href="../../assets/css/admin.css"></head>
 <body>
 
+
+
+<div class="admin-container">
+<?php include("../includes/sidebar.php"); ?>
+<div class="container">
+
 <h2>قائمة المحامين</h2>
 
 <form method="GET">
@@ -75,10 +81,6 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <button type="submit">🔍 بحث</button>
     <a href="add_syndicate_lawyer.php" class="btn" style="background:#52b788;">➕ إضافة محامي جديد</a>
 </form>
-
-<div class="admin-container">
-<?php include("../includes/sidebar.php"); ?>
-<div class="container">
 
 <?php if ($lawyers): ?>
 <table>

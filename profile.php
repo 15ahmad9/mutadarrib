@@ -98,15 +98,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("لا يوجد سجل مرتبط بهذا المستخدم في جدول الدور.");
             }
 
-            // رفع الملفات (مسموح رفع واحد أو الاثنين)
+            // رفع الوثائق (اختياري)
             [$noConvPath, $err1] = uploadDoc('no_conviction_doc', $user_id, 'no_conviction');
             if ($err1) throw new Exception($err1);
 
             [$goodPath, $err2] = uploadDoc('good_conduct_doc', $user_id, 'good_conduct');
             if ($err2) throw new Exception($err2);
 
+            // رفع الهوية (اختياري)
+            [$idFrontPath, $err3] = uploadDoc('identity_front', $user_id, 'identity_front');
+            if ($err3) throw new Exception($err3);
+
+            [$idBackPath, $err4] = uploadDoc('identity_back', $user_id, 'identity_back');
+            if ($err4) throw new Exception($err4);
+
             // إذا لم يرفع أي ملف
-            if ($noConvPath === null && $goodPath === null) {
+            if ($noConvPath === null && $goodPath === null && $idFrontPath === null && $idBackPath === null) {
                 throw new Exception("لم يتم اختيار أي ملف للرفع.");
             }
 
@@ -117,35 +124,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $lawyerId = (int)$roleRow['lawyer_id'];
 
                 // نبقي القديم إذا لم يتم رفع جديد
-                $newNoConv = $noConvPath ?? $roleRow['no_conviction_doc'];
-                $newGood   = $goodPath   ?? $roleRow['good_conduct_doc'];
+                $newNoConv  = $noConvPath  ?? $roleRow['no_conviction_doc'];
+                $newGood    = $goodPath    ?? $roleRow['good_conduct_doc'];
+                $newIdFront = $idFrontPath ?? ($roleRow['identity_front'] ?? null);
+                $newIdBack  = $idBackPath  ?? ($roleRow['identity_back']  ?? null);
 
                 $up = $pdo->prepare("
                     UPDATE lawyers
-                    SET no_conviction_doc = ?, good_conduct_doc = ?, updated_at = NOW()
+                    SET no_conviction_doc = ?,
+                        good_conduct_doc  = ?,
+                        identity_front    = ?,
+                        identity_back     = ?,
+                        updated_at        = NOW()
                     WHERE lawyer_id = ?
                 ");
-                $up->execute([$newNoConv, $newGood, $lawyerId]);
+                $up->execute([$newNoConv, $newGood, $newIdFront, $newIdBack, $lawyerId]);
 
             } else { // trainee
                 $traineeId = (int)$roleRow['trainee_id'];
 
-                $newNoConv = $noConvPath ?? $roleRow['no_conviction_doc'];
-                $newGood   = $goodPath   ?? $roleRow['good_conduct_doc'];
+                $newNoConv  = $noConvPath  ?? $roleRow['no_conviction_doc'];
+                $newGood    = $goodPath    ?? $roleRow['good_conduct_doc'];
+                $newIdFront = $idFrontPath ?? ($roleRow['identity_front'] ?? null);
+                $newIdBack  = $idBackPath  ?? ($roleRow['identity_back']  ?? null);
 
                 $up = $pdo->prepare("
                     UPDATE trainees
-                    SET no_conviction_doc = ?, good_conduct_doc = ?, updated_at = NOW()
+                    SET no_conviction_doc = ?,
+                        good_conduct_doc  = ?,
+                        identity_front    = ?,
+                        identity_back     = ?,
+                        updated_at        = NOW()
                     WHERE trainee_id = ?
                 ");
-                $up->execute([$newNoConv, $newGood, $traineeId]);
+                $up->execute([$newNoConv, $newGood, $newIdFront, $newIdBack, $traineeId]);
             }
 
-            // تحديث حالة اكتمال الملف في users إذا أصبحت الوثائق مكتملة
-            $finalNo = $noConvPath ?? ($roleRow['no_conviction_doc'] ?? null);
-            $finalGood = $goodPath ?? ($roleRow['good_conduct_doc'] ?? null);
+            // تحديث حالة اكتمال الملف في users إذا أصبحت كل المتطلبات مكتملة (الهوية + الوثائق)
+            $finalNo     = $noConvPath  ?? ($roleRow['no_conviction_doc'] ?? null);
+            $finalGood   = $goodPath    ?? ($roleRow['good_conduct_doc']  ?? null);
+            $finalFront  = $idFrontPath ?? ($roleRow['identity_front']    ?? null);
+            $finalBack   = $idBackPath  ?? ($roleRow['identity_back']     ?? null);
 
-            if (!empty($finalNo) && !empty($finalGood)) {
+            if (!empty($finalNo) && !empty($finalGood) && !empty($finalFront) && !empty($finalBack)) {
                 $upUser = $pdo->prepare("
                     UPDATE users
                     SET profile_completed = 1,
@@ -180,15 +201,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $role_ar = ($role === 'lawyer') ? 'محامي مزاول' : (($role === 'trainee') ? 'متدرب' : 'مدير');
 
 // حالات الوثائق للعرض
-$hasNoConv = ($roleRow && !empty($roleRow['no_conviction_doc']));
-$hasGood   = ($roleRow && !empty($roleRow['good_conduct_doc']));
+$hasNoConv   = ($roleRow && !empty($roleRow['no_conviction_doc']));
+$hasGood     = ($roleRow && !empty($roleRow['good_conduct_doc']));
+$hasIdFront  = ($roleRow && !empty($roleRow['identity_front']));
+$hasIdBack   = ($roleRow && !empty($roleRow['identity_back']));
+
+// هل الملف مكتمل فعلياً حسب المتطلبات (بدون الاعتماد فقط على users.profile_completed)
+$isProfileCompleteNow = in_array($role, ['trainee','lawyer'], true)
+    ? ($hasNoConv && $hasGood && $hasIdFront && $hasIdBack)
+    : true;
+
+// رابط مباشر للملفات (إذا مخزنة كمسار نسبي)
+function fileUrl($path) {
+    if (!$path) return null;
+    $p = ltrim($path, '/');
+    return "/mutadarrib/" . $p;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <title>الملف الشخصي | <?= htmlspecialchars($user['full_name']) ?></title>
-  <link rel="stylesheet" href="assets/css/style.css"></head>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
 <body>
 
 <?php include("includes/header.php"); ?>
@@ -199,9 +235,9 @@ $hasGood   = ($roleRow && !empty($roleRow['good_conduct_doc']));
   <div class="profile-card">
     <?= $message ?>
 
-    <?php if ((int)($user['profile_completed'] ?? 0) === 0 && in_array($role, ['trainee','lawyer'], true)): ?>
+    <?php if (in_array($role, ['trainee','lawyer'], true) && !$isProfileCompleteNow): ?>
       <p class="alert alert-error">
-        حسابك غير مكتمل. يرجى رفع وثائق عدم المحكومية وحسن السيرة والسلوك لإكمال الملف.
+        حسابك غير مكتمل. يرجى رفع (الهوية الأمامية والخلفية) بالإضافة إلى وثائق (عدم المحكومية وحسن السيرة والسلوك) لإكمال الملف.
       </p>
     <?php endif; ?>
 
@@ -229,6 +265,19 @@ $hasGood   = ($roleRow && !empty($roleRow['good_conduct_doc']));
         <div class="doc-row">
           <div class="doc-col">
             <p>
+              <strong>الهوية (أمامي):</strong>
+              <?= $hasIdFront ? '<span class="badge ok">مرفوع</span>' : '<span class="badge no">غير مرفوع</span>' ?>
+            </p>
+          </div>
+          <div class="doc-col">
+            <p>
+              <strong>الهوية (خلفي):</strong>
+              <?= $hasIdBack ? '<span class="badge ok">مرفوع</span>' : '<span class="badge no">غير مرفوع</span>' ?>
+            </p>
+          </div>
+
+          <div class="doc-col">
+            <p>
               <strong>عدم المحكومية:</strong>
               <?= $hasNoConv ? '<span class="badge ok">مرفوع</span>' : '<span class="badge no">غير مرفوع</span>' ?>
             </p>
@@ -244,7 +293,13 @@ $hasGood   = ($roleRow && !empty($roleRow['good_conduct_doc']));
         <p class="note">الصيغ المسموحة: PDF/JPG/PNG — الحد الأقصى 5MB لكل ملف.</p>
 
         <form class="doc-form" method="POST" enctype="multipart/form-data">
-          <label>رفع/تحديث وثيقة عدم المحكومية</label>
+          <label>رفع/تحديث الهوية (أمامي)</label>
+          <input type="file" name="identity_front" accept=".pdf,.jpg,.jpeg,.png">
+
+          <label style="margin-top:10px;">رفع/تحديث الهوية (خلفي)</label>
+          <input type="file" name="identity_back" accept=".pdf,.jpg,.jpeg,.png">
+
+          <label style="margin-top:10px;">رفع/تحديث وثيقة عدم المحكومية</label>
           <input type="file" name="no_conviction_doc" accept=".pdf,.jpg,.jpeg,.png">
 
           <label style="margin-top:10px;">رفع/تحديث وثيقة حسن السيرة والسلوك</label>
@@ -253,19 +308,62 @@ $hasGood   = ($roleRow && !empty($roleRow['good_conduct_doc']));
           <button type="submit">حفظ الوثائق</button>
         </form>
 
-        <?php if ($hasNoConv || $hasGood): ?>
-          <div class="doc-actions">
-            <?php if ($hasNoConv): ?>
-              <a target="_blank" href="/mutadarrib/my_doc_download.php?doc=no_conviction&disp=inline">عرض عدم المحكومية</a>
-              <a class="dl" href="/mutadarrib/my_doc_download.php?doc=no_conviction&disp=attachment">تنزيل</a>
+        <?php
+          $frontUrl = $hasIdFront ? fileUrl($roleRow['identity_front']) : null;
+          $backUrl  = $hasIdBack  ? fileUrl($roleRow['identity_back'])  : null;
+          $noUrl    = $hasNoConv  ? fileUrl($roleRow['no_conviction_doc']) : null;
+          $goodUrl  = $hasGood    ? fileUrl($roleRow['good_conduct_doc'])  : null;
+
+          $isImg = function($p){
+            $ext = strtolower(pathinfo($p, PATHINFO_EXTENSION));
+            return in_array($ext, ['jpg','jpeg','png'], true);
+          };
+        ?>
+
+        <?php if ($hasIdFront || $hasIdBack): ?>
+          <div class="id-previews">
+            <?php if ($hasIdFront): ?>
+              <div class="id-preview">
+                <strong>الهوية (أمامي)</strong>
+                <div class="doc-actions">
+                  <a target="_blank" href="<?= htmlspecialchars($frontUrl) ?>">عرض</a>
+                  <a class="dl" href="<?= htmlspecialchars($frontUrl) ?>" download>تنزيل</a>
+                </div>
+                <?php if ($isImg($roleRow['identity_front'])): ?>
+                  <img src="<?= htmlspecialchars($frontUrl) ?>" alt="Identity Front">
+                <?php endif; ?>
+              </div>
             <?php endif; ?>
 
-            <?php if ($hasGood): ?>
-              <a target="_blank" href="/mutadarrib/my_doc_download.php?doc=good_conduct&disp=inline">عرض حسن السيرة</a>
-              <a class="dl" href="/mutadarrib/my_doc_download.php?doc=good_conduct&disp=attachment">تنزيل</a>
+            <?php if ($hasIdBack): ?>
+              <div class="id-preview">
+                <strong>الهوية (خلفي)</strong>
+                <div class="doc-actions">
+                  <a target="_blank" href="<?= htmlspecialchars($backUrl) ?>">عرض</a>
+                  <a class="dl" href="<?= htmlspecialchars($backUrl) ?>" download>تنزيل</a>
+                </div>
+                <?php if ($isImg($roleRow['identity_back'])): ?>
+                  <img src="<?= htmlspecialchars($backUrl) ?>" alt="Identity Back">
+                <?php endif; ?>
+              </div>
             <?php endif; ?>
           </div>
         <?php endif; ?>
+
+        <?php if ($hasNoConv || $hasGood): ?>
+          <div class="doc-actions" style="margin-top:12px;">
+            <?php if ($hasNoConv): ?>
+              <a target="_blank" href="<?= htmlspecialchars($noUrl) ?>">عرض عدم المحكومية</a>
+              <a class="dl" href="<?= htmlspecialchars($noUrl) ?>" download>تنزيل</a>
+            <?php endif; ?>
+
+            <?php if ($hasGood): ?>
+              <a target="_blank" href="<?= htmlspecialchars($goodUrl) ?>">عرض حسن السيرة</a>
+              <a class="dl" href="<?= htmlspecialchars($goodUrl) ?>" download>تنزيل</a>
+            <?php endif; ?>
+          </div>
+        <?php endif; ?>
+
       </div>
     <?php endif; ?>
 

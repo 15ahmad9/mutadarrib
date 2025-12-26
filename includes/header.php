@@ -1,6 +1,8 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
-if (!isset($pdo)) require_once __DIR__ . '/../config/db.php';
+if (session_status() === PHP_SESSION_NONE)
+  session_start();
+if (!isset($pdo))
+  require_once __DIR__ . '/../config/db.php';
 
 $role = $_SESSION['role'] ?? '';
 $notificationsCount = 0;
@@ -8,14 +10,14 @@ $calendarRemindersCount = 0;
 
 /* إشعارات التدريب للمتدرب */
 if (isset($_SESSION['user_id']) && $role === 'trainee') {
-  $userId = (int)$_SESSION['user_id'];
+  $userId = (int) $_SESSION['user_id'];
 
   $stmtNotif = $pdo->prepare("SELECT trainee_id FROM trainees WHERE user_id = ? LIMIT 1");
   $stmtNotif->execute([$userId]);
   $traineeRow = $stmtNotif->fetch(PDO::FETCH_ASSOC);
 
   if ($traineeRow) {
-    $traineeId = (int)$traineeRow['trainee_id'];
+    $traineeId = (int) $traineeRow['trainee_id'];
 
     $stmtCount = $pdo->prepare("
       SELECT COUNT(*)
@@ -25,13 +27,13 @@ if (isset($_SESSION['user_id']) && $role === 'trainee') {
         AND trainee_seen = 0
     ");
     $stmtCount->execute([$traineeId]);
-    $notificationsCount = (int)$stmtCount->fetchColumn();
+    $notificationsCount = (int) $stmtCount->fetchColumn();
   }
 }
 
 /* تذكيرات التقويم */
 if (isset($_SESSION['user_id'])) {
-  $userId = (int)$_SESSION['user_id'];
+  $userId = (int) $_SESSION['user_id'];
 
   $stmtRem = $pdo->prepare("
     SELECT COUNT(*)
@@ -44,7 +46,7 @@ if (isset($_SESSION['user_id'])) {
       AND NOW() < start_at
   ");
   $stmtRem->execute([$userId]);
-  $calendarRemindersCount = (int)$stmtRem->fetchColumn();
+  $calendarRemindersCount = (int) $stmtRem->fetchColumn();
 }
 
 $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'متدرب' : (($role === 'syndicate_admin') ? 'موظف النقابة' : 'مدير'));
@@ -54,24 +56,42 @@ $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'مت�
 <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css">
 
 <style>
-  .nav-notifications { position: relative; margin: 0 8px; }
-  .nav-notifications a { position: relative; display: inline-block; text-decoration:none; }
+  .nav-notifications {
+    position: relative;
+    margin: 0 8px;
+  }
+
+  .nav-notifications a {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+  }
+
   .notif-badge {
-    position:absolute; top:-8px; right:-12px;
-    background:red; color:#fff; font-size:11px;
-    border-radius:999px; padding:2px 6px; min-width:18px; text-align:center;
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    background: red;
+    color: #fff;
+    font-size: 11px;
+    border-radius: 999px;
+    padding: 2px 6px;
+    min-width: 18px;
+    text-align: center;
   }
 </style>
 
 <nav class="navbar">
-  <div class="logo">متدرب</div>
+  <a href="/mutadarrib/index.php">
+    <div class="logo">متدرب</div>
+  </a>
 
   <ul class="nav-links">
     <li><a href="/mutadarrib/index.php">الرئيسية</a></li>
     <li><a href="/mutadarrib/contact.php">تواصل معنا</a></li>
     <li><a href="/mutadarrib/index.php#services">الخدمات</a></li>
 
-        <li><a href="/mutadarrib/membership/request_membership.php">طلب انتساب</a></li>
+    <li><a href="/mutadarrib/membership/request_membership.php">طلب انتساب</a></li>
 
     <?php if (isset($_SESSION['user_id'])): ?>
 
@@ -81,26 +101,17 @@ $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'مت�
 
       <li><a href="/mutadarrib/calendar/calendar.php">التقويم</a></li>
 
-      <li class="nav-notifications">
-        <a href="/mutadarrib/trainee/notifications.php#reminders" title="تذكيرات التقويم">
-          تذكيرات
-          <?php if ($calendarRemindersCount > 0): ?>
-            <span class="notif-badge"><?= $calendarRemindersCount ?></span>
-          <?php endif; ?>
-        </a>
-      </li>
 
-      <?php if ($role === 'trainee'): ?>
         <li class="nav-notifications">
-          <a href="/mutadarrib/trainee/notifications.php#training" title="إشعارات التدريب">
-            إشعارات
-            <?php if ($notificationsCount > 0): ?>
-              <span class="notif-badge"><?= $notificationsCount ?></span>
+          <a href="/mutadarrib/calendar/upcoming_reminders.php#reminders" title="تذكيرات التقويم">
+            تذكيرات
+            <?php if ($calendarRemindersCount > 0): ?>
+              <span class="notif-badge"><?= $calendarRemindersCount ?></span>
             <?php endif; ?>
           </a>
         </li>
-      <?php endif; ?>
 
+        
       <li class="user-dropdown">
         <button class="user-toggle" id="userToggle">
           <?= htmlspecialchars($_SESSION['full_name'] ?? '') ?> (<?= $role_ar ?>) ▾
@@ -132,19 +143,19 @@ $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'مت�
 </nav>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const toggleBtn = document.getElementById("userToggle");
-  const dropdown = document.getElementById("dropdownMenu");
-  if (toggleBtn && dropdown) {
-    toggleBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      dropdown.classList.toggle("show");
-    });
-    document.addEventListener("click", function (e) {
-      if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
-        dropdown.classList.remove("show");
-      }
-    });
-  }
-});
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("userToggle");
+    const dropdown = document.getElementById("dropdownMenu");
+    if (toggleBtn && dropdown) {
+      toggleBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle("show");
+      });
+      document.addEventListener("click", function (e) {
+        if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
+          dropdown.classList.remove("show");
+        }
+      });
+    }
+  });
 </script>

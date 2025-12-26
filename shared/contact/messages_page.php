@@ -168,6 +168,7 @@ if ($layout_header_path && file_exists($layout_header_path)) include $layout_hea
 ?>
 
 <div class="admin-container">
+  <div class="container">
   <?php if ($layout_sidebar_path && file_exists($layout_sidebar_path)) include $layout_sidebar_path; ?>
 
   <div class="wrap">
@@ -193,7 +194,7 @@ if ($layout_header_path && file_exists($layout_header_path)) include $layout_hea
       </form>
     </div>
 
-    <div class="summary">
+    <div class="stats">
       <div class="card">جديد: <strong><?= (int)$counts['new'] ?></strong></div>
       <div class="card">مقروء: <strong><?= (int)$counts['read'] ?></strong></div>
       <div class="card">مغلق: <strong><?= (int)$counts['closed'] ?></strong></div>
@@ -345,6 +346,6 @@ if ($layout_header_path && file_exists($layout_header_path)) include $layout_hea
 
   </div>
 </div>
-
+</div>
 </body>
 </html>

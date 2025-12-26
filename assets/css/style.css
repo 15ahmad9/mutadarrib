@@ -408,7 +408,7 @@ label {
 }
 
 .profile-card {
-  width: min(820px, 92vw);
+  /* width: min(820px, 92vw); */
   padding: 18px;
 }
 
@@ -857,7 +857,9 @@ label {
      .wrap{max-width:900px;margin:25px auto;background:#fff;padding:18px;border-radius:12px}
     label{display:block;margin-top:10px}
     input{width:100%;padding:9px;border:1px solid #ccc;border-radius:10px;margin-top:6px}
-    button{margin-top:12px;padding:10px 14px;border:0;border-radius:10px;background:#0077b6;color:#fff;cursor:pointer}
+    button{
+      /* margin-top:12px; */
+      padding:10px 14px;border:0;border-radius:10px;background:#0077b6;color:#fff;cursor:pointer}
     .err{color:#b00020;margin-top:10px}
     .card{margin-top:15px;background:#f8f9fa;border:1px solid #e6e6e6;padding:12px;border-radius:12px}
     .row{display:flex;gap:12px;flex-wrap:wrap}
@@ -866,3 +868,17 @@ label {
     .b-pending{background:#6c757d}
     .b-approved{background:#2d6a4f}
     .b-rejected{background:#d62828}
+
+
+        .soon-wrap{max-width:980px;margin:30px auto;padding:0 16px;}
+    .soon-card{
+      background:#fff;border:1px solid #e7e7e7;border-radius:16px;
+      padding:28px;box-shadow:0 8px 24px rgba(0,0,0,.06);text-align:center;
+    }
+    .soon-title{font-size:28px;margin:0 0 10px;}
+    .soon-sub{font-size:16px;color:#555;margin:0 auto 18px;max-width:720px;line-height:1.9;}
+    .pill{display:inline-block;padding:8px 12px;border-radius:999px;background:#f3f6ff;border:1px solid #dbe3ff;color:#0c005a;font-size:13px;}
+    .soon-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
+    .btnx{display:inline-block;padding:10px 14px;border-radius:10px;text-decoration:none;border:1px solid #0077b6;background:#0077b6;color:#fff;}
+    .btnx.secondary{background:#fff;color:#0077b6;}
+    .soon-illus{font-size:64px;line-height:1;margin:6px 0 14px;color:#0077b6;}

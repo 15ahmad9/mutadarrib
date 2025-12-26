@@ -53,6 +53,10 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <link rel="stylesheet" href="../../assets/css/admin.css"></head>
 <body>
 
+<div class="admin-container">
+<?php include("../includes/sidebar.php"); ?>
+
+<div class="container">
 <h2>إدارة المحامين</h2>
 
 <form method="GET">
@@ -62,11 +66,6 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- اختياري: زر إضافة محامي إذا عندك صفحة add_lawyer.php -->
     <a href="add_lawyer.php" class="btn" style="background:#52b788;">إضافة محامي جديد</a>
 </form>
-
-<div class="admin-container">
-<?php include("../includes/sidebar.php"); ?>
-
-<div class="container">
 
 <?php if ($lawyers): ?>
 <table>
