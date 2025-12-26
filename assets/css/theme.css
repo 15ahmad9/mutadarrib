@@ -186,7 +186,7 @@ table tr:hover td{
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
-  color: #fff;
+  /* color: #fff; */
 }
 
 .badge.pending{ background: #f59f00; }
@@ -235,7 +235,7 @@ table tr:hover td{
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
-  color: #fff;
+  /* color: #fff; */
 }
 .badge-accepted{ background: var(--success); }
 .badge-completed{ background: var(--primary); }

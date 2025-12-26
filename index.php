@@ -14,8 +14,8 @@
 <!-- ========= HERO ========= -->
 <section class="hero">
   <h1>مرحبًا بك في منصة <span style="color:#ffd700;">متدرب</span></h1>
-  <p>منصة للتدريب المهني تربط الخريجين بجهات التدريب المعتمدة في مختلف التخصصات.</p>
-  <button onclick="window.location.href='auth/choose_specialization.php'">ابدأ رحلتك المهنية</button>
+  <p>منصة للتدريب المهني تربط المتدربين بجهات التدريب المعتمدة في مختلف التخصصات.</p>
+  <button onclick="window.location.href='/mutadarrib/specializations/lawyers/index.php'">ابدأ رحلتك المهنية</button>
 </section>
 
 <!-- ========= ABOUT ========= -->

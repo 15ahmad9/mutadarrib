@@ -40,6 +40,33 @@ try {
 
         $pdo->beginTransaction();
 
+        // =====================================================
+        // (تعديل مطلوب) جلب صور الهوية/الوثائق من طلب الانتساب
+        // =====================================================
+        $identity_front    = null;
+        $identity_back     = null;
+        $no_conviction_doc = null;
+        $good_conduct_doc  = null;
+
+        $stmtMem = $pdo->prepare("
+            SELECT identity_front, identity_back, no_conviction_doc, good_conduct_doc
+            FROM membership_requests
+            WHERE national_id = ?
+              AND role = ?
+              AND status = 'approved'
+            ORDER BY reviewed_at DESC, request_id DESC
+            LIMIT 1
+        ");
+        $stmtMem->execute([$national_id, ($_POST['role'] ?? '')]);
+        $memRow = $stmtMem->fetch(PDO::FETCH_ASSOC);
+
+        if ($memRow) {
+            $identity_front    = $memRow['identity_front'] ?? null;
+            $identity_back     = $memRow['identity_back'] ?? null;
+            $no_conviction_doc = $memRow['no_conviction_doc'] ?? null;
+            $good_conduct_doc  = $memRow['good_conduct_doc'] ?? null;
+        }
+
         // ==============================
         // ===== تسجيل المتدرب trainee ===
         // ==============================
@@ -90,12 +117,16 @@ $user_id = $pdo->lastInsertId();
                 phone,
                 email,
                 home_address,
+                identity_front,
+                identity_back,
+                no_conviction_doc,
+                good_conduct_doc,
                 highschool_certificate,
                 university_degree,
                 social_security,
                 social_security_number
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $insertTrainee->execute([
@@ -109,6 +140,10 @@ $user_id = $pdo->lastInsertId();
             $phone ?: $traineeRef['phone'],
             $email ?: $traineeRef['email'],
             $home_address ?: $traineeRef['home_address'],
+            $identity_front,
+            $identity_back,
+            $no_conviction_doc,
+            $good_conduct_doc,
             $highschool_certificate,
             $university_degree,
             $has_social_security,
@@ -166,6 +201,10 @@ $user_id = $pdo->lastInsertId();
                         social_security,
                         home_address,
                         office_address,
+                        identity_front,
+                        identity_back,
+                        no_conviction_doc,
+                        good_conduct_doc,
                         highschool_certificate,
                         university_degree,
                         phone,
@@ -173,7 +212,7 @@ $user_id = $pdo->lastInsertId();
                         password,
                         verified
                     )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
                 ");
 
                 $insertLawyer->execute([
@@ -188,6 +227,10 @@ $user_id = $pdo->lastInsertId();
                     $social_security ?: $lawyer['social_security'],
                     $home_address ?: $lawyer['home_address'],
                     $office_address ?: $lawyer['office_address'],
+                    $identity_front,
+                    $identity_back,
+                    $no_conviction_doc,
+                    $good_conduct_doc,
                     $highschool_certificate ?: $lawyer['highschool_certificate'],
                     $university_degree ?: $lawyer['university_degree'],
                     $phone ?: $lawyer['phone'],

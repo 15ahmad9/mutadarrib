@@ -208,7 +208,7 @@
 .profile-box .section-title{ margin-top: 10px; }
 
 /* Status badges (Arabic) */
-.badge { padding:3px 10px; border-radius:12px; color:#fff; font-size:12px; display:inline-block; }
+.badge { padding:3px 10px; border-radius:12px; font-size:12px; display:inline-block; }
 .b-open { background:#2d6a4f; }
 .b-closed { background:#6c757d; }
 
@@ -252,7 +252,6 @@
     .badge {
       padding: 3px 10px;
       border-radius: 12px;
-      color: #fff;
       font-size: 12px;
       display: inline-block;
     }

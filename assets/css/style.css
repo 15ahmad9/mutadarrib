@@ -853,3 +853,16 @@ label {
     .unread-row {
       background: #fff7e6;
     }
+
+     .wrap{max-width:900px;margin:25px auto;background:#fff;padding:18px;border-radius:12px}
+    label{display:block;margin-top:10px}
+    input{width:100%;padding:9px;border:1px solid #ccc;border-radius:10px;margin-top:6px}
+    button{margin-top:12px;padding:10px 14px;border:0;border-radius:10px;background:#0077b6;color:#fff;cursor:pointer}
+    .err{color:#b00020;margin-top:10px}
+    .card{margin-top:15px;background:#f8f9fa;border:1px solid #e6e6e6;padding:12px;border-radius:12px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .row > div{flex:1;min-width:220px}
+    .badge{display:inline-block;padding:4px 10px;border-radius:999px;color:#fff;font-size:13px}
+    .b-pending{background:#6c757d}
+    .b-approved{background:#2d6a4f}
+    .b-rejected{background:#d62828}

@@ -121,23 +121,32 @@ if ($totalPages < 1) $totalPages = 1;
 if ($page > $totalPages) $page = $totalPages;
 
 // List query
+// List query (FIX: use positional placeholders for LIMIT/OFFSET to avoid mixing)
 $sqlList = "
   SELECT message_id, user_id, name, email, phone, subject, status, created_at
   FROM contact_messages
   {$where}
   ORDER BY created_at DESC
-  LIMIT :limit OFFSET :offset
+  LIMIT ? OFFSET ?
 ";
+
 $stmtL = $pdo->prepare($sqlList);
+
+// bind filters (positional ?)
 $idx = 1;
 foreach ($params as $p) {
   $stmtL->bindValue($idx, $p, PDO::PARAM_STR);
   $idx++;
 }
-$stmtL->bindValue(':limit', $perPage, PDO::PARAM_INT);
-$stmtL->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+// bind limit/offset also positional (no :limit/:offset)
+$stmtL->bindValue($idx, (int)$perPage, PDO::PARAM_INT);
+$idx++;
+$stmtL->bindValue($idx, (int)$offset, PDO::PARAM_INT);
+
 $stmtL->execute();
 $rows = $stmtL->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Preserve filters in links
 $commonQS = [];
