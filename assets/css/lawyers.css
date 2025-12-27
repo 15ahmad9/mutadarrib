@@ -317,3 +317,47 @@
   .lawyers-grid,
   .offices-grid{ padding: 12px; }
 }
+
+
+/* -------- Dashboard User Dropdown (no JS) -------- */
+.dash-user-dropdown{ position: relative; }
+.dash-user-toggle{
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.06);
+}
+.dash-user-dropdown[open] .dash-user-toggle{
+  background: rgba(255,255,255,0.10);
+}
+.dash-user-dropdown summary::-webkit-details-marker{ display:none; }
+
+.dash-user-menu{
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 10px);
+  min-width: 220px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(12, 0, 90, 0.92);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 6px;
+  z-index: 200;
+}
+.dash-user-menu a{
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: rgba(255,255,255,0.92);
+  border: 1px solid transparent;
+}
+.dash-user-menu a:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.14);
+}
+

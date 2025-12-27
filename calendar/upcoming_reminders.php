@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
+
 session_start();
 require_once("../config/db.php");
 
@@ -163,7 +165,7 @@ if ($role === 'trainee') {
 
 </head>
 
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
   <?php include("../includes/header.php"); ?>
 

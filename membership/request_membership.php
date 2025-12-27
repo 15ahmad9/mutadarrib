@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
+
 session_start();
 require_once __DIR__ . "/../config/db.php";
 
@@ -103,6 +105,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = normalizeSpaces($first_name . " " . $father_name . " " . $grandfather_name . " " . $family_name);
 
     $national_id    = normalizeSpaces($_POST['national_id'] ?? '');
+
+    // ==============================
+// منع تقديم طلب انتساب إذا كان مسجلاً مسبقاً لدى النقابة (lawyers_syndicate)
+// ==============================
+$chkSynd = $pdo->prepare("SELECT COUNT(*) FROM lawyers_syndicate WHERE national_id = ? LIMIT 1");
+$chkSynd->execute([$national_id]);
+
+if ((int)$chkSynd->fetchColumn() > 0) {
+  throw new Exception("انت مسجل لدى النقابة يمكنك انشاء حساب");
+}
+
+
     $phone          = normalizeSpaces($_POST['phone'] ?? '');
     $email          = normalizeSpaces($_POST['email'] ?? '');
     $office_address = normalizeSpaces($_POST['office_address'] ?? '');
@@ -206,7 +220,7 @@ $def_ssn = htmlspecialchars($profile['social_security_number'] ?? '');
     .readonly{background:#f6f6f6}
   </style>
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include(__DIR__ . "/../includes/header.php"); ?>
 
@@ -245,7 +259,7 @@ $def_ssn = htmlspecialchars($profile['social_security_number'] ?? '');
       </div>
     </div>
 
-    <label>الاسم الكامل (يُولد تلقائياً)</label>
+    <label>الاسم الكامل </label>
     <input type="text" id="full_name_preview" class="readonly" readonly
            value="<?= htmlspecialchars($def_full_preview) ?>">
 
@@ -289,17 +303,17 @@ $def_ssn = htmlspecialchars($profile['social_security_number'] ?? '');
 
     <hr>
 
-    <label>صورة الهوية (أمامي) إلزامي</label>
+    <label>صورة الهوية (أمامي) </label>
     <input type="file" name="identity_front" accept=".jpg,.jpeg,.png,.pdf" required>
 
-    <label>صورة الهوية (خلفي) إلزامي</label>
+    <label>صورة الهوية (خلفي) </label>
     <input type="file" name="identity_back" accept=".jpg,.jpeg,.png,.pdf" required>
 
-    <label>عدم محكومية (اختياري)</label>
-    <input type="file" name="no_conviction_doc" accept=".jpg,.jpeg,.png,.pdf">
+    <label>عدم محكومية</label>
+    <input type="file" name="no_conviction_doc" accept=".jpg,.jpeg,.png,.pdf" required>
 
-    <label>حسن السيرة والسلوك (اختياري)</label>
-    <input type="file" name="good_conduct_doc" accept=".jpg,.jpeg,.png,.pdf">
+    <label>حسن السيرة والسلوك </label>
+    <input type="file" name="good_conduct_doc" accept=".jpg,.jpeg,.png,.pdf" required>
 
     <button type="submit">إرسال الطلب</button>
   </form>
@@ -334,3 +348,5 @@ toggleSS();
 
 </body>
 </html>
+
+<?php include("../includes/footer.php"); ?>

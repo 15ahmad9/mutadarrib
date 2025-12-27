@@ -1,4 +1,6 @@
-<?php 
+<?php
+require_once __DIR__ . '/../includes/theme_init.php';
+ 
 require_once("../config/db.php");
 include("../includes/header.php");
 
@@ -258,7 +260,7 @@ $user_id = $pdo->lastInsertId();
 <title>تسجيل محامي</title>
 <link rel="stylesheet" href="../assets/css/style.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <div class="form-card">
 <h2>إنشاء حساب</h2>

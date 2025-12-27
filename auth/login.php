@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
+
 
 session_start();
 require_once("../config/db.php");
@@ -142,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <title>تسجيل الدخول</title>
 <link rel="stylesheet" href="../assets/css/style.css">
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <div class="container">
     <h2>تسجيل الدخول</h2>

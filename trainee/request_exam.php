@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
+
 session_start();
 require_once("../config/db.php");
 
@@ -133,7 +135,7 @@ $completedApps = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <meta charset="UTF-8">
 <title>طلب امتحان المزاولة</title>
 <link rel="stylesheet" href="../assets/css/style.css"></head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include("../includes/header.php"); ?>
 

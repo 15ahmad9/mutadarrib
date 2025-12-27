@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
+
 session_start();
 
 $code = $_SESSION['membership_public_code'] ?? null;
@@ -20,7 +22,7 @@ unset($_SESSION['membership_public_code'], $_SESSION['membership_national_id']);
     .muted{color:#666}
   </style>
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include(__DIR__ . "/../includes/header.php"); ?>
 

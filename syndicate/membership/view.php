@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 session_start();
 require_once __DIR__ . "/../../config/db.php";
 
@@ -32,7 +34,7 @@ if (!$r) die("الطلب غير موجود.");
     input,textarea{width:100%;padding:8px;border:1px solid #ccc;border-radius:10px;}
   </style>
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include(__DIR__ . "/../includes/header.php"); ?>
 <div class="admin-container">

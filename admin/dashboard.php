@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
+
 require_once("../config/db.php");
 include("includes/auth_check.php");
 
@@ -31,7 +33,7 @@ $membershipAll = $pdo->query("SELECT COUNT(*) FROM membership_requests")->fetchC
   <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
   <?php include("includes/header.php"); ?>
   <?php include("includes/sidebar.php"); ?>

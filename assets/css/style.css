@@ -440,7 +440,7 @@ label {
 }
 
 .topbar {
-  display: flex;
+  /* display: flex; */
   align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
@@ -882,3 +882,22 @@ label {
     .btnx{display:inline-block;padding:10px 14px;border-radius:10px;text-decoration:none;border:1px solid #0077b6;background:#0077b6;color:#fff;}
     .btnx.secondary{background:#fff;color:#0077b6;}
     .soon-illus{font-size:64px;line-height:1;margin:6px 0 14px;color:#0077b6;}
+
+
+/* -------- Settings Page -------- */
+.settings-page{ max-width: 760px; padding: 26px 14px; }
+.settings-page .card{ padding: 18px; }
+.settings-page h3{ margin: 0 0 12px; color: var(--ink); }
+.settings-form{ display: grid; gap: 10px; }
+.radio-row{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.radio-row input{ accent-color: var(--primary); }
+.settings-page .actions{ display:flex; gap:10px; margin-top: 10px; flex-wrap: wrap; }
+.muted-note{ margin-top: 10px; color: var(--muted); font-size: 0.95rem; }

@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 session_start();
 require_once("../../config/db.php");
 include("../includes/header.php");
@@ -42,7 +44,7 @@ $trainees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <meta charset="UTF-8">
 <title>قائمة الطلاب</title>
 <link rel="stylesheet" href="../../assets/css/admin.css"></head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 
 

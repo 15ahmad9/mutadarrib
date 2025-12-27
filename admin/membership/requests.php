@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 session_start();
 require_once __DIR__ . "/../../config/db.php";
 
@@ -52,7 +54,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .btn-view { background:#4c6ef5; }
   </style>
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include(__DIR__ . "/../includes/header.php"); ?>
 <div class="admin-container">

@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 session_start();
 require_once("../../config/db.php");
 
@@ -67,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <title>إضافة متدرب جديد</title>
 <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css"></head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <div class="container">
 <h2>➕ إضافة متدرب جديد</h2>

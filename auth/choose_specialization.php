@@ -1,4 +1,6 @@
-<?php include("../includes/header.php"); ?>
+<?php
+require_once __DIR__ . '/../includes/theme_init.php';
+ include("../includes/header.php"); ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -7,7 +9,7 @@
 <link rel="stylesheet" href="../assets/css/style.css">
 
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <div class="form-card auth-choice">
     <h2>اختر التخصص للتسجيل</h2>

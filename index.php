@@ -1,4 +1,6 @@
-<?php session_start(); ?>
+<?php
+require_once __DIR__ . '/includes/theme_init.php';
+ session_start(); ?>
 <?php include("includes/header.php"); ?>
 
 <!DOCTYPE html>
@@ -9,7 +11,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/lawyers.css">
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <!-- ========= HERO ========= -->
 <section class="hero">

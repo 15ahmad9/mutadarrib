@@ -1,5 +1,7 @@
 
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
+
 session_start();
 require_once("../config/db.php"); 
 //  include("../includes/header.php");
@@ -88,14 +90,18 @@ function diffDays(?DateTime $a, ?DateTime $b): ?int {
 
 $today = new DateTime('today');
 ?>
+<?php include("../includes/header.php"); ?>
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>مدة التدريب والمتبقي</title>
-<link rel="stylesheet" href="../assets/css/admin.css"></head>
-<body>
-
+<link rel="stylesheet" href="../assets/css/admin.css">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
+  
 <div class="container">
     <h2>مدة التدريب والمتبقي</h2>
 

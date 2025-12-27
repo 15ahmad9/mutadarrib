@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 require_once("../../config/db.php");
 ?>
 
@@ -11,7 +13,7 @@ require_once("../../config/db.php");
 <link rel="stylesheet" href="../../assets/css/lawyers.css">
 
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include("../../includes/header.php"); ?>
 <div class="container">

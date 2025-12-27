@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 session_start();
 require_once("../../config/db.php");
 include("../includes/header.php");
@@ -230,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <title>تعديل بيانات المحامي</title>
 <link rel="stylesheet" href="../../assets/css/admin.css"></head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <div class="admin-container">
 <?php include("../includes/sidebar.php"); ?>

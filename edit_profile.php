@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/includes/theme_init.php';
+
 session_start();
 require_once("config/db.php");
 
@@ -74,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <title>تعديل الملف الشخصي | <?= htmlspecialchars($user['full_name']) ?></title>
   <link rel="stylesheet" href="assets/css/style.css"></head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include("includes/header.php"); ?>
 

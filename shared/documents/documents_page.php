@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 /**
  * Shared Documents Page
  * Wrappers must define:
@@ -126,7 +128,7 @@ if ($tab === 'trainees') {
   <title><?= htmlspecialchars($page_title) ?></title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
     <!-- <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css"></head> -->
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php
 // header من الـ wrapper

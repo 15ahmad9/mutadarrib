@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 session_start();
 require_once("../../config/db.php");
 
@@ -21,7 +23,7 @@ if (!$user) {
 <head><meta charset="utf-8"><title>تفاصيل المستخدم</title>
 <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <div class="container">
 <h2>تفاصيل المستخدم</h2>

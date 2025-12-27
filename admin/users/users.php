@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 session_start();
 require_once("../../config/db.php");
 include("../includes/header.php");
@@ -35,7 +37,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <link rel="stylesheet" href="../../assets/css/admin.css">
 <!-- <link rel="stylesheet" href="../../assets/css/theme.css"> -->
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <div class="admin-container">
 <?php include("../includes/sidebar.php"); ?>

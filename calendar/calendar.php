@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
+
 session_start();
 require_once("../config/db.php");
 
@@ -19,7 +21,7 @@ if (!isset($_SESSION['user_id'])) {
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 
   <link rel="stylesheet" href="../assets/css/style.css"></head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include("../includes/header.php"); ?>
 

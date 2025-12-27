@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 /**
  * Shared Contact Messages Page
  * Wrappers must define:
@@ -161,7 +163,7 @@ if ($statusFilter !== 'all') $commonQS['status'] = $statusFilter;
   <title><?= h($page_title) ?></title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
       <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css"></head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php
 if ($layout_header_path && file_exists($layout_header_path)) include $layout_header_path;

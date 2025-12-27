@@ -257,3 +257,221 @@ table tr:hover td{
 
 
 
+
+
+
+/* ============================================
+   Dark Mode (CSS Variables)
+   Activated by: body[data-theme="dark"]
+   ============================================ */
+body[data-theme="dark"]{
+  --bg: #0b1020;
+  --surface: #101a33;
+
+  /* keep same brand hue, slightly brighter */
+  --primary: #5d7fe0;
+  --primary-700: #4b6cd0;
+  --primary-800: #3b59b8;
+
+  --ink: #eef2ff;
+
+  --text: #eef2ff;
+  --muted: #b9c1dd;
+
+  --border: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.22);
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+/* Improve form controls in dark mode */
+body[data-theme="dark"] input,
+body[data-theme="dark"] select,
+body[data-theme="dark"] textarea{
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body[data-theme="dark"] input::placeholder,
+body[data-theme="dark"] textarea::placeholder{
+  color: rgba(235, 238, 255, 0.65);
+}
+
+/* Alerts in dark mode */
+body[data-theme="dark"] .alert{
+  background: rgba(255,255,255,0.06);
+  border-color: var(--border);
+}
+
+
+/* ------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------- */
+
+
+body[data-theme="dark"]{
+  /* Hint for native controls */
+  color-scheme: dark;
+
+  /* Core surfaces */
+  --bg: #080a12;
+  --surface: #0f1424;
+
+  /* Text */
+  --text: rgba(244,246,255,0.92);
+  --muted: rgba(244,246,255,0.66);
+  --ink: rgba(244,246,255,0.96);
+
+  /* Brand (slightly lifted for dark contrast while staying on-brand) */
+  --primary: #4b6ab8;
+  --primary-700: #3f5ea7;
+  --primary-800: #365191;
+
+  /* Borders + shadows */
+  --border: rgba(255,255,255,0.10);
+  --border-strong: rgba(255,255,255,0.16);
+  --shadow: 0 18px 60px rgba(0,0,0,0.38);
+  --shadow-sm: 0 10px 32px rgba(0,0,0,0.32);
+
+  background:
+    radial-gradient(1200px 700px at 85% -120px, rgba(65,95,157,0.24), transparent 55%),
+    radial-gradient(900px 600px at 15% -140px, rgba(12,0,90,0.32), transparent 60%),
+    var(--bg);
+}
+
+/* Links/hover */
+body[data-theme="dark"] a:hover{ filter: brightness(1.08); }
+
+/* Inputs / selects / textarea */
+body[data-theme="dark"] :where(input, select, textarea){
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.16);
+  color: var(--text);
+}
+body[data-theme="dark"] :where(input, select, textarea)::placeholder{
+  color: rgba(244,246,255,0.52);
+}
+body[data-theme="dark"] :where(input, select, textarea):focus{
+  border-color: rgba(75,106,184,0.70);
+  box-shadow: 0 0 0 4px rgba(75,106,184,0.16);
+}
+
+body[data-theme="dark"] .hero button{
+  background: rgba(255, 255, 255, 0.219);
+  border-color: var(--text);
+  color: var(--text);
+
+}
+
+/* Cards / tables */
+body[data-theme="dark"] .card{
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.10);
+  box-shadow: var(--shadow-sm);
+}
+body[data-theme="dark"] :where(table, .table){
+  background: rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.10);
+}
+body[data-theme="dark"] :where(table th, table td, .table th, .table td){
+  border-bottom-color: rgba(255,255,255,0.10);
+}
+body[data-theme="dark"] :where(table thead th, .table thead th){
+  background: linear-gradient(0deg, rgba(12,0,90,0.98), rgba(65,95,157,0.92));
+  border-bottom-color: rgba(255,255,255,0.18);
+}
+
+/* Public navbar/hero polish */
+body[data-theme="dark"] .navbar{
+  background:
+    radial-gradient(1200px 800px at 50% -90px, rgba(65,95,157,0.28), transparent 55%),
+    linear-gradient(180deg, rgba(12,0,90,0.98), rgba(65,95,157,0.92));
+}
+body[data-theme="dark"] .hero{
+  background:
+    radial-gradient(1200px 600px at 50% -80px, rgba(65,95,157,0.24), transparent 55%),
+    linear-gradient(0deg, rgba(12,0,90,0.98), rgba(65,95,157,0.92));
+}
+
+/* Alerts (make them readable in dark) */
+body[data-theme="dark"] .alert-exam-success{
+  background: rgba(46, 125, 50, 0.14);
+  border-color: rgba(46, 125, 50, 0.28);
+  color: rgba(244,246,255,0.90);
+}
+body[data-theme="dark"] .alert-exam-warning{
+  background: rgba(245, 159, 0, 0.12);
+  border-color: rgba(245, 159, 0, 0.26);
+  color: rgba(244,246,255,0.90);
+}
+body[data-theme="dark"] .alert-exam-danger{
+  background: rgba(193, 18, 31, 0.14);
+  border-color: rgba(193, 18, 31, 0.28);
+  color: rgba(244,246,255,0.90);
+}
+
+/* Page-specific legacy blocks inside style.css (wrap/soon) */
+body[data-theme="dark"] .wrap{
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+body[data-theme="dark"] .soon-card{
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.10);
+  box-shadow: var(--shadow-sm);
+}
+body[data-theme="dark"] .pill{
+  background: rgba(65,95,157,0.16);
+  border-color: rgba(65,95,157,0.28);
+  color: rgba(244,246,255,0.92);
+}
+
+/* Footer */
+body[data-theme="dark"] footer{
+  background: radial-gradient(1200px 800px at 50% -90px, rgba(65, 95, 157, 0.28), transparent 55%), linear-gradient(180deg, rgba(12, 0, 90, 0.98), rgba(65, 95, 157, 0.92));
+  color: rgba(244,246,255,0.78);
+}
+
+
+/* ============================================
+   Dashboard polish in Dark Mode
+   ============================================ */
+body[data-theme="dark"] .admin-header,
+body[data-theme="dark"] .header{
+  background:
+    radial-gradient(900px 380px at 85% -120px, rgba(65,95,157,0.32), transparent 55%),
+    linear-gradient(250deg, rgba(12,0,90,0.98), rgba(65,95,157,0.92));
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+body[data-theme="dark"] .admin-sidebar,
+body[data-theme="dark"] .sidebar{
+  background:
+    radial-gradient(900px 600px at 70% -260px, rgba(255,255,255,0.10), transparent 60%),
+    linear-gradient(210deg, rgba(12,0,90,0.98), rgba(65,95,157,0.86));
+  border-left-color: rgba(255,255,255,0.12);
+}
+
+/* Sidebar links */
+body[data-theme="dark"] .admin-sidebar a,
+body[data-theme="dark"] .sidebar a{
+  color: rgba(244,246,255,0.92);
+}
+body[data-theme="dark"] .admin-sidebar a:hover,
+body[data-theme="dark"] .sidebar a:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.14);
+}
+
+
+body[data-theme="dark"] .about-viewport{
+    background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.10);
+  box-shadow: var(--shadow-sm);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* body[data-theme="dark"] .about-slide h3, .about-slide p, .about-slide li{
+  color: rgba(158, 32, 32, 0.92);
+} */

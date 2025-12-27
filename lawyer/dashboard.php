@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
+
 require_once("includes/auth_check.php");
 require_once("../config/db.php");
 
@@ -35,9 +37,10 @@ $applicationsCount = $stmt->fetchColumn();
 <title>لوحة المحامي</title>
 <link rel="stylesheet" href="../assets/css/lawyers.css">
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include("includes/header.php"); ?>
+<div class="layout">
 <?php include("includes/sidebar.php"); ?>
 
 <main class="content">
@@ -52,7 +55,7 @@ $applicationsCount = $stmt->fetchColumn();
 </div>
 
 </main>
-
+</div>
 <?php include("includes/footer.php"); ?>
 
 </body>

@@ -1,6 +1,7 @@
 <?php
 if (session_status() === PHP_SESSION_NONE)
   session_start();
+require_once __DIR__ . '/theme_init.php';
 if (!isset($pdo))
   require_once __DIR__ . '/../config/db.php';
 
@@ -130,6 +131,7 @@ $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'مت�
           <?php if ($role === 'syndicate_admin'): ?>
             <li><a href="/mutadarrib/syndicate/dashboard.php">لوحة النقابة</a></li>
           <?php endif; ?>
+          <li><a href="/mutadarrib/toggle_theme.php?redirect=<?= urlencode($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php') ?>">الوضع الداكن: <?= ($theme === 'dark') ? 'مفعل' : 'غير مفعل' ?></a></li>
 
           <li><a href="/mutadarrib/auth/logout.php">تسجيل الخروج</a></li>
         </ul>

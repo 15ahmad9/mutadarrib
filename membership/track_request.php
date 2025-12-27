@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
+
 session_start();
 require_once __DIR__ . "/../config/db.php";
 
@@ -84,7 +86,7 @@ function applicantLabel($t) {
   <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
 
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include(__DIR__ . "/../includes/header.php"); ?>
 

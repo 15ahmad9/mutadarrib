@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/theme_init.php';
+
 session_start();
 require_once("../../config/db.php");
 
@@ -101,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <title>إضافة محامي جديد</title>
 <link rel="stylesheet" href="../../assets/css/admin.css"></head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <h2 style="text-align:center;">إضافة محامي جديد إلى النظام</h2>
 <div style="text-align:center;"><?= $message ?></div>

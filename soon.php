@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/includes/theme_init.php';
+
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
@@ -16,7 +18,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <style>
   </style>
 </head>
-<body>
+<body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include __DIR__ . "/includes/header.php"; ?>
 
