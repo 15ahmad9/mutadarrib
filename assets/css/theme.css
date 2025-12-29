@@ -34,6 +34,9 @@
   --header-h: 64px;
   --sidebar-w: 280px;
   --container: 1200px;
+
+  /* Footer height used for sticky-to-bottom layout */
+  --footer-h: 42px;
 }
 
 /* ========== Reset ========== */
@@ -47,6 +50,30 @@ body{
   color: var(--text);
   direction: rtl;
   line-height: 1.6;
+
+  /* Sticky footer (no overlay): body is a flex column, footer is pushed down */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Base footer (all areas) */
+footer{
+  margin-top: auto;
+  width: 100%;
+  flex-shrink: 0;
+  min-height: var(--footer-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 img{ max-width: 100%; height: auto; }

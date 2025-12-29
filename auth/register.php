@@ -37,7 +37,7 @@ try {
     $checkUser = $pdo->prepare("SELECT user_id FROM users WHERE national_id = ?");
     $checkUser->execute([$national_id]);
     if ($checkUser->rowCount() > 0) {
-        $message = "<p class='error'>⚠ يوجد حساب بهذا الرقم الوطني.</p>";
+        $message = "<p class='error'>يوجد حساب بهذا الرقم الوطني, يمكنك تسجيل الدخول.</p>";
     } else {
 
         $pdo->beginTransaction();
@@ -85,7 +85,8 @@ if ($_POST['role'] === 'trainee') {
 
     if (!$traineeRef) {
         $pdo->rollBack();
-        $message = "<p class='error'>❌ الرقم الوطني غير موجود بسجلات الجهة المعتمدة للتدريب</p>";
+        // $message = "<p class='error'> الرقم الوطني غير موجود بسجلات الجهة المعتمدة للتدريب</p>";
+        $message = "<p class='error'> الرقم الوطني غير مسجل في سجلات النقابة, يرجى تقديم طلب انتساب.</p>";
     } else {
 
 // إنشاء المستخدم (متدرب)
@@ -153,7 +154,7 @@ $user_id = $pdo->lastInsertId();
         ]);
 
         $pdo->commit();
-        $message = "<p class='success'>✅ تم إنشاء حساب المتدرب بنجاح!</p>";
+        $message = "<p class='success'>تم إنشاء حساب المتدرب بنجاح!</p>";
     }
 }
 
@@ -168,7 +169,7 @@ $user_id = $pdo->lastInsertId();
 
             if (!$lawyer) {
                 $pdo->rollBack();
-                $message = "<p class='error'>❌ الرقم الوطني غير موجود في جدول النقابة.</p>";
+        $message = "<p class='error'> الرقم الوطني غير مسجل في سجلات النقابة, يرجى تقديم طلب انتساب.</p>";
             } else {
 
 // إنشاء المستخدم (محامي)
@@ -241,7 +242,7 @@ $user_id = $pdo->lastInsertId();
                 ]);
 
                 $pdo->commit();
-                $message = "<p class='success'>🎉 تم إنشاء حساب المحامي بنجاح!</p>";
+                $message = "<p class='success'>تم إنشاء حساب المحامي بنجاح!</p>";
             }
         }
     }
@@ -262,79 +263,121 @@ $user_id = $pdo->lastInsertId();
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head>
 <body data-theme="<?= htmlspecialchars($theme) ?>">
 
-<div class="form-card">
-<h2>إنشاء حساب</h2>
-<?= $message ?>
+<main class="auth-shell">
+  <div class="auth-card auth-card--wide">
+    <div class="auth-head">
+      <h2 class="auth-title">إنشاء حساب</h2>
+      <p class="auth-subtitle">يرجى تعبئة البيانات التالية</p>
+    </div>
 
-<form method="POST">
+    <?= $message ?>
 
-<label>نوع الحساب:</label>
-<select name="role" id="role" required>
-    <option value="">اختر</option>
-    <option value="trainee">متدرب</option>
-    <option value="lawyer">محامي مزاول</option>
-</select>
-    <label>الرقم الوطني:</label>
-    <input type="text" name="national_id" id="national_id" required>
+    <form method="POST" class="auth-form" autocomplete="on">
+      <div class="auth-grid">
 
-    <label>الاسم الأول:</label>
-    <input type="text" name="first_name" id="first_name">
+        <div class="auth-field col-6">
+          <label for="role">نوع الحساب:</label>
+          <select name="role" id="role" required>
+              <option value="">اختر</option>
+              <option value="trainee">متدرب</option>
+              <option value="lawyer">محامي مزاول</option>
+          </select>
+        </div>
 
-    <label>اسم الأب:</label>
-    <input type="text" name="father_name" id="father_name">
+        <div class="auth-field col-6">
+          <label for="national_id">الرقم الوطني:</label>
+          <input type="text" name="national_id" id="national_id" required>
+        </div>
 
-    <label>اسم الجد:</label>
-    <input type="text" name="grandfather_name" id="grandfather_name">
+        <div class="auth-field col-3">
+          <label for="first_name">الاسم الأول:</label>
+          <input type="text" name="first_name" id="first_name" required>
+        </div>
 
-    <label>اسم العائلة:</label>
-    <input type="text" name="family_name" id="family_name">
+        <div class="auth-field col-3">
+          <label for="father_name">اسم الأب:</label>
+          <input type="text" name="father_name" id="father_name" required>
+        </div>
 
-    <label>الاسم الكامل:</label>
-    <input type="text" name="full_name" id="full_name" readonly class="readonly">
+        <div class="auth-field col-3">
+          <label for="grandfather_name">اسم الجد:</label>
+          <input type="text" name="grandfather_name" id="grandfather_name" required>
+        </div>
 
-    <label>هل يوجد ضمان اجتماعي؟</label>
-    <select id="has_social_security" name="has_social_security">
-        <option value="">اختر</option>
-        <option value="نعم">نعم</option>
-        <option value="لا">لا</option>
-    </select>
+        <div class="auth-field col-3">
+          <label for="family_name">اسم العائلة:</label>
+          <input type="text" name="family_name" id="family_name" required>
+        </div>
 
-    <label>رقم الضمان الاجتماعي:</label>
-    <input type="text" name="social_security" id="social_security" disabled>
+        <div class="auth-field col-12">
+          <label for="full_name">الاسم الكامل:</label>
+          <input type="text" name="full_name" id="full_name" readonly class="readonly">
+        </div>
 
-    <label>عنوان السكن:</label>
-    <input type="text" name="home_address" id="home_address">
+        <div class="auth-field col-6">
+          <label for="has_social_security">هل يوجد ضمان اجتماعي؟</label>
+          <select id="has_social_security" name="has_social_security">
+              <option value="">اختر</option>
+              <option value="نعم">نعم</option>
+              <option value="لا">لا</option>
+          </select>
+        </div>
 
-    <label>عنوان المكتب:</label>
-    <input type="text" name="office_address" id="office_address">
+        <div class="auth-field col-6">
+          <label for="social_security">رقم الضمان الاجتماعي:</label>
+          <input type="text" name="social_security" id="social_security" disabled>
+        </div>
 
-    <label>شهادة ثانوية:</label>
-    <select id="highschool_certificate" name="highschool_certificate">
-        <option value="">اختر</option>
-        <option value="نعم">نعم</option>
-        <option value="لا">لا</option>
-    </select>
+        <div class="auth-field col-6">
+          <label for="home_address">عنوان السكن:</label>
+          <input type="text" name="home_address" id="home_address" required>
+        </div>
 
-    <label>الشهادة الجامعية:</label>
-    <select id="university_degree" name="university_degree">
-        <option value="">اختر</option>
-        <option value="بكالوريوس">بكالوريوس</option>
-        <option value="ماجستير">ماجستير</option>
-        <option value="دكتوراه">دكتوراه</option>
-    </select>
+        <div class="auth-field col-6">
+          <label for="office_address">عنوان المكتب:</label>
+          <input type="text" name="office_address" id="office_address" required>
+        </div>
 
-    <label>الهاتف:</label>
-    <input type="text" name="phone" id="phone">
+        <div class="auth-field col-6">
+          <label for="highschool_certificate">شهادة ثانوية:</label>
+          <select id="highschool_certificate" name="highschool_certificate" >
+              <option value="">اختر</option>
+              <option value="نعم">نعم</option>
+              <option value="لا">لا</option>
+          </select>
+        </div>
 
-    <label>البريد الإلكتروني:</label>
-    <input type="email" name="email" id="email">
+        <div class="auth-field col-6">
+          <label for="university_degree">الشهادة الجامعية:</label>
+          <select id="university_degree" name="university_degree">
+              <option value="">اختر</option>
+              <option value="بكالوريوس">بكالوريوس</option>
+              <option value="ماجستير">ماجستير</option>
+              <option value="دكتوراه">دكتوراه</option>
+          </select>
+        </div>
 
-    <label>كلمة المرور:</label>
-    <input type="password" name="password" required>
+        <div class="auth-field col-6">
+          <label for="phone">الهاتف:</label>
+          <input type="text" name="phone" id="phone" required>
+        </div>
 
-    <button type="submit">إنشاء الحساب</button>
-</form>
-</div>
+        <div class="auth-field col-6">
+          <label for="email">البريد الإلكتروني:</label>
+          <input type="email" name="email" id="email" required>
+        </div>
+
+        <div class="auth-field col-12">
+          <label for="password">كلمة المرور:</label>
+          <input type="password" name="password" id="password" required>
+        </div>
+
+      </div>
+
+      <button type="submit" class="auth-submit">إنشاء الحساب</button>
+    </form>
+  </div>
+</main>
 
 <script>
 function updateFullName() {
@@ -388,6 +431,7 @@ $("#national_id").on("keyup change", function(){
 });
 </script>
 
+<?php include("../includes/footer.php"); ?>
+
 </body>
 </html>
-<?php include("../includes/footer.php"); ?>

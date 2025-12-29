@@ -146,28 +146,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body data-theme="<?= htmlspecialchars($theme) ?>">
 
-<div class="container">
-    <h2>تسجيل الدخول</h2>
+<main class="auth-shell">
+    <section class="auth-card">
+        <div class="auth-head">
+            <h2 class="auth-title">تسجيل الدخول</h2>
+            <p class="auth-subtitle">أدخل الرقم الوطني وكلمة المرور للمتابعة.</p>
+        </div>
 
-    <?= $message ?>
+        <?= $message ?>
 
-    <form method="POST">
+        <form method="POST" class="auth-form" autocomplete="on">
+            <div class="auth-field">
+                <label for="national_id">الرقم الوطني</label>
+                <input id="national_id" type="text" name="national_id" required autocomplete="username">
+            </div>
 
-        <label>الرقم الوطني:</label>
-        <input type="text" name="national_id" required>
+            <div class="auth-field">
+                <label for="password">كلمة المرور</label>
+                <input id="password" type="password" name="password" required autocomplete="current-password">
+            </div>
 
-        <label>كلمة المرور:</label>
-        <input type="password" name="password" required>
+            <button class="auth-submit" type="submit">تسجيل الدخول</button>
+        </form>
 
-        <button type="submit">تسجيل الدخول</button>
+        <div class="auth-foot">
+            <span>ليس لديك حساب؟</span>
+            <a class="auth-link" href="choose_specialization.php">إنشاء حساب</a>
+        </div>
+    </section>
+</main>
 
-    </form>
-
-    <p>ليس لديك حساب؟
-        <a href="choose_specialization.php">إنشاء حساب</a>
-    </p>
-</div>
+<?php include("../includes/footer.php"); ?>
 
 </body>
 </html>
-<?php include("../includes/footer.php"); ?>

@@ -285,7 +285,8 @@ $goodCondUrl = fileUrl($lawyer['good_conduct_doc'] ?? null);
         <?php if (empty($recent_trainings)): ?>
             <p>لا يوجد تدريبات لهذا المحامي.</p>
         <?php else: ?>
-            <table>
+            <div class="table-card"><div class="table-wrap">
+<table class="table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -309,6 +310,7 @@ $goodCondUrl = fileUrl($lawyer['good_conduct_doc'] ?? null);
                 <?php endforeach; ?>
                 </tbody>
             </table>
+</div></div>
         <?php endif; ?>
     </div>
 

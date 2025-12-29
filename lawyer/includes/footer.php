@@ -1,3 +1,3 @@
-<footer class="footer">
-    <p>© <?= date("Y") ?> منصة متدرب</p>
+<footer class="site-footer">
+  <p>© <?= date("Y") ?> منصة متدرب</p>
 </footer>

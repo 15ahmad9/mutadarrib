@@ -1,31 +1,42 @@
 <?php
 require_once __DIR__ . '/../includes/theme_init.php';
- include("../includes/header.php"); ?>
+?>
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<title>اختيار التخصص</title>
-<link rel="stylesheet" href="../assets/css/style.css">
+  <head>
+    <meta charset="UTF-8">
+    <title>اختيار التخصص</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+  </head>
+  <body class="layout-sticky" data-theme="<?= htmlspecialchars($theme) ?>">
 
-</head>
-<body data-theme="<?= htmlspecialchars($theme) ?>">
+    <?php include("../includes/header.php"); ?>
 
-<div class="form-card auth-choice">
-    <h2>اختر التخصص للتسجيل</h2>
+    <main class="main-content auth-shell">
+      <section class="auth-card">
+        <div class="auth-head">
+          <h2 class="auth-title">اختر التخصص للتسجيل</h2>
+          <p class="auth-subtitle">اختر تخصصك ثم اضغط متابعة للانتقال لصفحة إنشاء الحساب.</p>
+        </div>
 
-    <label>اختر التخصص:</label>
-    <select id="specialization" required>
-        <option value="">اختر</option>
-        <option value="lawyer" >محاماه</option>
-        <option value="it" class="disabled-option" disabled>تكنولوجيا معلومات  (غير متاح حاليًا)</option>
-        <option value="engineering" class="disabled-option" disabled>هندسة  (غير متاح حاليًا)</option>
-        <option value="pharmacy" class="disabled-option" disabled>صيدلة  (غير متاح حاليًا)</option>
-        <option value="nursing" class="disabled-option" disabled>تمريض  (غير متاح حاليًا)</option>
-    </select>
+        <div class="auth-form">
+          <div class="auth-field">
+            <label for="specialization">اختر التخصص</label>
+            <select id="specialization" required>
+              <option value="">اختر</option>
+              <option value="lawyer">محاماه</option>
+              <option value="it" class="disabled-option" disabled>تكنولوجيا معلومات (غير متاح حاليًا)</option>
+              <option value="engineering" class="disabled-option" disabled>هندسة (غير متاح حاليًا)</option>
+              <option value="pharmacy" class="disabled-option" disabled>صيدلة (غير متاح حاليًا)</option>
+              <option value="nursing" class="disabled-option" disabled>تمريض (غير متاح حاليًا)</option>
+            </select>
+          </div>
 
-    <button onclick="goToRegister()">متابعة</button>
-</div>
+          <button type="button" class="auth-submit" onclick="goToRegister()">متابعة</button>
+        </div>
+      </section>
+    </main>
 
 <script>
 function goToRegister() {
@@ -64,7 +75,7 @@ function goToRegister() {
 }
 </script>
 
-</body>
-</html>
+    <?php include("../includes/footer.php"); ?>
 
-<?php include("../includes/footer.php"); ?>
+  </body>
+</html>

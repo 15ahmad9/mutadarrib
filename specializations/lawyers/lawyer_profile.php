@@ -241,8 +241,8 @@ $trainings = $stmtTr->fetchAll(PDO::FETCH_ASSOC);
 
   </div>
 
+<?php include("../../includes/footer.php"); ?>
+
 </body>
 
 </html>
-
-<?php include("../../includes/footer.php"); ?>

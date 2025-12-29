@@ -139,7 +139,6 @@ $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'مت�
 
     <?php else: ?>
       <li><a href="/mutadarrib/auth/login.php" class="login-btn">تسجيل الدخول</a></li>
-      <li><a href="/mutadarrib/auth/choose_specialization.php" class="register-btn">إنشاء حساب</a></li>
     <?php endif; ?>
   </ul>
 </nav>

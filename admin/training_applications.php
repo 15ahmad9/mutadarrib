@@ -53,7 +53,8 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php if (empty($rows)): ?>
         <p>لا توجد طلبات.</p>
     <?php else: ?>
-        <table class="table">
+        <div class="table-card"><div class="table-wrap">
+<table class="table">
             <thead>
                 <tr>
                     <th>#</th>
@@ -87,6 +88,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endforeach; ?>
             </tbody>
         </table>
+</div></div>
     <?php endif; ?>
 </div>
 </div>

@@ -189,7 +189,7 @@ header("Location: /mutadarrib/membership/request_success.php");
 exit;
 
   } catch (Exception $e) {
-    $message = "<div style='color:#b00020;margin:10px 0;'>" . htmlspecialchars($e->getMessage()) . "</div>";
+    $message = "<div class='alert alert-error'>" . htmlspecialchars($e->getMessage()) . "</div>";
   }
 }
 
@@ -209,115 +209,163 @@ $def_ssn = htmlspecialchars($profile['social_security_number'] ?? '');
   <meta charset="UTF-8">
   <title>طلب انتساب</title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
-  <style>
-    .container{max-width:900px;margin:20px auto;}
-    label{display:block;margin-top:10px}
-    input,select,textarea{width:100%;padding:8px;border:1px solid #ccc;border-radius:8px;margin-top:5px}
-    button{margin-top:15px;padding:10px 14px;border:0;border-radius:10px;background:#0077b6;color:#fff;cursor:pointer}
-    .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    @media(max-width:900px){.grid4{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:520px){.grid4{grid-template-columns:1fr}}
-    .readonly{background:#f6f6f6}
-  </style>
 </head>
-<body data-theme="<?= htmlspecialchars($theme) ?>">
+<body class="layout-sticky" data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include(__DIR__ . "/../includes/header.php"); ?>
 
-<div class="container">
-  <h2>طلب انتساب</h2>
-  <a class="btn" href="/mutadarrib/membership/track_request.php">تتبّع طلب الانتساب</a>
-
-  <?= $message ?>
-
-  <form method="POST" enctype="multipart/form-data">
-
-    <?php if (!$isKnownApplicant): ?>
-      <label>نوع مقدم الطلب</label>
-      <select name="role" required>
-        <option value="">اختر...</option>
-        <option value="trainee">متدرب</option>
-        <option value="lawyer">مزاول</option>
-      </select>
-    <?php else: ?>
-      <p>نوع مقدم الطلب: <strong><?= ($applicantType==='trainee'?'متدرب':'مزاول') ?></strong></p>
-    <?php endif; ?>
-
-    <label>الاسم الرباعي (كل مقطع منفرد)</label>
-    <div class="grid4">
+<main class="main-content auth-shell">
+  <div class="auth-card auth-card--wide">
+    <div class="auth-head auth-head--split">
       <div>
-        <input type="text" name="first_name" id="first_name" placeholder="الاسم الأول" required value="<?= $def_first ?>">
+        <h1 class="auth-title">طلب الانتساب</h1>
+        <p class="auth-subtitle">يرجى تعبئة البيانات المطلوبة ورفع الوثائق لإكمال الطلب.</p>
       </div>
-      <div>
-        <input type="text" name="father_name" id="father_name" placeholder="اسم الأب" required value="<?= $def_father ?>">
-      </div>
-      <div>
-        <input type="text" name="grandfather_name" id="grandfather_name" placeholder="اسم الجد" required value="<?= $def_gf ?>">
-      </div>
-      <div>
-        <input type="text" name="family_name" id="family_name" placeholder="اسم العائلة" required value="<?= $def_family ?>">
+      <div class="auth-head-actions">
+        <a class="btn-card" href="/mutadarrib/membership/track_request.php">تتبّع طلب الانتساب</a>
       </div>
     </div>
 
-    <label>الاسم الكامل </label>
-    <input type="text" id="full_name_preview" class="readonly" readonly
-           value="<?= htmlspecialchars($def_full_preview) ?>">
+    <?= $message ?>
+<form method="POST" enctype="multipart/form-data" class="auth-form">
+      <div class="auth-grid">
+        <?php if (!$isKnownApplicant): ?>
+          <div class="auth-field col-6">
+            <label>نوع مقدم الطلب</label>
+            <select name="role" required>
+              <option value="">اختر...</option>
+              <option value="trainee">متدرب</option>
+              <option value="lawyer">مزاول</option>
+            </select>
+          </div>
+        <?php else: ?>
+          <div class="auth-field col-6">
+            <label>نوع مقدم الطلب</label>
+            <input type="text" class="readonly" value="<?= ($applicantType==='trainee'?'متدرب':'مزاول') ?>" readonly>
+          </div>
+        <?php endif; ?>
 
-    <label>الرقم الوطني</label>
-    <input type="text" name="national_id" required value="<?= $def_national ?>">
+        <div class="auth-field col-6">
+          <label>الرقم الوطني</label>
+          <input type="text" name="national_id" required value="<?= $def_national ?>">
+        </div>
 
-    <label>الهاتف</label>
-    <input type="text" name="phone" value="<?= $def_phone ?>">
+        <div class="auth-field col-12">
+          <label>الاسم الرباعي (كل مقطع منفرد)</label>
+        </div>
 
-    <label>البريد الإلكتروني</label>
-    <input type="email" name="email" value="<?= $def_email ?>">
+        <div class="auth-field col-3">
+          <label for="first_name">الاسم الأول</label>
+          <input id="first_name" type="text" name="first_name" required value="<?= $def_first ?>">
+        </div>
 
-    <label>عنوان المكتب (اختياري)</label>
-    <input type="text" name="office_address" value="<?= $def_office ?>">
+        <div class="auth-field col-3">
+          <label for="father_name">اسم الأب</label>
+          <input id="father_name" type="text" name="father_name" required value="<?= $def_father ?>">
+        </div>
 
-    <label>ملاحظات (اختياري)</label>
-    <textarea name="notes" rows="3"></textarea>
+        <div class="auth-field col-3">
+          <label for="grandfather_name">اسم الجد</label>
+          <input id="grandfather_name" type="text" name="grandfather_name" required value="<?= $def_grand ?>">
+        </div>
 
-    <label>شهادة ثانوية</label>
-    <select name="highschool_certificate">
-      <option value="لا"  <?= ($def_highschool==='لا')?'selected':''; ?>>لا</option>
-      <option value="نعم" <?= ($def_highschool==='نعم')?'selected':''; ?>>نعم</option>
-    </select>
+        <div class="auth-field col-3">
+          <label for="family_name">اسم العائلة</label>
+          <input id="family_name" type="text" name="family_name" required value="<?= $def_family ?>">
+        </div>
 
-    <label>الدرجة الجامعية</label>
-    <select name="university_degree">
-      <option value="" <?= ($def_uni==='')?'selected':''; ?>>---</option>
-      <option value="بكالوريوس" <?= ($def_uni==='بكالوريوس')?'selected':''; ?>>بكالوريوس</option>
-      <option value="ماجستير"   <?= ($def_uni==='ماجستير')?'selected':''; ?>>ماجستير</option>
-      <option value="دكتوراه"   <?= ($def_uni==='دكتوراه')?'selected':''; ?>>دكتوراه</option>
-    </select>
+        <div class="auth-field col-12">
+          <label>الاسم الكامل</label>
+          <input type="text" id="full_name_preview" class="readonly" readonly>
+        </div>
 
-    <label>هل يوجد ضمان اجتماعي؟</label>
-    <select name="social_security" id="ssSel" onchange="toggleSS()">
-      <option value="لا"  <?= ($def_ss==='لا')?'selected':''; ?>>لا</option>
-      <option value="نعم" <?= ($def_ss==='نعم')?'selected':''; ?>>نعم</option>
-    </select>
+        <div class="auth-field col-6">
+          <label>الهاتف</label>
+          <input type="text" name="phone" value="<?= $def_phone ?>">
+        </div>
 
-    <label>رقم الضمان الاجتماعي</label>
-    <input type="text" name="social_security_number" id="ssNum" value="<?= $def_ssn ?>">
+        <div class="auth-field col-6">
+          <label>البريد الإلكتروني</label>
+          <input type="email" name="email" value="<?= $def_email ?>">
+        </div>
 
-    <hr>
+        <div class="auth-field col-6">
+          <label>عنوان المكتب (اختياري)</label>
+          <input type="text" name="office_address" value="<?= $def_office ?>">
+        </div>
 
-    <label>صورة الهوية (أمامي) </label>
-    <input type="file" name="identity_front" accept=".jpg,.jpeg,.png,.pdf" required>
+        <div class="auth-field col-6">
+          <label>شهادة ثانوية</label>
+          <select name="highschool_certificate">
+            <option value="لا"  <?= ($def_highschool==='لا')?'selected':''; ?>>لا</option>
+            <option value="نعم" <?= ($def_highschool==='نعم')?'selected':''; ?>>نعم</option>
+          </select>
+        </div>
 
-    <label>صورة الهوية (خلفي) </label>
-    <input type="file" name="identity_back" accept=".jpg,.jpeg,.png,.pdf" required>
+        <div class="auth-field col-6">
+          <label>هل يوجد ضمان اجتماعي؟</label>
+          <select name="social_security" id="ssSel" onchange="toggleSS()">
+            <option value="لا"  <?= ($def_ss==='لا')?'selected':''; ?>>لا</option>
+            <option value="نعم" <?= ($def_ss==='نعم')?'selected':''; ?>>نعم</option>
+          </select>
+        </div>
 
-    <label>عدم محكومية</label>
-    <input type="file" name="no_conviction_doc" accept=".jpg,.jpeg,.png,.pdf" required>
+        <div class="auth-field col-6">
+          <label>رقم الضمان الاجتماعي</label>
+          <input type="text" name="social_security_number" id="ssNum" value="<?= $def_ssn ?>">
+        </div>
 
-    <label>حسن السيرة والسلوك </label>
-    <input type="file" name="good_conduct_doc" accept=".jpg,.jpeg,.png,.pdf" required>
 
-    <button type="submit">إرسال الطلب</button>
-  </form>
-</div>
+
+        <div class="auth-field col-12">
+          <label>الدرجة العلمية</label>
+          <select name="university_degree">
+            <option value="" <?= ($def_uni==='')?'selected':''; ?>>---</option>
+            <option value="بكالوريوس" <?= ($def_uni==='بكالوريوس')?'selected':''; ?>>بكالوريوس</option>
+            <option value="ماجستير"   <?= ($def_uni==='ماجستير')?'selected':''; ?>>ماجستير</option>
+            <option value="دكتوراه"   <?= ($def_uni==='دكتوراه')?'selected':''; ?>>دكتوراه</option>
+          </select>
+        </div>
+
+
+
+        <div class="auth-field col-12">
+          <label>ملاحظات (اختياري)</label>
+          <textarea name="notes" rows="4"><?= $def_notes ?></textarea>
+        </div>
+
+        <hr class="auth-divider">
+
+        <div class="auth-field col-6">
+          <label>صورة الهوية (أمامي)</label>
+          <input type="file" name="identity_front" accept=".jpg,.jpeg,.png,.pdf" required>
+        </div>
+
+        <div class="auth-field col-6">
+          <label>صورة الهوية (خلفي)</label>
+          <input type="file" name="identity_back" accept=".jpg,.jpeg,.png,.pdf" required>
+        </div>
+
+        <div class="auth-field col-6">
+          <label>عدم محكومية</label>
+          <input type="file" name="no_conviction_doc" accept=".jpg,.jpeg,.png,.pdf" required>
+        </div>
+
+        <div class="auth-field col-6">
+          <label>حسن السيرة والسلوك</label>
+          <input type="file" name="good_conduct_doc" accept=".jpg,.jpeg,.png,.pdf" required>
+        </div>
+
+        <div class="auth-field col-12">
+          <button type="submit" class="auth-submit">إرسال الطلب</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</main>
+
+<?php include(__DIR__ . "/../includes/footer.php"); ?>
 
 <script>
 function normalizeSpaces(s){
@@ -344,9 +392,35 @@ function toggleSS(){
   num.disabled = (ss.value !== 'نعم');
 }
 toggleSS();
+
+function sanitizePhpNoise(){
+  const bad = /(Warning:|Notice:|Undefined variable|C:\\xampp|on line\s*\d+|<\/?b>)/i;
+
+  // Clear any input/textarea values polluted by PHP warnings
+  document.querySelectorAll('input, textarea').forEach(el => {
+    if (typeof el.value === 'string' && bad.test(el.value)) {
+      el.value = '';
+    }
+  });
+
+  // Hide standalone warning dumps (if they appear as text in the form)
+  document.querySelectorAll('form, .auth-card').forEach(root => {
+    root.querySelectorAll('*').forEach(node => {
+      node.childNodes.forEach(ch => {
+        if (ch.nodeType === Node.TEXT_NODE && bad.test(ch.textContent || '')) {
+          ch.textContent = '';
+        }
+      });
+      if (node.tagName === 'B' && bad.test(node.textContent || '')) {
+        const par = node.parentElement;
+        if (par && bad.test(par.textContent || '')) par.style.display = 'none';
+      }
+    });
+  });
+}
+
+sanitizePhpNoise();
 </script>
 
 </body>
 </html>
-
-<?php include("../includes/footer.php"); ?>

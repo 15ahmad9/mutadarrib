@@ -61,23 +61,22 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <?php include(__DIR__ . "/../includes/sidebar.php"); ?>
 
   <div class="container">
-    <h2>طلبات الانتساب</h2>
-
-    <form method="GET" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-      <input type="text" name="search" placeholder="بحث بالاسم/الرقم الوطني/الهاتف/البريد" value="<?= htmlspecialchars($search) ?>">
-      <select name="status">
-        <option value="pending" <?= $status==='pending'?'selected':'' ?>>قيد المراجعة</option>
-        <option value="approved" <?= $status==='approved'?'selected':'' ?>>مقبول</option>
-        <option value="rejected" <?= $status==='rejected'?'selected':'' ?>>مرفوض</option>
-        <option value="all" <?= $status==='all'?'selected':'' ?>>الكل</option>
-      </select>
-      <button type="submit">تطبيق</button>
-    </form>
+    <div class="admin-page-head">
+  <h2>طلبات الانتساب</h2>
+  <form class="search-form" method="GET">
+  <div class="search-input">
+    <input type="text" name="search" placeholder="بحث بالاسم/الرقم الوطني/الهاتف/البريد" value="<?= htmlspecialchars($search) ?>" class="search-field">
+    <svg class="in-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.3l4.4 4.4a1 1 0 0 0 1.4-1.4l-4.4-4.4A8 8 0 0 0 10 2Z"/></svg>
+  </div>
+  <button type="submit" class="btn btn-soft"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.3l4.4 4.4a1 1 0 0 0 1.4-1.4l-4.4-4.4A8 8 0 0 0 10 2Z"/></svg><span>بحث</span></button>
+</form>
+</div>
 
     <?php if (!$rows): ?>
       <p style="margin-top:15px;">لا توجد طلبات.</p>
     <?php else: ?>
-      <table>
+      <div class="table-card"><div class="table-wrap">
+<table class="table">
         <thead>
           <tr>
             <th>#</th>
@@ -115,6 +114,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <?php endforeach; ?>
         </tbody>
       </table>
+</div></div>
     <?php endif; ?>
 
   </div>

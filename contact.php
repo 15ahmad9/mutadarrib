@@ -83,59 +83,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <title>تواصل معنا</title>
-  <link rel="stylesheet" href="/mutadarrib/assets/css/style.css"></head>
+  <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
+</head>
 <body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include(__DIR__ . "/includes/header.php"); ?>
 
-<div class="contact-wrap">
-  <h2>تواصل معنا</h2>
-
-  <?php if ($success): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-  <?php endif; ?>
-
-  <?php if ($errors): ?>
-    <div class="alert alert-error">
-      <ul class="contact-list">
-        <?php foreach ($errors as $e): ?>
-          <li><?= htmlspecialchars($e) ?></li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
-  <?php endif; ?>
-
-  <form method="POST">
-    <div class="form-row">
-      <label>الاسم</label>
-      <input type="text" name="name" value="<?= htmlspecialchars($name) ?>" required>
+<main class="auth-shell contact-shell">
+  <div class="auth-card auth-card--wide contact-card">
+    <div class="auth-head">
+      <h1 class="auth-title">تواصل معنا</h1>
+      <p class="auth-subtitle">اكتب لنا رسالتك وسنعود إليك بأقرب وقت.</p>
     </div>
 
-    <div class="form-row">
-      <label>البريد الإلكتروني</label>
-      <input type="email" name="email" value="<?= htmlspecialchars($email) ?>" required>
-    </div>
+    <?php if ($success): ?>
+      <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+    <?php endif; ?>
 
-    <div class="form-row">
-      <label>رقم الهاتف (اختياري)</label>
-      <input type="text" name="phone" value="<?= htmlspecialchars($phone) ?>" placeholder="مثال: 079xxxxxxx أو +9627xxxxxxxx">
-      <div class="small-note">يساعدنا رقم الهاتف على التواصل معك بسرعة عند الحاجة.</div>
-    </div>
+    <?php if ($errors): ?>
+      <div class="alert alert-error">
+        <ul class="contact-list">
+          <?php foreach ($errors as $e): ?>
+            <li><?= htmlspecialchars($e) ?></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endif; ?>
 
-    <div class="form-row">
-      <label>الموضوع</label>
-      <input type="text" name="subject" value="<?= htmlspecialchars($subject) ?>" required>
-    </div>
+    <form method="POST" class="auth-form">
+      <div class="auth-grid contact-grid">
+        <div class="auth-field col-6">
+          <label for="c-name">الاسم</label>
+          <input id="c-name" type="text" name="name" value="<?= htmlspecialchars($name) ?>" required>
+        </div>
 
-    <div class="form-row">
-      <label>الرسالة</label>
-      <textarea name="message" required><?= htmlspecialchars($message) ?></textarea>
-      <div class="small-note">يرجى كتابة تفاصيل واضحة لتسهيل الرد.</div>
-    </div>
+        <div class="auth-field col-6">
+          <label for="c-email">البريد الإلكتروني</label>
+          <input id="c-email" type="email" name="email" value="<?= htmlspecialchars($email) ?>" required>
+        </div>
 
-    <button type="submit">إرسال</button>
-  </form>
-</div>
+        <div class="auth-field col-6">
+          <label for="c-phone">رقم الهاتف <span class="muted">(اختياري)</span></label>
+          <input id="c-phone" type="text" name="phone" value="<?= htmlspecialchars($phone) ?>" placeholder="مثال: 079xxxxxxx أو +9627xxxxxxxx">
+          <div class="small-note">يساعدنا رقم الهاتف على التواصل معك بسرعة عند الحاجة.</div>
+        </div>
+
+        <div class="auth-field col-6">
+          <label for="c-subject">الموضوع</label>
+          <input id="c-subject" type="text" name="subject" value="<?= htmlspecialchars($subject) ?>" required>
+        </div>
+
+        <div class="auth-field col-12">
+          <label for="c-message">الرسالة</label>
+          <textarea id="c-message" name="message" class="contact-textarea" required><?= htmlspecialchars($message) ?></textarea>
+          <div class="small-note">يرجى كتابة تفاصيل واضحة لتسهيل الرد.</div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-card auth-submit contact-submit">إرسال</button>
+
+      <div class="contact-hint">
+        * سيتم حفظ رسالتك في النظام ومراجعتها من الإدارة.
+      </div>
+    </form>
+  </div>
+</main>
 
 <?php include(__DIR__ . "/includes/footer.php"); ?>
 
