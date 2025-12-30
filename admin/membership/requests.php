@@ -94,7 +94,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <tr>
               <td><?= $i+1 ?></td>
               <td><?= htmlspecialchars($r['full_name'] ?? '-') ?></td>
-              <td><?= $r['applicant_type']==='trainee' ? 'متدرب' : 'مزاول' ?></td>
+              <td><?= $r['role']==='trainee' ? 'متدرب' : 'مزاول' ?></td>
               <td><?= htmlspecialchars($r['national_id'] ?? '-') ?></td>
               <td><?= htmlspecialchars($r['phone'] ?? '-') ?></td>
               <td>
