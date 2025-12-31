@@ -169,93 +169,126 @@ if ($role === 'trainee') {
 
   <?php include("../includes/header.php"); ?>
 
-  <div class="wrap">
-    <h2 class="page-title">مركز الإشعارات</h2>
 
-    <div class="tabs">
+  <div class="wrap notify-wrap">
+    <div class="notify-head">
+      <h2 class="page-title">مركز الإشعارات</h2>
+    </div>
+    <p class="notify-subtitle">كل تذكيراتك وإشعارات التدريب في مكان واحد.</p>
+
+    <div class="tabs notify-tabs">
       <a href="#reminders">تذكيرات التقويم</a>
       <?php if ($role === 'trainee'): ?>
         <a href="#training">إشعارات التدريب</a>
       <?php endif; ?>
     </div>
 
-    <!-- ================== Reminders ================== -->
-    <div class="section" id="reminders">
-      <h3>تذكيرات التقويم</h3>
+    <div class="notify-grid">
 
-      <h4 style="margin-top:12px;">تذكيرات الآن</h4>
-      <?php if (empty($remindersNow)): ?>
-        <p class="muted">لا توجد تذكيرات قريبة الآن.</p>
-      <?php else: ?>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>العنوان</th>
-              <th>النوع</th>
-              <th>وقت البدء</th>
-              <th>المتبقي</th>
-              <th>التذكير (دقيقة)</th>
-              <th>حالة</th>
-              <th>إجراء</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($remindersNow as $i => $r): ?>
-              <tr>
-                <td><?= $i + 1 ?></td>
-                <td><?= htmlspecialchars($r['title']) ?></td>
-                <td><?= htmlspecialchars($r['type'] ?? 'task') ?></td>
-                <td><?= htmlspecialchars($r['start_at']) ?></td>
-                <td><?= htmlspecialchars(formatRemaining($r['start_at'])) ?></td>
-                <td><?= htmlspecialchars($r['reminder_minutes']) ?></td>
-                <td><span class="badge badge-now">حان وقت التذكير</span></td>
-                <td class="actions">
-                  <a href="/mutadarrib/calendar/calendar.php">فتح التقويم</a>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      <?php endif; ?>
+      <!-- ================== Reminders ================== -->
+      <div class="section" id="reminders">
 
-      <h4 style="margin-top:16px;">قادم خلال 24 ساعة</h4>
-      <?php if (empty($next24h)): ?>
-        <p class="muted">لا توجد مهام خلال 24 ساعة القادمة.</p>
-      <?php else: ?>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>العنوان</th>
-              <th>وقت البدء</th>
-              <th>المتبقي</th>
-              <th>التذكير (دقيقة)</th>
-              <th>إجراء</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($next24h as $i => $r): ?>
-              <tr>
-                <td><?= $i + 1 ?></td>
-                <td><?= htmlspecialchars($r['title']) ?></td>
-                <td><?= htmlspecialchars($r['start_at']) ?></td>
-                <td><?= htmlspecialchars(formatRemaining($r['start_at'])) ?></td>
-                <td><?= htmlspecialchars($r['reminder_minutes'] ?? '-') ?></td>
-                <td class="actions">
-                  <a href="/mutadarrib/calendar/calendar.php">فتح التقويم</a>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      <?php endif; ?>
-    </div>
+        <div class="notify-section-card" data-notify-block="now">
+          <div class="notify-section-head">
+            <h3>تذكيرات الآن</h3>
+            <span class="notify-count"><?= count($remindersNow) ?></span>
+          </div>
+          <div class="notify-body">
+            <?php if (empty($remindersNow)): ?>
+              <div class="notify-empty" data-empty>
+                <span class="emoji">🔔</span>
+                <strong>لا توجد تذكيرات قريبة الآن.</strong>
+                <div style="margin-top:6px;">عندما يقترب موعد تذكير، سيظهر هنا مع حركة جميلة.</div>
+              </div>
+            <?php else: ?>
+              <table class="notify-table" data-rows>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>العنوان</th>
+                    <th>النوع</th>
+                    <th>وقت البدء</th>
+                    <th>المتبقي</th>
+                    <th>التذكير (دقيقة)</th>
+                    <th>حالة</th>
+                    <th>إجراء</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($remindersNow as $i => $r): ?>
+                    <tr>
+                      <td data-label="#"><?= $i + 1 ?></td>
+                      <td data-label="العنوان"><?= htmlspecialchars($r['title']) ?></td>
+                      <td data-label="النوع"><?= htmlspecialchars($r['type'] ?? 'task') ?></td>
+                      <td data-label="وقت البدء"><?= htmlspecialchars($r['start_at']) ?></td>
+                      <td data-label="المتبقي"><?= htmlspecialchars(formatRemaining($r['start_at'])) ?></td>
+                      <td data-label="التذكير"><?= htmlspecialchars($r['reminder_minutes']) ?></td>
+                      <td data-label="حالة"><span class="badge badge-now">حان وقت التذكير</span></td>
+                      <td data-label="إجراء" class="actions">
+                        <a class="notify-btn" href="/mutadarrib/calendar/calendar.php">فتح التقويم</a>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            <?php endif; ?>
+          </div>
+        </div>
 
-    <!-- ================== Training Notifications (Trainee only) ================== -->
+        <div class="notify-section-card" data-notify-block="next">
+          <div class="notify-section-head">
+            <h3>قادم خلال 24 ساعة</h3>
+            <span class="notify-count"><?= count($next24h) ?></span>
+          </div>
+          <div class="notify-body">
+            <?php if (empty($next24h)): ?>
+              <div class="notify-empty" data-empty>
+                <span class="emoji">⏳</span>
+                <strong>لا توجد مهام خلال 24 ساعة القادمة.</strong>
+                <div style="margin-top:6px;">تابع التقويم لإضافة مهام وتذكيرات جديدة.</div>
+              </div>
+            <?php else: ?>
+              <table class="notify-table" data-rows>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>العنوان</th>
+                    <th>وقت البدء</th>
+                    <th>المتبقي</th>
+                    <th>التذكير (دقيقة)</th>
+                    <th>إجراء</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($next24h as $i => $r): ?>
+                    <tr>
+                      <td data-label="#"><?= $i + 1 ?></td>
+                      <td data-label="العنوان"><?= htmlspecialchars($r['title']) ?></td>
+                      <td data-label="وقت البدء"><?= htmlspecialchars($r['start_at']) ?></td>
+                      <td data-label="المتبقي"><?= htmlspecialchars(formatRemaining($r['start_at'])) ?></td>
+                      <td data-label="التذكير"><?= htmlspecialchars($r['reminder_minutes'] ?? '-') ?></td>
+                      <td data-label="إجراء" class="actions">
+                        <a class="notify-btn" href="/mutadarrib/calendar/calendar.php">فتح التقويم</a>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            <?php endif; ?>
+          </div>
+        </div>
+
+      </div>
+
+<!-- ================== Training Notifications (Trainee only) ================== -->
     <?php if ($role === 'trainee'): ?>
       <div class="section" id="training">
-        <h3>إشعارات التدريب</h3>
+        <div class="notify-section-card" data-notify-block="training">
+          <div class="notify-section-head">
+            <h3>إشعارات التدريب</h3>
+            <span class="notify-count">📌</span>
+          </div>
+          <div class="notify-body">
 
         <?php if (!isset($trainee_id) || !$trainee_id): ?>
           <div class="alert-exam-danger">
@@ -334,12 +367,19 @@ if ($role === 'trainee') {
           <?php endif; ?>
 
         <?php endif; ?>
+          </div>
+        </div>
       </div>
     <?php endif; ?>
 
+
+
+    </div>
   </div>
 
-  <?php include("../includes/footer.php"); ?>
+  <script src="/mutadarrib/assets/js/notify-anim.js"></script>
+
+<?php include("../includes/footer.php"); ?>
 </body>
 
 </html>

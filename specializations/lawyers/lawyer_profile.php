@@ -96,21 +96,46 @@ $trainings = $stmtTr->fetchAll(PDO::FETCH_ASSOC);
 
   <?php include("../../includes/header.php"); ?>
 
-  <div class="container profile-container">
-    <div class="profile-card">
+  <div class="container">
+    <div class="office-page">
 
-      <div class="avatar large">⚖️</div>
+      <div class="office-page-header">
+        <a class="btn-card office-back" href="lawyers_offices.php">الرجوع للمكاتب</a>
+        <div class="office-page-title">
+          <h1>تفاصيل المكتب</h1>
+          <p>معلومات المكتب والتدريبات المتاحة لدى المحامي</p>
+        </div>
+      </div>
 
-      <h2><?= htmlspecialchars($lawyer['full_name']) ?></h2>
+      <div class="office-card">
 
-      <p><strong>رقم السجل:</strong> <?= htmlspecialchars($lawyer['syndicate_id']) ?></p>
-      <p><strong>الهاتف:</strong> <?= htmlspecialchars($lawyer['phone'] ?? '-') ?></p>
-      <p><strong>البريد:</strong> <?= htmlspecialchars($lawyer['email'] ?? '-') ?></p>
-      <p><strong>عنوان المكتب:</strong> <?= htmlspecialchars($lawyer['office_address'] ?? '-') ?></p>
+        <div class="office-hero">
+          <div class="avatar large">⚖️</div>
+          <h2><?= htmlspecialchars($lawyer['full_name']) ?></h2>
+        </div>
 
-      <hr>
+        <div class="office-info-grid">
+          <div class="office-info-item">
+            <span class="label">رقم السجل</span>
+            <span class="value"><?= htmlspecialchars($lawyer['syndicate_id']) ?></span>
+          </div>
+          <div class="office-info-item">
+            <span class="label">الهاتف</span>
+            <span class="value"><?= htmlspecialchars($lawyer['phone'] ?? '-') ?></span>
+          </div>
+          <div class="office-info-item">
+            <span class="label">البريد</span>
+            <span class="value"><?= htmlspecialchars($lawyer['email'] ?? '-') ?></span>
+          </div>
+          <div class="office-info-item">
+            <span class="label">عنوان المكتب</span>
+            <span class="value"><?= htmlspecialchars($lawyer['office_address'] ?? '-') ?></span>
+          </div>
+        </div>
 
-      <h3>التدريبات المنشأة لدى المكتب</h3>
+        <div class="hr"></div>
+
+        <h3 class="office-section-title">التدريبات المنشأة لدى المكتب</h3>
 
       <?php if ($activeApp && isset($_SESSION['role']) && $_SESSION['role'] === 'trainee'): ?>
         <div class="alert">
@@ -237,8 +262,9 @@ $trainings = $stmtTr->fetchAll(PDO::FETCH_ASSOC);
 
 
       </div>
-    </div>
+      </div>
 
+    </div>
   </div>
 
 <?php include("../../includes/footer.php"); ?>

@@ -21,11 +21,11 @@ if (!isset($_SESSION['user_id'])) {
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 
   <link rel="stylesheet" href="../assets/css/style.css"></head>
-<body data-theme="<?= htmlspecialchars($theme) ?>">
+<body class="calendar-page" data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php include("../includes/header.php"); ?>
 
-<div class="page-wrap">
+<div class="page-wrap calendar-wrap">
   <div class="topbar">
     <h2>التقويم (المهام والتذكير)</h2>
     <div class="hint">اضغط على يوم/اسحب فترة لإضافة مهمة. اضغط على مهمة للتعديل أو الحذف.</div>
@@ -112,19 +112,32 @@ if (!isset($_SESSION['user_id'])) {
   const btnClose = document.getElementById('closeBtn');
 
   function openModal(mode) {
-    modalBackdrop.style.display = 'flex';
-    if (mode === 'edit') {
-      modalTitle.textContent = 'تعديل مهمة';
-      btnDelete.style.display = 'inline-block';
-    } else {
-      modalTitle.textContent = 'مهمة جديدة';
-      btnDelete.style.display = 'none';
-    }
-  }
+  // show with animation
+  modalBackdrop.style.display = 'flex';
+  // force reflow then add class
+  requestAnimationFrame(() => {
+    modalBackdrop.classList.add('open');
+  });
 
-  function closeModal() {
-    modalBackdrop.style.display = 'none';
+  if (mode === 'edit') {
+    modalTitle.textContent = 'تعديل مهمة';
+    btnDelete.style.display = 'inline-block';
+  } else {
+    modalTitle.textContent = 'مهمة جديدة';
+    btnDelete.style.display = 'none';
   }
+}
+
+function closeModal() {
+  // hide with animation
+  modalBackdrop.classList.remove('open');
+  // wait for transition end
+  setTimeout(() => {
+    if (!modalBackdrop.classList.contains('open')) {
+      modalBackdrop.style.display = 'none';
+    }
+  }, 220);
+}
 
   function toLocalInputValue(dateObj) {
     // YYYY-MM-DDTHH:mm
@@ -180,6 +193,29 @@ if (!isset($_SESSION['user_id'])) {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
+
+
+// Animations & polish
+loading: function(isLoading) {
+  calendarEl.classList.toggle('is-loading', !!isLoading);
+},
+
+datesSet: function() {
+  // view transition (month/week/day)
+  const harness = calendarEl.querySelector('.fc-view-harness');
+  if (!harness) return;
+  harness.classList.remove('fc-animate-in');
+  // reflow then animate in
+  void harness.offsetWidth;
+  harness.classList.add('fc-animate-in');
+},
+
+eventDidMount: function(info) {
+  // animate events popping in
+  info.el.classList.add('fc-event-pop');
+  // small hover hint
+  info.el.setAttribute('title', info.event.title || '');
+},
 
       events: async function(fetchInfo, successCallback, failureCallback) {
         try {

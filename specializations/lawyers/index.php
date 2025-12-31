@@ -2,48 +2,55 @@
 <link rel="stylesheet" href="../../assets/css/style.css">
 <link rel="stylesheet" href="../../assets/css/lawyers.css">
 
-<div class="container hero-lawyers">
+<main class="lawyers-landing">
+  <div class="lawyers-landing__inner">
 
-    <h1>⚖️ قسم المحامين</h1>
-    <p>
-        بوابتك إلى التدريب القانوني المهني المعتمد
-        بإشراف نخبة من كبار المحامين.
-    </p>
-
-    <div class="lawyers-sections">
-
-        <div class="lawyer-box">
-            <h3>🏢 مكاتب المحامين</h3>
-            <p>
-                تصفّح جميع المكاتب المعتمدة التي تستقبل متدربين.
-            </p>
-            <a class="btn" href="lawyers_offices.php">
-                عرض المكاتب
-            </a>
-        </div>
-
-        <div class="lawyer-box">
-            <h3>📝 التسجيل كمحامي</h3>
-            <p>
-                هل أنت محامٍ مزاول وتريد استقبال متدربين؟
-            </p>
-            <a class="btn secondary" href="../../auth/register.php?specialization=lawyer">
-                تسجيل محامٍ
-            </a>
-        </div>
-
-        <div class="lawyer-box">
-            <h3>🎓 التسجيل كمتدرب</h3>
-            <p>
-                ابدأ مسيرتك المهنية القانونية الآن.
-            </p>
-            <a class="btn secondary" href="../../auth/choose_specialization.php">
-                تسجيل متدرب
-            </a>
-        </div>
-
+    <div class="lawyers-landing__head">
+      <h1 class="lawyers-landing__title">⚖️ قسم المحامين</h1>
+      <p class="lawyers-landing__subtitle">
+        بوابتك إلى التدريب القانوني المهني المعتمد، بإشراف نخبة من كبار المحامين.
+      </p>
     </div>
 
-</div>
+    <section class="lawyers-landing__grid" aria-label="خدمات قسم المحامين">
+      <article class="law-card">
+        <div class="law-card__top">
+          <span class="law-card__icon" aria-hidden="true">🏢</span>
+          <span class="law-card__badge">مكاتب المحامين</span>
+        </div>
+        <h3 class="law-card__title">استعرض المكاتب المعتمدة</h3>
+        <p class="law-card__desc">تصفح جميع المكاتب المعتمدة التي تستقبل متدربين، واطّلع على التفاصيل والتدريبات المتاحة.</p>
+        <div class="law-card__actions">
+          <a class="law-card__btn" href="lawyers_offices.php">عرض المكاتب</a>
+        </div>
+      </article>
+
+      <article class="law-card">
+        <div class="law-card__top">
+          <span class="law-card__icon" aria-hidden="true">🧑‍⚖️</span>
+          <span class="law-card__badge">التسجيل كمحامي</span>
+        </div>
+        <h3 class="law-card__title">هل تريد استقبال متدربين؟</h3>
+        <p class="law-card__desc">قدّم طلب اعتماد مكتبك وابدأ بطرح تدريبات مهنية للمتدربين ضمن نظام واضح وسهل.</p>
+        <div class="law-card__actions">
+          <a class="law-card__btn law-card__btn--ghost" href="../../auth/register.php">تسجيل محام</a>
+        </div>
+      </article>
+
+      <article class="law-card">
+        <div class="law-card__top">
+          <span class="law-card__icon" aria-hidden="true">🎓</span>
+          <span class="law-card__badge">التسجيل كمتدرب</span>
+        </div>
+        <h3 class="law-card__title">ابدأ مسيرتك المهنية</h3>
+        <p class="law-card__desc">اختر تخصصك وقدّم طلب التدريب بسهولة، وتابع حالتك وخطواتك القادمة من لوحة المتدرب.</p>
+        <div class="law-card__actions">
+          <a class="law-card__btn" href="../../auth/choose_specialization.php">تسجيل متدرب</a>
+        </div>
+      </article>
+    </section>
+
+  </div>
+</main>
 
 <?php include("../../includes/footer.php"); ?>

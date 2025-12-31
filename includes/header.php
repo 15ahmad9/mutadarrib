@@ -160,3 +160,6 @@ $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'مت�
     }
   });
 </script>
+
+<!-- Front-end only: Apply Training popup (prevents full navigation when user already has active application) -->
+<script src="/mutadarrib/assets/js/apply-training-modal.js" defer></script>

@@ -231,83 +231,152 @@ function fileUrl($path) {
 
 <?php include("includes/header.php"); ?>
 
-<div class="container profile-page">
-  <h2>الملف الشخصي</h2>
+<div class="container profile-page profile-v2">
+  <div class="profile-head reveal" data-reveal="zoom">
+    <h2 class="profile-title">الملف الشخصي</h2>
+    <p class="profile-sub">إدارة معلومات حسابك ورفع الوثائق المطلوبة لإكمال الملف.</p>
+  </div>
 
-  <div class="profile-card">
-    <?= $message ?>
+  <div class="profile-layout">
+    <section class="card profile-summary reveal" data-reveal="right">
+      <?= $message ?>
 
-    <?php if (in_array($role, ['trainee','lawyer'], true) && !$isProfileCompleteNow): ?>
-      <p class="alert alert-error">
-        حسابك غير مكتمل. يرجى رفع (الهوية الأمامية والخلفية) بالإضافة إلى وثائق (عدم المحكومية وحسن السيرة والسلوك) لإكمال الملف.
-      </p>
-    <?php endif; ?>
+      <?php if (in_array($role, ['trainee','lawyer'], true) && !$isProfileCompleteNow): ?>
+        <p class="alert alert-error">
+          حسابك غير مكتمل. يرجى رفع (الهوية الأمامية والخلفية) بالإضافة إلى وثائق (عدم المحكومية وحسن السيرة والسلوك) لإكمال الملف.
+        </p>
+      <?php endif; ?>
 
-    <p><strong>الاسم الكامل:</strong> <?= htmlspecialchars($user['full_name']) ?></p>
-    <p><strong>الرقم الوطني:</strong> <?= htmlspecialchars($user['national_id']) ?></p>
-    <p><strong>رقم الهاتف:</strong> <?= htmlspecialchars($user['phone']) ?></p>
-    <p><strong>البريد الإلكتروني:</strong> <?= htmlspecialchars($user['email']) ?></p>
-    <p><strong>العنوان:</strong> <?= htmlspecialchars($user['address']) ?></p>
-    <p><strong>نوع الحساب:</strong> <?= $role_ar ?></p>
-
-    <a href="edit_profile.php" class="edit-btn">تعديل الملف الشخصي</a>
-
-    <?php if ($role === 'lawyer' && $roleRow): ?>
-      <hr>
-      <h3>معلومات المزاول</h3>
-      <p><strong>رقم السجل:</strong> <?= htmlspecialchars($roleRow['syndicate_id']) ?></p>
-      <p><strong>عنوان المكتب:</strong> <?= htmlspecialchars($roleRow['office_address']) ?></p>
-      <p><strong>الحالة:</strong> <?= ((int)$roleRow['verified'] === 1) ? 'موثّق' : 'قيد التحقق' ?></p>
-    <?php endif; ?>
-
-    <?php if (in_array($role, ['trainee','lawyer'], true)): ?>
-      <div class="doc-card">
-        <h3>وثائق الملف الشخصي</h3>
-
-        <div class="doc-row">
-          <div class="doc-col">
-            <p>
-              <strong>الهوية (أمامي):</strong>
-              <?= $hasIdFront ? '<span class="badge ok">مرفوع</span>' : '<span class="badge no">غير مرفوع</span>' ?>
-            </p>
-          </div>
-          <div class="doc-col">
-            <p>
-              <strong>الهوية (خلفي):</strong>
-              <?= $hasIdBack ? '<span class="badge ok">مرفوع</span>' : '<span class="badge no">غير مرفوع</span>' ?>
-            </p>
-          </div>
-
-          <div class="doc-col">
-            <p>
-              <strong>عدم المحكومية:</strong>
-              <?= $hasNoConv ? '<span class="badge ok">مرفوع</span>' : '<span class="badge no">غير مرفوع</span>' ?>
-            </p>
-          </div>
-          <div class="doc-col">
-            <p>
-              <strong>حسن السيرة والسلوك:</strong>
-              <?= $hasGood ? '<span class="badge ok">مرفوع</span>' : '<span class="badge no">غير مرفوع</span>' ?>
-            </p>
+      <div class="profile-top">
+        <div class="profile-avatar" aria-hidden="true">👤</div>
+        <div class="profile-meta">
+          <h3 class="profile-name"><?= htmlspecialchars($user['full_name']) ?></h3>
+          <div class="profile-chips">
+            <span class="chip chip-role"><?= $role_ar ?></span>
+            <?php if (in_array($role, ['trainee','lawyer'], true)): ?>
+              <span class="chip <?= $isProfileCompleteNow ? 'chip-ok' : 'chip-warn' ?>">
+                <?= $isProfileCompleteNow ? 'الملف مكتمل' : 'الملف غير مكتمل' ?>
+              </span>
+            <?php endif; ?>
           </div>
         </div>
 
-        <p class="note">الصيغ المسموحة: PDF/JPG/PNG — الحد الأقصى 5MB لكل ملف.</p>
+        <div class="profile-actions">
+          <a href="edit_profile.php" class="btn btn-sm">تعديل الملف الشخصي</a>
+          <a href="./auth/logout.php" class="btn outline btn-sm">تسجيل الخروج</a>
+        </div>
+      </div>
 
-        <form class="doc-form" method="POST" enctype="multipart/form-data">
-          <label>رفع/تحديث الهوية (أمامي)</label>
-          <input type="file" name="identity_front" accept=".pdf,.jpg,.jpeg,.png">
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="label">الرقم الوطني</div>
+          <div class="value"><?= htmlspecialchars($user['national_id']) ?></div>
+        </div>
+        <div class="info-item">
+          <div class="label">رقم الهاتف</div>
+          <div class="value"><?= htmlspecialchars($user['phone']) ?></div>
+        </div>
+        <div class="info-item">
+          <div class="label">البريد الإلكتروني</div>
+          <div class="value"><?= htmlspecialchars($user['email']) ?></div>
+        </div>
+        <div class="info-item">
+          <div class="label">العنوان</div>
+          <div class="value"><?= htmlspecialchars($user['address']) ?></div>
+        </div>
+      </div>
 
-          <label style="margin-top:10px;">رفع/تحديث الهوية (خلفي)</label>
-          <input type="file" name="identity_back" accept=".pdf,.jpg,.jpeg,.png">
+      <?php if ($role === 'lawyer' && $roleRow): ?>
+        <div class="subcard">
+          <h4>معلومات المزاول</h4>
+          <div class="info-grid info-grid-3">
+            <div class="info-item">
+              <div class="label">رقم السجل</div>
+              <div class="value"><?= htmlspecialchars($roleRow['syndicate_id']) ?></div>
+            </div>
+            <div class="info-item">
+              <div class="label">عنوان المكتب</div>
+              <div class="value"><?= htmlspecialchars($roleRow['office_address']) ?></div>
+            </div>
+            <div class="info-item">
+              <div class="label">الحالة</div>
+              <div class="value">
+                <span class="chip <?= ((int)$roleRow['verified'] === 1) ? 'chip-ok' : 'chip-warn' ?>">
+                  <?= ((int)$roleRow['verified'] === 1) ? 'موثّق' : 'قيد التحقق' ?>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php endif; ?>
+    </section>
 
-          <label style="margin-top:10px;">رفع/تحديث وثيقة عدم المحكومية</label>
-          <input type="file" name="no_conviction_doc" accept=".pdf,.jpg,.jpeg,.png">
+    <?php if (in_array($role, ['trainee','lawyer'], true)): ?>
+      <section class="card profile-docs reveal" data-reveal="left">
+        <div class="card-head">
+          <h3>وثائق الملف الشخصي</h3>
+          <p class="note">الصيغ المسموحة: PDF/JPG/PNG — الحد الأقصى 5MB لكل ملف.</p>
+        </div>
 
-          <label style="margin-top:10px;">رفع/تحديث وثيقة حسن السيرة والسلوك</label>
-          <input type="file" name="good_conduct_doc" accept=".pdf,.jpg,.jpeg,.png">
+        <div class="doc-status">
+          <div class="status-item">
+            <span class="status-title">الهوية (أمامي)</span>
+            <?= $hasIdFront ? '<span class="chip chip-ok">مرفوع</span>' : '<span class="chip chip-danger">غير مرفوع</span>' ?>
+          </div>
+          <div class="status-item">
+            <span class="status-title">الهوية (خلفي)</span>
+            <?= $hasIdBack ? '<span class="chip chip-ok">مرفوع</span>' : '<span class="chip chip-danger">غير مرفوع</span>' ?>
+          </div>
+          <div class="status-item">
+            <span class="status-title">عدم المحكومية</span>
+            <?= $hasNoConv ? '<span class="chip chip-ok">مرفوع</span>' : '<span class="chip chip-danger">غير مرفوع</span>' ?>
+          </div>
+          <div class="status-item">
+            <span class="status-title">حسن السيرة والسلوك</span>
+            <?= $hasGood ? '<span class="chip chip-ok">مرفوع</span>' : '<span class="chip chip-danger">غير مرفوع</span>' ?>
+          </div>
+        </div>
 
-          <button type="submit">حفظ الوثائق</button>
+        <form class="doc-form doc-form-v2" method="POST" enctype="multipart/form-data">
+          <div class="file-grid">
+            <div class="file-field">
+              <div class="file-label">رفع/تحديث الهوية (أمامي)</div>
+              <div class="file-ui">
+                <input id="identity_front" type="file" name="identity_front" accept=".pdf,.jpg,.jpeg,.png">
+                <label class="file-btn" for="identity_front">اختيار ملف</label>
+                <span class="file-name" data-default="لم يتم اختيار ملف">لم يتم اختيار ملف</span>
+              </div>
+            </div>
+
+            <div class="file-field">
+              <div class="file-label">رفع/تحديث الهوية (خلفي)</div>
+              <div class="file-ui">
+                <input id="identity_back" type="file" name="identity_back" accept=".pdf,.jpg,.jpeg,.png">
+                <label class="file-btn" for="identity_back">اختيار ملف</label>
+                <span class="file-name" data-default="لم يتم اختيار ملف">لم يتم اختيار ملف</span>
+              </div>
+            </div>
+
+            <div class="file-field">
+              <div class="file-label">رفع/تحديث وثيقة عدم المحكومية</div>
+              <div class="file-ui">
+                <input id="no_conviction_doc" type="file" name="no_conviction_doc" accept=".pdf,.jpg,.jpeg,.png">
+                <label class="file-btn" for="no_conviction_doc">اختيار ملف</label>
+                <span class="file-name" data-default="لم يتم اختيار ملف">لم يتم اختيار ملف</span>
+              </div>
+            </div>
+
+            <div class="file-field">
+              <div class="file-label">رفع/تحديث وثيقة حسن السيرة والسلوك</div>
+              <div class="file-ui">
+                <input id="good_conduct_doc" type="file" name="good_conduct_doc" accept=".pdf,.jpg,.jpeg,.png">
+                <label class="file-btn" for="good_conduct_doc">اختيار ملف</label>
+                <span class="file-name" data-default="لم يتم اختيار ملف">لم يتم اختيار ملف</span>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-wide">حفظ الوثائق</button>
         </form>
 
         <?php
@@ -366,12 +435,13 @@ function fileUrl($path) {
           </div>
         <?php endif; ?>
 
-      </div>
+      </section>
     <?php endif; ?>
-
-    <a href="./auth/logout.php" class="logout-btn">تسجيل الخروج</a>
   </div>
 </div>
+
+<script src="assets/js/ui-reveal.js"></script>
+<script src="assets/js/profile-ui.js"></script>
 
 <?php include("includes/footer.php"); ?>
 

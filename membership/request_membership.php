@@ -76,9 +76,30 @@ $message = "";
 // قيم افتراضية للعرض في الفورم (من بروفايل المستخدم إن وجد)
 $def_first  = htmlspecialchars($profile['first_name'] ?? '');
 $def_father = htmlspecialchars($profile['father_name'] ?? '');
-$def_gf     = htmlspecialchars($profile['grandfather_name'] ?? '');
+$def_grand  = htmlspecialchars($profile['grandfather_name'] ?? '');
+$def_notes  = htmlspecialchars($profile['notes'] ?? '');
 $def_family = htmlspecialchars($profile['family_name'] ?? '');
 $def_full_preview = normalizeSpaces(($profile['full_name'] ?? ''));
+
+
+// AJAX: تحقق سريع من وجود الرقم الوطني في جدول النقابة
+if (isset($_GET['action']) && $_GET['action'] === 'check_national_id') {
+  header('Content-Type: application/json; charset=utf-8');
+  $nid = normalizeSpaces($_POST['national_id'] ?? $_GET['national_id'] ?? '');
+  if ($nid === '') {
+    echo json_encode(['ok' => true, 'exists' => false]);
+    exit;
+  }
+  try {
+    $stmt = $pdo->prepare("SELECT syndicate_id FROM lawyers_syndicate WHERE national_id=? LIMIT 1");
+    $stmt->execute([$nid]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    echo json_encode(['ok' => true, 'exists' => (bool)$row]);
+  } catch (Throwable $t) {
+    echo json_encode(['ok' => false, 'error' => 'db_error']);
+  }
+  exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   try {
@@ -91,46 +112,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
 
-    // الاسم الرباعي (إجباري كأجزاء منفصلة)
-    $first_name       = normalizeSpaces($_POST['first_name'] ?? '');
-    $father_name      = normalizeSpaces($_POST['father_name'] ?? '');
-    $grandfather_name = normalizeSpaces($_POST['grandfather_name'] ?? '');
-    $family_name      = normalizeSpaces($_POST['family_name'] ?? '');
 
-    if ($first_name === '' || $father_name === '' || $grandfather_name === '' || $family_name === '') {
-      throw new Exception("يرجى تعبئة الاسم الرباعي بالكامل (كل جزء في حقل منفصل).");
-    }
-
-    // توليد الاسم الكامل تلقائياً
-    $full_name = normalizeSpaces($first_name . " " . $father_name . " " . $grandfather_name . " " . $family_name);
-
-    $national_id    = normalizeSpaces($_POST['national_id'] ?? '');
-
-    // ==============================
-// منع تقديم طلب انتساب إذا كان مسجلاً مسبقاً لدى النقابة (lawyers_syndicate)
-// ==============================
-$chkSynd = $pdo->prepare("SELECT COUNT(*) FROM lawyers_syndicate WHERE national_id = ? LIMIT 1");
-$chkSynd->execute([$national_id]);
-
-if ((int)$chkSynd->fetchColumn() > 0) {
-  throw new Exception("انت مسجل لدى النقابة يمكنك انشاء حساب");
+// الرقم الوطني (إجباري) + تحقق من وجوده في جدول النقابة قبل فتح بقية الحقول
+$national_id = normalizeSpaces($_POST['national_id'] ?? '');
+if ($national_id === '') {
+  throw new Exception("الرقم الوطني مطلوب.");
 }
 
+// منع تقديم طلب انتساب إذا كان مسجلاً مسبقاً لدى النقابة (lawyers_syndicate)
+$chkSynd = $pdo->prepare("SELECT COUNT(*) FROM lawyers_syndicate WHERE national_id = ? LIMIT 1");
+$chkSynd->execute([$national_id]);
+if ((int)$chkSynd->fetchColumn() > 0) {
+  throw new Exception("انت مسجل في النقابة يمكنك انشاء حساب");
+}
 
-    $phone          = normalizeSpaces($_POST['phone'] ?? '');
-    $email          = normalizeSpaces($_POST['email'] ?? '');
-    $office_address = normalizeSpaces($_POST['office_address'] ?? '');
-    $notes          = normalizeSpaces($_POST['notes'] ?? '');
+// الاسم الرباعي (إجباري كأجزاء منفصلة)
+$first_name       = normalizeSpaces($_POST['first_name'] ?? '');
+$father_name      = normalizeSpaces($_POST['father_name'] ?? '');
+$grandfather_name = normalizeSpaces($_POST['grandfather_name'] ?? '');
+$family_name      = normalizeSpaces($_POST['family_name'] ?? '');
 
-    $highschool     = $_POST['highschool_certificate'] ?? 'لا';
-    $university     = $_POST['university_degree'] ?? null;
+if ($first_name === '' || $father_name === '' || $grandfather_name === '' || $family_name === '') {
+  throw new Exception("يرجى تعبئة الاسم الرباعي بالكامل (كل جزء في حقل منفصل).");
+}
 
-    $social_security = $_POST['social_security'] ?? 'لا';
-    $social_number   = normalizeSpaces($_POST['social_security_number'] ?? '');
+// توليد الاسم الكامل تلقائياً
+$full_name = normalizeSpaces($first_name . " " . $father_name . " " . $grandfather_name . " " . $family_name);
 
-    if ($national_id === '') throw new Exception("الرقم الوطني مطلوب.");
-
-    // منع وجود طلب pending لنفس الرقم الوطني
+// منع وجود طلب pending لنفس الرقم الوطني
     $chk = $pdo->prepare("SELECT COUNT(*) FROM membership_requests WHERE national_id=? AND status='pending'");
     $chk->execute([$national_id]);
     if ((int)$chk->fetchColumn() > 0) {
@@ -209,6 +218,31 @@ $def_ssn = htmlspecialchars($profile['social_security_number'] ?? '');
   <meta charset="UTF-8">
   <title>طلب انتساب</title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
+<style>
+  /* إخفاء/إظهار بقية الحقول بدون كسر Grid */
+  .extra-fields.hidden { display: none; }
+  .extra-fields { display: contents; }
+
+  /* رسالة التحقق */
+  .syndicate-alert{
+    background: rgba(70, 99, 180, 0.08);
+    border: 1px solid rgba(70, 99, 180, 0.25);
+    color: #0f1b3f;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+  .syndicate-alert a{
+    color: #1b3a8a;
+    text-decoration: underline;
+  }
+  .syndicate-hint{
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 6px;
+  }
+</style>
 </head>
 <body class="layout-sticky" data-theme="<?= htmlspecialchars($theme) ?>">
 
@@ -249,6 +283,10 @@ $def_ssn = htmlspecialchars($profile['social_security_number'] ?? '');
           <label>الرقم الوطني</label>
           <input type="text" name="national_id" required value="<?= $def_national ?>">
         </div>
+
+<div class="auth-field col-12" id="syndicateMsg" style="display:none;"></div>
+
+<div id="extraFields" class="extra-fields hidden">
 
         <div class="auth-field col-12">
           <label>الاسم الرباعي (كل مقطع منفرد)</label>
@@ -359,6 +397,8 @@ $def_ssn = htmlspecialchars($profile['social_security_number'] ?? '');
         <div class="auth-field col-12">
           <button type="submit" class="auth-submit">إرسال الطلب</button>
         </div>
+
+        </div>
       </div>
     </form>
 
@@ -392,6 +432,93 @@ function toggleSS(){
   num.disabled = (ss.value !== 'نعم');
 }
 toggleSS();
+
+
+// تحقق من الرقم الوطني: إذا كان موجوداً في جدول النقابة نظهر رسالة ونغلق بقية الحقول
+const nationalInput = document.querySelector('input[name="national_id"]');
+const extraFields = document.getElementById('extraFields');
+const syndicateMsg = document.getElementById('syndicateMsg');
+
+// إغلاق الحقول مبدئياً إلى أن يتم التحقق من الرقم الوطني
+if(extraFields && extraFields.classList.contains('hidden')){
+  extraFields.querySelectorAll('input, select, textarea, button').forEach(el=>{ el.disabled = true; });
+}
+
+
+
+function toggleExtraFieldsDisabled(disabled){
+  if(!extraFields) return;
+  extraFields.querySelectorAll('input, select, textarea, button').forEach(el=>{
+    // لا نغلق زر التتبع الموجود خارج extraFields
+    el.disabled = !!disabled;
+  });
+}
+
+function setSyndicateState(state){
+  if(!extraFields || !syndicateMsg) return;
+
+  if(state === 'exists'){
+    toggleExtraFieldsDisabled(true);
+    extraFields.classList.add('hidden');
+    syndicateMsg.style.display = '';
+    syndicateMsg.innerHTML = `
+      <div class="syndicate-alert">
+        انت مسجل في النقابة يمكنك انشاء حساب
+        <div class="syndicate-hint">
+          يمكنك الانتقال لصفحة إنشاء الحساب من هنا:
+          <a href="/mutadarrib/auth/register.php">إنشاء حساب</a>
+        </div>
+      </div>`;
+  } else if (state === 'not_exists'){
+    syndicateMsg.style.display = 'none';
+    syndicateMsg.innerHTML = '';
+    extraFields.classList.remove('hidden');
+    toggleExtraFieldsDisabled(false);
+  } else { // empty/unknown
+    syndicateMsg.style.display = 'none';
+    syndicateMsg.innerHTML = '';
+    toggleExtraFieldsDisabled(true);
+    extraFields.classList.add('hidden');
+  }
+}
+
+let _nidTimer = null;
+async function checkNationalId(){
+  const nid = (nationalInput?.value || '').trim();
+  if(!nid){
+    setSyndicateState('empty');
+    return;
+  }
+
+  try{
+    const res = await fetch(window.location.pathname + '?action=check_national_id', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+      body: new URLSearchParams({ national_id: nid }).toString()
+    });
+    const data = await res.json();
+    if(data && data.ok){
+      setSyndicateState(data.exists ? 'exists' : 'not_exists');
+    }else{
+      // في حال فشل التحقق نفتح الحقول حتى لا نمنع المستخدم
+      setSyndicateState('not_exists');
+    }
+  }catch(e){
+    setSyndicateState('not_exists');
+  }
+}
+
+function scheduleCheck(){
+  if(_nidTimer) clearTimeout(_nidTimer);
+  _nidTimer = setTimeout(checkNationalId, 450);
+}
+
+if(nationalInput){
+  nationalInput.addEventListener('input', scheduleCheck);
+  nationalInput.addEventListener('blur', checkNationalId);
+  // تشغيل مبدئي لو كان الرقم موجوداً مسبقاً (معبأ من البروفايل)
+  scheduleCheck();
+}
 
 function sanitizePhpNoise(){
   const bad = /(Warning:|Notice:|Undefined variable|C:\\xampp|on line\s*\d+|<\/?b>)/i;
