@@ -30,11 +30,36 @@ if (!$lawyer_id) {
     die("❌ لم يتم العثور على حساب محامٍ مرتبط بهذا المستخدم.");
 }
 
-// جلب رقم الطلب من الرابط
+/*
+=====================================================
+  جلب رقم الطلب من الرابط (id)
+  وإذا لم يتم تمريره أو كان غير صالح => نجلبه من DB
+=====================================================
+*/
 $app_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if ($app_id <= 0) {
-    die("❌ رقم الطلب غير صالح (لم يتم تمرير ID صحيح).");
+    // نجلب أحدث طلب تدريب يخص هذا المحامي (بدون الاعتماد على GET)
+    $stmt = $pdo->prepare("
+        SELECT ta.application_id
+        FROM training_applications ta
+        JOIN trainings t ON ta.training_id = t.training_id
+        WHERE t.lawyer_id = ?
+        ORDER BY ta.applied_at DESC
+        LIMIT 1
+    ");
+    $stmt->execute([$lawyer_id]);
+
+    // loop (حسب طلبك) لاستخراج application_id
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($rows as $r) {
+        $app_id = (int)$r['application_id'];
+        break;
+    }
+}
+
+if ($app_id <= 0) {
+    die("❌ رقم الطلب غير صالح (لم يتم تمرير ID صحيح ولا يوجد طلبات لاسترجاعها).");
 }
 
 // يمكن أن تأتي قيمة قرار مبدئي من الرابط (?action=accept/reject)
@@ -77,15 +102,13 @@ function processDecision(PDO $pdo, array $app, int $app_id, string $decision) {
 
     $pdo->beginTransaction();
 
-// ===========================
-// تحديث حالة الطلب
-// ===========================
-$update = $pdo->prepare("
-    UPDATE training_applications
-    SET status = ?, reviewed_at = NOW(), trainee_seen = 0
-    WHERE application_id = ?
-");
-$update->execute([$decision, $app_id]);
+    // تحديث حالة الطلب
+    $update = $pdo->prepare("
+        UPDATE training_applications
+        SET status = ?, reviewed_at = NOW(), trainee_seen = 0
+        WHERE application_id = ?
+    ");
+    $update->execute([$decision, $app_id]);
 
     // في حالة القبول فقط
     if ($decision === 'accepted') {

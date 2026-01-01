@@ -36,6 +36,30 @@ $membershipApproved = $pdo->query("SELECT COUNT(*) FROM membership_requests WHER
 $membershipRejected = $pdo->query("SELECT COUNT(*) FROM membership_requests WHERE status='rejected'")->fetchColumn();
 $membershipAll = $pdo->query("SELECT COUNT(*) FROM membership_requests")->fetchColumn();
 
+
+// ===========================
+// رسائل تواصل معنا
+// ===========================
+// غيّر اسم الجدول إذا كان مختلفاً عندك
+$contactTable = "contact_messages";
+
+$contactNew = 0;
+$contactRead = 0;
+$contactClosed = 0;
+$contactAll = 0;
+
+try {
+  $stmtC = $pdo->query("SELECT status, COUNT(*) AS c FROM {$contactTable} GROUP BY status");
+  while ($r = $stmtC->fetch(PDO::FETCH_ASSOC)) {
+    if ($r['status'] === 'new') $contactNew = (int)$r['c'];
+    elseif ($r['status'] === 'read') $contactRead = (int)$r['c'];
+    elseif ($r['status'] === 'closed') $contactClosed = (int)$r['c'];
+  }
+  $contactAll = (int)$pdo->query("SELECT COUNT(*) FROM {$contactTable}")->fetchColumn();
+} catch (Exception $e) {
+  // الجدول غير موجود / الاسم مختلف
+  $contactAll = 0;
+}
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +82,7 @@ $membershipAll = $pdo->query("SELECT COUNT(*) FROM membership_requests")->fetchC
       <h1>لوحة تحكم المدير</h1>
 
       <div class="dash-grid">
-        <!-- Users (grouped by role) -->
+        <!-- Users -->
         <section class="dash-card">
           <div class="dash-card-head">
             <div class="dash-card-title"><span class="dash-icon" data-icon="users" aria-hidden="true"></span> المستخدمون</div>
@@ -103,7 +127,7 @@ $membershipAll = $pdo->query("SELECT COUNT(*) FROM membership_requests")->fetchC
           </div>
         </section>
 
-        <!-- Membership (same width as the 3 cards above on desktop) -->
+        <!-- Membership -->
         <section class="dash-card dash-card--wide">
           <div class="dash-card-head">
             <div class="dash-card-title"><span class="dash-icon" data-icon="membership" aria-hidden="true"></span> طلبات الانتساب</div>
@@ -116,11 +140,25 @@ $membershipAll = $pdo->query("SELECT COUNT(*) FROM membership_requests")->fetchC
             <div class="dash-row"><span>مرفوضة</span><strong><?= (int) $membershipRejected ?></strong></div>
           </div>
         </section>
-      </div>
 
-      <!-- تم حذف أزرار الاختصارات أسفل الصفحة بناءً على الطلب -->
+        <!-- Contact Messages -->
+        <section class="dash-card dash-card--wide">
+          <div class="dash-card-head">
+            <div class="dash-card-title"><span class="dash-icon" data-icon="contact" aria-hidden="true"></span> رسائل تواصل معنا</div>
+            <div class="dash-card-total"><?= (int) $contactAll ?></div>
+          </div>
+
+          <div class="dash-breakdown">
+            <div class="dash-row"><span>جديدة</span><strong><?= (int) $contactNew ?></strong></div>
+            <div class="dash-row"><span>مقروءة</span><strong><?= (int) $contactRead ?></strong></div>
+            <div class="dash-row"><span>مغلقة</span><strong><?= (int) $contactClosed ?></strong></div>
+          </div>
+        </section>
+
+      </div>
     </div>
   </div>
+
   <?php include("includes/footer.php"); ?>
 </body>
 

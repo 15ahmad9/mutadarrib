@@ -2440,6 +2440,7 @@ label {
 
 .notify-section-card.is-empty{
   animation: softGlow 3.2s ease-in-out infinite;
+  margin-bottom: 15px;
 }
 @keyframes softGlow{
   0%,100%{ box-shadow: var(--shadow-sm); }

@@ -94,7 +94,7 @@ $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td>
                 <?php if ($row['status'] == 'pending'): ?>
                     <!-- قبول / رفض -->
-                    <a class="btn approve" href="review.php?id=<?= $row['application_id'] ?>">قبول / رفض</a>
+<a class="btn approve" href="/mutadarrib/lawyer/review.php?id=<?= (int)$row['application_id'] ?>">قبول / رفض</a>
 
                 <?php elseif ($row['status'] == 'accepted'): ?>
                     <!-- زر إنهاء التدريب -->
