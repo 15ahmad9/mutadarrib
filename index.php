@@ -105,6 +105,12 @@ require_once __DIR__ . '/includes/theme_init.php';
     </a>
 
     <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
+        <h3>💻 تكنولوجيا المعلومات</h3>
+        <p>تدريب برمجة، شبكات، دعم فني وتطوير أنظمة.</p>
+        <span class="btn-card">دخول القسم</span>
+    </a>
+
+    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
         <h3>💊 الصيدلة</h3>
         <p>تدريب عملي في الصيدليات والمصانع الطبية.</p>
         <span class="btn-card">دخول القسم</span>
@@ -116,12 +122,11 @@ require_once __DIR__ . '/includes/theme_init.php';
         <span class="btn-card">دخول القسم</span>
     </a>
 
-    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
-        <h3>💻 تكنولوجيا المعلومات</h3>
-        <p>تدريب برمجة، شبكات، دعم فني وتطوير أنظمة.</p>
+<a class="card card-link reveal-item" href="/mutadarrib/soon.php">
+        <h3>🏢 الأعمال</h3>
+        <p>تدريب عملي في الشركات والمكاتب المعتمدة.</p>
         <span class="btn-card">دخول القسم</span>
     </a>
-
   </div>
 </section>
 

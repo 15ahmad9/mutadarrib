@@ -196,6 +196,23 @@
   padding: calc(var(--header-h) + 18px) 18px 18px;
 }
 
+/* -------------------------------------------------
+   FIX: Shared pages (Admin + Syndicate) render a global `.container`
+   inside `.admin-container`.
+   In theme.css, `.container` has a max-width and a top margin (50px),
+   which causes:
+   - extra spacing under the fixed header
+   - the card/table not centered within the available area (after reserving sidebar)
+   Solution: neutralize `.container` only when it is a direct child of `.admin-container`.
+   ------------------------------------------------- */
+.admin-container > .container{
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  margin-top: 0;
+  padding: 0;
+}
+
 /* Many admin pages render sidebar outside .admin-container, others render it inside.
    In both cases, keep enough right space on desktop. */
 @media (min-width: 992px) {
@@ -705,16 +722,64 @@ form.filter-row input[type="text"] {
   width:100%;
   border-collapse: separate;
   border-spacing: 0;
+  max-width: 100%;
+  min-width: 0; /* allow shrinking inside the content area */
+  table-layout: fixed; /* prevent long strings from expanding table */
+}
+
+/* -------------------------------------------------
+   FIX: Tables overflowing the page
+   - Some pages render <table> directly inside .wrap (no .table-wrap).
+   - Global min-width + nowrap headers can push the table خارج إطار الصفحة.
+   - We keep wide-table behavior ONLY when a .table-wrap is present.
+   ------------------------------------------------- */
+
+/* If a .table-wrap exists, keep the wide-table min width (scrollable). */
+.table-wrap :where(.table, table){
   min-width: 720px;
+}
+
+/* Otherwise, allow tables to shrink inside their container */
+.admin-container .wrap{
+  max-width: 100%;
+  overflow-x: auto; /* safety: if a cell still overflows */
+  -webkit-overflow-scrolling: touch;
+}
+.admin-container .wrap :where(.table, table){
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100%;
+  table-layout: fixed; /* prevents long strings from expanding table */
+}
+
+/* Smaller, more compact table on these pages */
+.admin-container .wrap :where(th, td){
+  padding: 10px 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: normal; /* allow wrapping */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Keep action buttons from wrapping awkwardly if the cell is marked */
+.admin-container .wrap td.actions{ white-space: nowrap; }
+
+@media (max-width: 992px){
+  .admin-container .wrap :where(th, td){
+    padding: 9px 8px;
+    font-size: 12px;
+  }
 }
 .table thead th, table thead th{
   background: linear-gradient(180deg, rgba(65,95,157,1) 0%, rgba(49,74,131,1) 100%);
   color:#fff;
-  padding: 12px 14px;
+  padding: 12px 10px;
   font-weight: 800;
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .table thead th:first-child, table thead th:first-child{
   border-top-right-radius: 16px; /* RTL */
@@ -723,12 +788,14 @@ form.filter-row input[type="text"] {
   border-top-left-radius: 16px;
 }
 .table tbody td, table tbody td{
-  padding: 12px 14px;
+  padding: 10px 10px;
   border-bottom: 1px solid rgba(2,6,23,.06);
-  font-size: 14px;
+  font-size: 13px;
   color: #0f172a;
   text-align: center;
   vertical-align: middle;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .table tbody tr:nth-child(even) td, table tbody tr:nth-child(even) td{
   background: rgba(2,6,23,.012);

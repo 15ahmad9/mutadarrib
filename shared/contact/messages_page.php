@@ -288,29 +288,6 @@ if ($layout_header_path && file_exists($layout_header_path)) include $layout_hea
             <td>
               <a class="btn btn-view" href="?<?= h(http_build_query($viewQS)) ?>">عرض</a>
 
-              <form method="POST" style="display:inline;">
-                <input type="hidden" name="csrf" value="<?= h($csrf) ?>">
-                <input type="hidden" name="action" value="set_status">
-                <input type="hidden" name="message_id" value="<?= $id ?>">
-                <input type="hidden" name="status" value="read">
-                <button class="btn btn-read" type="submit">مقروء</button>
-              </form>
-
-              <form method="POST" style="display:inline;">
-                <input type="hidden" name="csrf" value="<?= h($csrf) ?>">
-                <input type="hidden" name="action" value="set_status">
-                <input type="hidden" name="message_id" value="<?= $id ?>">
-                <input type="hidden" name="status" value="closed">
-                <button class="btn btn-close" type="submit">إغلاق</button>
-              </form>
-
-              <form method="POST" style="display:inline;">
-                <input type="hidden" name="csrf" value="<?= h($csrf) ?>">
-                <input type="hidden" name="action" value="set_status">
-                <input type="hidden" name="message_id" value="<?= $id ?>">
-                <input type="hidden" name="status" value="new">
-                <button class="btn btn-new" type="submit">جديد</button>
-              </form>
             </td>
           </tr>
         <?php endforeach; ?>
@@ -349,5 +326,7 @@ if ($layout_header_path && file_exists($layout_header_path)) include $layout_hea
   </div>
 </div>
 </div>
+<?php include("../../includes/footer.php"); ?>
+
 </body>
 </html>

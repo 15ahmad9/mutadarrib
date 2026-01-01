@@ -128,7 +128,7 @@ try {
         </section>
 
         <!-- Membership -->
-        <section class="dash-card dash-card--wide">
+        <section class="dash-card">
           <div class="dash-card-head">
             <div class="dash-card-title"><span class="dash-icon" data-icon="membership" aria-hidden="true"></span> طلبات الانتساب</div>
             <div class="dash-card-total"><?= (int) $membershipAll ?></div>
@@ -142,7 +142,7 @@ try {
         </section>
 
         <!-- Contact Messages -->
-        <section class="dash-card dash-card--wide">
+        <section class="dash-card ">
           <div class="dash-card-head">
             <div class="dash-card-title"><span class="dash-icon" data-icon="contact" aria-hidden="true"></span> رسائل تواصل معنا</div>
             <div class="dash-card-total"><?= (int) $contactAll ?></div>

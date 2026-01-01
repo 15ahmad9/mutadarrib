@@ -127,7 +127,8 @@ if ($tab === 'trainees') {
   <meta charset="UTF-8">
   <title><?= htmlspecialchars($page_title) ?></title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
-    <!-- <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css"></head> -->
+    <link rel="stylesheet" href="/mutadarrib/assets/css/lawyers.css">
+  </head>
 <body data-theme="<?= htmlspecialchars($theme) ?>">
 
 <?php
@@ -268,5 +269,7 @@ if ($layout_header_path && file_exists($layout_header_path)) {
   </div>
 </div>
 </div>
+<?php include("../../includes/footer.php"); ?>
+
 </body>
 </html>
