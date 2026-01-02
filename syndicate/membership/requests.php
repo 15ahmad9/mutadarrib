@@ -136,7 +136,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   </div>
 </div>
+<?php include("../../includes/footer.php"); ?>
 
-<?php include(__DIR__ . "/../includes/footer.php"); ?>
 </body>
 </html>

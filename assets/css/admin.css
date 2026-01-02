@@ -1,5 +1,8 @@
 @import url("./theme.css");
 
+
+/* Space for fixed header */
+body{ padding-top: calc(var(--header-h) + 18px); }
 /* ---------- Header ---------- */
 .admin-header {
   /* position: sticky; */
@@ -193,24 +196,7 @@
 /* ---------- Content layout ---------- */
 .admin-container {
   /* Header is fixed; keep content fully visible below it */
-  padding: calc(var(--header-h) + 18px) 18px 18px;
-}
-
-/* -------------------------------------------------
-   FIX: Shared pages (Admin + Syndicate) render a global `.container`
-   inside `.admin-container`.
-   In theme.css, `.container` has a max-width and a top margin (50px),
-   which causes:
-   - extra spacing under the fixed header
-   - the card/table not centered within the available area (after reserving sidebar)
-   Solution: neutralize `.container` only when it is a direct child of `.admin-container`.
-   ------------------------------------------------- */
-.admin-container > .container{
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  margin-top: 0;
-  padding: 0;
+  padding: 18px;
 }
 
 /* Many admin pages render sidebar outside .admin-container, others render it inside.
@@ -222,7 +208,7 @@
 
   /* Some admin pages render headings/search forms before the main container.
      Ensure they appear "under" the sidebar (i.e., not behind it) on desktop. */
-  body > :is(h1, h2, h3, form[method="GET"], form.filter-row) {
+  body > .admin-sidebar ~ :is(h1, h2, h3, form[method="GET"], form.filter-row) {
     margin-right: calc(var(--sidebar-w) + 16px);
     margin-left: 18px;
   }
@@ -249,6 +235,79 @@
 
   .admin-container {
     margin-right: 0;
+  }
+}
+
+/* ============================================
+   Syndicate (and shared pages) Sidebar (class="sidebar")
+   Ensure it sits on the RIGHT side (RTL dashboards)
+   and matches the modern dashboard styling.
+   ============================================ */
+
+/* Base sidebar styling for pages that render <aside class="sidebar"> */
+.sidebar{
+  position: fixed;
+  top: var(--header-h);
+  right: 0 !important;
+  left: auto !important;
+  width: var(--sidebar-w);
+  height: calc(100vh - var(--header-h));
+  background:
+    radial-gradient(900px 600px at 70% -260px, rgba(255,255,255,0.12), transparent 60%),
+    linear-gradient(210deg, rgba(12,0,90,0.98), rgba(65,95,157,0.86));
+  border-left: 1px solid rgba(255,255,255,0.12);
+  box-shadow: var(--shadow-sm);
+  overflow: auto;
+  padding: 14px;
+  z-index: 110;
+  color: rgba(255,255,255,0.92);
+}
+
+.sidebar ul{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar a{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.94);
+  font-weight: 800;
+  text-decoration: none;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.sidebar a:hover{
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.18);
+  transform: translateY(-1px);
+}
+
+/* Keep content area clear of the fixed sidebar on desktop */
+@media (min-width: 992px){
+  .admin-container{ margin-right: calc(var(--sidebar-w) + 16px); }
+}
+
+/* Mobile: sidebar off-canvas (closed by default) */
+@media (max-width: 991px){
+  .sidebar{
+    transform: translateX(110%);
+    transition: transform .22s ease;
+  }
+
+  /* Sidebar can be outside or inside .admin-container depending on page */
+  .dash-sidebar-toggle:checked ~ .sidebar,
+  .dash-sidebar-toggle:checked ~ .admin-container .sidebar{
+    transform: translateX(0);
   }
 }
 
@@ -824,3 +883,309 @@ form.filter-row input[type="text"] {
 .admin-container .container > p{
   color: var(--muted);
 }
+
+
+/* ---------- Standalone create/edit forms (Add Trainee / Add Lawyer / Edit forms) ---------- */
+/* ---------------------------------------------------------------------------
+   Big add/edit POST forms (Add Trainee / Add Lawyer …)
+   Styled to match the public "طلب الانتساب" card layout (RTL, clean spacing).
+--------------------------------------------------------------------------- */
+
+:root{
+  --form-card-max: 1040px;
+  --form-gap-x: 22px;
+  --form-gap-y: 14px;
+}
+
+/* When a page forgets the .admin-container wrapper, keep content away from sidebar */
+@media (min-width: 992px){
+  body > .admin-sidebar ~ .container{
+    margin-right: calc(var(--sidebar-w) + 18px);
+    margin-left: 18px;
+  }
+  body > .admin-sidebar ~ form[method="POST"]{
+    margin-right: calc(var(--sidebar-w) + 18px);
+    margin-left: 18px;
+  }
+}
+
+/* Desktop: when a page renders its main content directly under <body>
+   (no .admin-container/.container wrapper), center it within the area
+   excluding the fixed right sidebar. */
+@media (min-width: 992px){
+  body > .admin-sidebar ~ form[method="POST"],
+  body > .admin-sidebar ~ a.back-link,
+  body > .admin-sidebar ~ :is(h1, h2, h3),
+  body > .admin-sidebar ~ div[style*="text-align:center"]{
+    transform: translateX(calc(var(--sidebar-w) / -2));
+  }
+}
+
+/* Card + grid shell (only the "big" forms that are direct children) */
+:is(.container, .admin-container, body) > form[method="POST"]{
+  max-width: var(--form-card-max);
+  margin: 26px auto 40px;
+  background: #fff;
+  border: 1px solid rgba(15,23,42,.10);
+  border-radius: 24px;
+  box-shadow: 0 18px 44px rgba(15,23,42,.08);
+  padding: 28px 28px 22px;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--form-gap-x);
+  row-gap: var(--form-gap-y);
+  align-items: start;
+}
+
+/* Full-width separators inside those big forms (e.g., Add Trainee uses <hr>) */
+:is(.container, .admin-container, body) > form[method="POST"] hr{
+  grid-column: 1 / -1;
+  border: 0;
+  border-top: 1px solid rgba(15,23,42,.10);
+  margin: 10px 0 4px;
+}
+
+/* Mobile: single column */
+@media (max-width: 899px){
+  :is(.container, .admin-container, body) > form[method="POST"]{
+    grid-template-columns: 1fr;
+    padding: 22px 16px 18px;
+  }
+}
+
+/* Headings/alerts inside forms span full width */
+:is(.container, .admin-container, body) > form[method="POST"] :is(h2, h3, .alert, .message, .success, .error, .info){
+  grid-column: 1 / -1;
+  margin: 0 0 8px;
+}
+
+:is(.container, .admin-container, body) > form[method="POST"] h3{
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--ink);
+  padding-top: 6px;
+}
+
+/* Remove legacy <br> spacing in those forms */
+:is(.container, .admin-container, body) > form[method="POST"] br{ display:none; }
+
+/* Labels */
+:is(.container, .admin-container, body) > form[method="POST"] label{
+  display:block;
+  font-weight: 900;
+  color: var(--ink);
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+@media (max-width: 899px){
+  :is(.container, .admin-container, body) > form[method="POST"] label{
+    margin-top: 8px;
+  }
+}
+
+/* Two-column pairing: keep label + control in the same column (RTL: odd -> right column) */
+@media (min-width: 900px){
+  :is(.container, .admin-container, body) > form[method="POST"] label:nth-of-type(odd){
+    grid-column: 2;
+  }
+  :is(.container, .admin-container, body) > form[method="POST"] label:nth-of-type(odd) + :is(input, select, textarea){
+    grid-column: 2;
+  }
+
+  :is(.container, .admin-container, body) > form[method="POST"] label:nth-of-type(even){
+    grid-column: 1;
+  }
+  :is(.container, .admin-container, body) > form[method="POST"] label:nth-of-type(even) + :is(input, select, textarea){
+    grid-column: 1;
+  }
+}
+
+/* Inputs */
+:is(.container, .admin-container, body) > form[method="POST"] :is(input:not([type="hidden"]), select, textarea){
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(65,95,157,.22);
+  background: #fff;
+  font-size: 15px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+:is(.container, .admin-container, body) > form[method="POST"] textarea{
+  min-height: 120px;
+  resize: vertical;
+}
+
+:is(.container, .admin-container, body) > form[method="POST"] :is(input:not([type="hidden"]), select, textarea):focus{
+  border-color: rgba(65,95,157,.65);
+  box-shadow: 0 0 0 4px rgba(65,95,157,.18);
+}
+
+:is(.container, .admin-container, body) > form[method="POST"] :is(input:not([type="hidden"]), select, textarea):disabled{
+  opacity: .75;
+  cursor: not-allowed;
+  background: rgba(15,23,42,.04);
+}
+
+/* File inputs (if any) */
+:is(.container, .admin-container, body) > form[method="POST"] input[type="file"]{
+  padding: 10px 12px;
+}
+
+/* Submit / actions */
+:is(.container, .admin-container, body) > form[method="POST"] :is(button[type="submit"], .btn, a.btn){
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: 12px;
+}
+
+:is(.container, .admin-container, body) > form[method="POST"] button[type="submit"]{
+  padding: 14px 16px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent), #2f4c86);
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 16px 34px rgba(3,10,46,.18);
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+:is(.container, .admin-container, body) > form[method="POST"] button[type="submit"]:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 20px 44px rgba(3,10,46,.22);
+  filter: brightness(1.02);
+}
+
+/*
+  Some admin pages (notably: add_syndicate_lawyer.php) place the main form
+  directly under <body> (without a .container/.admin-container wrapper).
+  On wide screens with the fixed sidebar, this can feel visually "shifted".
+  We nudge those standalone elements left by نصف عرض السايدبار ليظهروا
+  مُتمركزين داخل مساحة المحتوى المتاحة.
+*/
+@media (min-width: 992px){
+  body > .admin-sidebar ~ form[method="POST"],
+  body > .admin-sidebar ~ :is(h1, h2, h3),
+  body > .admin-sidebar ~ div[style*="text-align:center"],
+  body > .admin-sidebar ~ a.back-link{
+    transform: translateX(calc(var(--sidebar-w) / -2));
+  }
+}
+
+/* Back link (used on some add/edit pages) */
+a.back-link{
+  display:inline-flex;
+  gap: 10px;
+  align-items:center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(65,95,157,.10);
+  border: 1px solid rgba(65,95,157,.22);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 900;
+  transition: background .15s ease, transform .15s ease, border-color .15s ease;
+}
+a.back-link:hover{
+  background: rgba(65,95,157,.14);
+  border-color: rgba(65,95,157,.35);
+  transform: translateY(-1px);
+}
+
+
+/* ---------------------------------------------------------------------------
+   Review pages (Exam/Training review)
+   ---------------------------------------------------------------------------
+   صفحات المراجعة البسيطة (مثل: exam_review.php / training_review.php)
+   كانت تتأثر بقواعد "النماذج الكبيرة" (grid + إخفاء <br>) لأن النموذج
+   يأتي مباشرةً بعد .admin-container. النتيجة: توزيع أعمدة غير صحيح في RTL
+   وأزرار ممتدة بشكل مبالغ. هنا نعيد ضبط شكل هذه النماذج فقط عندما تكون
+   مسبوقة ببطاقة معلومات (.card) داخل .admin-container.
+--------------------------------------------------------------------------- */
+
+/* عنوان الصفحة في صفحات المراجعة */
+.admin-container > h2{
+  font-size: clamp(22px, 2.1vw, 32px);
+  text-align: center;
+  margin: 6px 0 16px;
+  letter-spacing: .2px;
+}
+
+/* بطاقة المعلومات أعلى النموذج (توسيط + عرض منطقي) */
+.admin-container > .card{
+  max-width: 980px;
+  margin-inline: auto;
+}
+
+.admin-container > .card p{
+  margin: 8px 0;
+  line-height: 1.7;
+}
+
+/* إعادة ضبط نموذج المراجعة: card + form (فقط) */
+.admin-container > .card + form[method="POST"]{
+  max-width: 980px;
+  margin: 16px auto 40px;
+  padding: 22px;
+  background: #fff;
+  border: 1px solid rgba(15,23,42,.10);
+  border-radius: 24px;
+  box-shadow: 0 18px 44px rgba(15,23,42,.08);
+
+  /* reset from big-form grid */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* لا نحتاج <br> داخل نموذج المراجعة */
+.admin-container > .card + form[method="POST"] br{ display: none; }
+
+.admin-container > .card + form[method="POST"] label{
+  display: block;
+  margin: 0;
+  font-weight: 900;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.admin-container > .card + form[method="POST"] :is(input:not([type="hidden"]), select, textarea){
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(65,95,157,.22);
+  background: #fff;
+  font-size: 15px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.admin-container > .card + form[method="POST"] :is(input:not([type="hidden"]), select, textarea):focus{
+  border-color: rgba(65,95,157,.65);
+  box-shadow: 0 0 0 4px rgba(65,95,157,.18);
+}
+
+/* أزرار الإجراءات في الأسفل */
+.admin-container > .card + form[method="POST"] :is(button.btn, a.btn){
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  font-weight: 900;
+}
+
+/* زر الرجوع (anchor) كزر ثانوي */
+.admin-container > .card + form[method="POST"] a.btn{
+  background: #e9eef9;
+  border: 1px solid rgba(65,95,157,.25);
+  color: var(--ink);
+}
+.admin-container > .card + form[method="POST"] a.btn:hover{
+  background:#dde6f7;
+  border-color: rgba(65,95,157,.35);
+  box-shadow: none;
+}
+

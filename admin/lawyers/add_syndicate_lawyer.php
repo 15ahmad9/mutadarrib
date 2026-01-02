@@ -104,7 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>إضافة محامي جديد</title>
 <link rel="stylesheet" href="../../assets/css/admin.css"></head>
 <body data-theme="<?= htmlspecialchars($theme) ?>">
-
+<?php include(__DIR__ . "/../includes/header.php"); ?>
+  <?php include(__DIR__ . "/../includes/sidebar.php"); ?>
 <h2 style="text-align:center;">إضافة محامي جديد إلى النظام</h2>
 <div style="text-align:center;"><?= $message ?></div>
 

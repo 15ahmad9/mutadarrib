@@ -136,9 +136,6 @@
   /* syndicate pages: sidebar is inside .layout */
   .dash-sidebar-toggle:checked ~ .layout .sidebar{ transform: translateX(0); }
 
-  /* shared pages (Admin + Syndicate): sidebar is inside .admin-container */
-  .dash-sidebar-toggle:checked ~ .admin-container .sidebar{ transform: translateX(0); }
-
   .dash-sidebar-toggle:checked ~ .sidebar-backdrop{ display: block; }
 
   .content{ margin-right: 0; }
@@ -256,6 +253,13 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 18px !important;
   margin-top: 14px;
+}
+
+/* Lawyer dashboard: when there is a single card, keep it card-sized (like Admin) */
+.layout .content .stats .card:only-child{
+  max-width: 520px;
+  width: 100%;
+  justify-self: center;
 }
 
 .layout .content .stats .card{

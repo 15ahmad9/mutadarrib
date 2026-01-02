@@ -70,9 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>إضافة متدرب جديد</title>
 <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css"></head>
 <body data-theme="<?= htmlspecialchars($theme) ?>">
+<?php include(__DIR__ . "/../includes/header.php"); ?>
 
+  <?php include(__DIR__ . "/../includes/sidebar.php"); ?>
 <div class="container">
-<h2>➕ إضافة متدرب جديد</h2>
+   <h2>➕ إضافة متدرب جديد</h2> 
+
 <?= $message ?>
 
 <form method="POST">

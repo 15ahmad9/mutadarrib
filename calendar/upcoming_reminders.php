@@ -301,7 +301,7 @@ if ($role === 'trainee') {
               لقد أنهيت فترة التدريب، وأنت الآن مؤهل للتقدم لامتحان المزاولة لدى النقابة.
               <?php if ($canRequestExam): ?>
                 <br>
-                <a href="request_exam.php" class="btn-inline">تقديم طلب امتحان المزاولة</a>
+                <a href="/mutadarrib/trainee/request_exam.php" class="btn-inline">تقديم طلب امتحان المزاولة</a>
               <?php endif; ?>
             </div>
           <?php endif; ?>

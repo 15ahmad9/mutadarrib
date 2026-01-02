@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/theme_init.php';
 
-
 session_start();
 require_once("../config/db.php");
 include("../includes/header.php");
@@ -11,7 +10,7 @@ $message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $national_id = trim($_POST["national_id"]);
-    $password    = trim($_POST["password"]);
+    $password = trim($_POST["password"]);
 
     /* ======================================
         1) تسجيل دخول المدير Admin
@@ -28,8 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($admin && password_verify($password, $admin['password'])) {
 
-        $_SESSION['user_id']   = (int) $admin['user_id'];   // ✅ USER_ID الصحيح
-        $_SESSION['role']      = 'admin';
+        $_SESSION['user_id'] = (int) $admin['user_id'];
+        $_SESSION['role'] = 'admin';
         $_SESSION['full_name'] = $admin['full_name'];
 
         header("Location: ../admin/dashboard.php");
@@ -51,8 +50,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($syndicate && password_verify($password, $syndicate['password'])) {
 
-        $_SESSION['user_id']   = (int) $syndicate['user_id'];
-        $_SESSION['role']      = 'syndicate_admin';
+        $_SESSION['user_id'] = (int) $syndicate['user_id'];
+        $_SESSION['role'] = 'syndicate_admin';
         $_SESSION['full_name'] = $syndicate['full_name'];
 
         header("Location: ../syndicate/dashboard.php");
@@ -93,8 +92,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         } else {
 
-            $_SESSION['user_id']   = (int) $lawyer['user_id']; 
-            $_SESSION['role']      = 'lawyer';
+            $_SESSION['user_id'] = (int) $lawyer['user_id'];
+            $_SESSION['role'] = 'lawyer';
             $_SESSION['full_name'] = $lawyer['full_name'];
 
             header("Location: /mutadarrib/index.php");
@@ -122,8 +121,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($trainee && password_verify($password, $trainee['password'])) {
 
-        $_SESSION['user_id']   = (int) $trainee['user_id']; // ✅ USER_ID الصحيح من جدول users
-        $_SESSION['role']      = 'trainee';
+        $_SESSION['user_id'] = (int) $trainee['user_id']; // ✅ USER_ID الصحيح من جدول users
+        $_SESSION['role'] = 'trainee';
         $_SESSION['full_name'] = $trainee['full_name'];
 
         header("Location: /mutadarrib/index.php");
@@ -139,44 +138,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-<meta charset="UTF-8">
-<title>تسجيل الدخول</title>
-<link rel="stylesheet" href="../assets/css/style.css">
+    <meta charset="UTF-8">
+    <title>تسجيل الدخول</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
+
 <body data-theme="<?= htmlspecialchars($theme) ?>">
 
-<main class="auth-shell">
-    <section class="auth-card">
-        <div class="auth-head">
-            <h2 class="auth-title">تسجيل الدخول</h2>
-            <p class="auth-subtitle">أدخل الرقم الوطني وكلمة المرور للمتابعة.</p>
-        </div>
-
-        <?= $message ?>
-
-        <form method="POST" class="auth-form" autocomplete="on">
-            <div class="auth-field">
-                <label for="national_id">الرقم الوطني</label>
-                <input id="national_id" type="text" name="national_id" required autocomplete="username">
+    <main class="auth-shell">
+        <section class="auth-card">
+            <div class="auth-head">
+                <h2 class="auth-title">تسجيل الدخول</h2>
+                <p class="auth-subtitle">أدخل الرقم الوطني وكلمة المرور للمتابعة.</p>
             </div>
 
-            <div class="auth-field">
-                <label for="password">كلمة المرور</label>
-                <input id="password" type="password" name="password" required autocomplete="current-password">
+            <?= $message ?>
+
+            <form method="POST" class="auth-form" autocomplete="on">
+                <div class="auth-field">
+                    <label for="national_id">الرقم الوطني</label>
+                    <input id="national_id" type="text" name="national_id" required autocomplete="username">
+                </div>
+
+                <div class="auth-field">
+                    <label for="password">كلمة المرور</label>
+                    <input id="password" type="password" name="password" required autocomplete="current-password">
+                </div>
+
+                <button class="auth-submit" type="submit">تسجيل الدخول</button>
+            </form>
+
+            <div class="auth-foot">
+                <span>ليس لديك حساب؟</span>
+                <a class="auth-link" href="choose_specialization.php">إنشاء حساب</a>
             </div>
+        </section>
+    </main>
 
-            <button class="auth-submit" type="submit">تسجيل الدخول</button>
-        </form>
-
-        <div class="auth-foot">
-            <span>ليس لديك حساب؟</span>
-            <a class="auth-link" href="choose_specialization.php">إنشاء حساب</a>
-        </div>
-    </section>
-</main>
-
-<?php include("../includes/footer.php"); ?>
+    <?php include("../includes/footer.php"); ?>
 
 </body>
+
 </html>
