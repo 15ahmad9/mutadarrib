@@ -157,6 +157,23 @@
   font-weight: 700;
 }
 
+/* Theme toggle icon (shown beside login / user menu) */
+.theme-toggle-icon{
+  width: 42px;
+  height: 42px;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.theme-toggle-icon:hover,
+.theme-toggle-icon:focus-visible{
+  transform: translateY(-1px);
+}
+
 .user-dropdown {
   position: relative;
 }
@@ -2787,6 +2804,10 @@ label {
   padding: 16px 18px 6px;
 }
 
+/* Some flows accidentally inject raw CSS text into the modal description area.
+   Keep the UI clean without touching PHP/JS by hiding the optional description block. */
+.ui-modal #uiModalDesc{ display:none !important; }
+
 .ui-modal__details{
   margin: 0;
   padding: 0;
@@ -2825,6 +2846,8 @@ label {
   border-radius: 14px;
   padding: 10px 14px;
   font-weight: 900;
+  /* Ensure readable text even if there are global button rules (some pages set button{color:#fff}) */
+  color: rgba(15, 23, 42, 0.92);
   cursor: pointer;
   transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
 }
@@ -2846,6 +2869,36 @@ label {
 
 .ui-modal__btn--ghost{
   background: rgba(15, 23, 42, 0.04);
+  color: rgba(15, 23, 42, 0.88);
+}
+
+/* Dark mode support for the UI modal */
+body[data-theme="dark"] .ui-modal{
+  background: rgba(15, 20, 36, 0.94);
+  border-color: rgba(255,255,255,0.14);
+}
+body[data-theme="dark"] .ui-modal__top{
+  background: linear-gradient(135deg, rgba(65,95,157,0.22), rgba(255,255,255,0.02));
+}
+body[data-theme="dark"] .ui-modal__title{ color: rgba(244,246,255,0.96); }
+body[data-theme="dark"] .ui-modal__subtitle{ color: rgba(244,246,255,0.66); }
+body[data-theme="dark"] .ui-modal__icon{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.14);
+}
+body[data-theme="dark"] .ui-modal__details li{
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.14);
+  color: rgba(244,246,255,0.88);
+}
+body[data-theme="dark"] .ui-modal__btn{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.16);
+  color: rgba(244,246,255,0.92);
+}
+body[data-theme="dark"] .ui-modal__btn--ghost{
+  background: rgba(255,255,255,0.06);
+  color: rgba(244,246,255,0.92);
 }
 
 /* subtle shake when blocked */
@@ -2875,4 +2928,149 @@ label {
   .ui-modal{ animation: none; opacity: 1; transform: none; }
   .ui-modal__details li{ animation: none; }
   .ui-modal__btn:hover{ transform: none; }
+}
+
+/* === Admin forms (create/edit) — match "طلب الانتساب" card layout (RTL) ===
+   هدفه: صفحات إضافة متدرب جديد + إضافة محامي جديد (وأي صفحة أدمن تستخدم auth-form/auth-grid)
+   بدون أي تعديل في الـHTML/PHP — ستايل فقط.
+-------------------------------------------------------------------------- */
+
+@supports selector(.x:has(.y)) {
+  /* Turn the admin content block into a wide centered card, just like .auth-card--wide */
+  .admin-container .container:has(> form.auth-form .auth-grid) {
+    width: min(1040px, 94vw);
+    margin: 22px auto 40px;
+    padding: 26px 24px 22px;
+    background: var(--surface);
+    border: 1px solid rgba(15,23,42,.10);
+    border-radius: 24px;
+    box-shadow: 0 18px 44px rgba(15,23,42,.08);
+  }
+
+  .admin-container .container:has(> form.auth-form .auth-grid) > h2 {
+    margin: 0 0 8px;
+    font-size: clamp(20px, 2.2vw, 30px);
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: .2px;
+  }
+
+  /* Keep flash messages neatly spaced */
+  .admin-container .container:has(> form.auth-form .auth-grid) > :is(.msg, .alert, .notice, .success, .error, p) {
+    margin-top: 10px;
+  }
+
+  /* Ensure the form itself doesn't create a second "card" */
+  .admin-container .container:has(> form.auth-form .auth-grid) > form.auth-form {
+    margin-top: 12px;
+  }
+
+  /* Improve breathing room for long forms */
+  .admin-container .container:has(> form.auth-form .auth-grid) .auth-grid {
+    gap: 12px 16px;
+  }
+
+  .admin-container .container:has(> form.auth-form .auth-grid) .auth-divider {
+    grid-column: span 12;
+    margin: 10px 0 4px;
+    border-top: 1px solid rgba(148,163,184,.35);
+  }
+
+  /* File inputs: keep consistent height & spacing (matches site inputs) */
+  .admin-container .container:has(> form.auth-form .auth-grid) input[type="file"] {
+    min-height: 46px;
+  }
+}
+
+/* Fallback (for browsers without :has): style the form as a wide card.
+   العنوان رح يظل خارج الكرت، لكن الفورم يصير بنفس عرض وترتيب طلب الانتساب. */
+@supports not selector(.x:has(.y)) {
+  .admin-container .container > form.auth-form .auth-grid {
+    width: 100%;
+  }
+  .admin-container .container > form.auth-form {
+    width: min(1040px, 94vw);
+    margin: 22px auto 40px;
+    padding: 26px 24px 22px;
+    background: var(--surface);
+    border: 1px solid rgba(15,23,42,.10);
+    border-radius: 24px;
+    box-shadow: 0 18px 44px rgba(15,23,42,.08);
+  }
+}
+
+
+/* ============================================================
+   Dark mode overrides (Profile / Docs / buttons)
+   style.css imports theme.css then defines some light surfaces
+   (rgba(255,255,255,...) backgrounds). In dark mode we must
+   override them here so all profile buttons + doc panels match.
+   ============================================================ */
+
+body[data-theme="dark"] .profile-actions .btn.outline,
+body[data-theme="dark"] .btn-cancel{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.16);
+  color: rgba(244,246,255,0.92);
+}
+
+body[data-theme="dark"] .status-item{
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.10);
+}
+
+body[data-theme="dark"] .info-item{
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.10);
+}
+
+body[data-theme="dark"] .chip{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.14);
+  color: rgba(244,246,255,0.92);
+}
+body[data-theme="dark"] .chip-ok{
+  background: rgba(45,106,79,0.22);
+  border-color: rgba(45,106,79,0.45);
+  color: rgba(214,255,232,0.95);
+}
+body[data-theme="dark"] .chip-warn{
+  background: rgba(192,120,7,0.22);
+  border-color: rgba(192,120,7,0.45);
+  color: rgba(255,238,203,0.95);
+}
+body[data-theme="dark"] .chip-danger{
+  background: rgba(193,43,43,0.24);
+  border-color: rgba(193,43,43,0.50);
+  color: rgba(255,220,220,0.95);
+}
+
+body[data-theme="dark"] .file-field{
+  background: rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.10);
+}
+
+body[data-theme="dark"] .file-ui{
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.16);
+}
+
+body[data-theme="dark"] .file-btn{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.16);
+  color: rgba(244,246,255,0.92);
+}
+body[data-theme="dark"] .file-btn:hover{
+  background: rgba(255,255,255,0.10);
+}
+
+/* Native file selector button (if any page uses it directly) */
+body[data-theme="dark"] input[type="file"]::file-selector-button{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(244,246,255,0.92);
+  border-radius: 12px;
+}
+body[data-theme="dark"] input[type="file"]::file-selector-button:hover{
+  background: rgba(255,255,255,0.10);
 }

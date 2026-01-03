@@ -9,12 +9,12 @@
   <h2>لوحة تحكم النقابة</h2>
   
   <div class="user-info">
+    <a class="dash-theme-toggle" href="/mutadarrib/toggle_theme.php?redirect=<?= urlencode($_SERVER['REQUEST_URI'] ?? '../index.php') ?>" aria-label="تبديل الوضع" title="تبديل الوضع"><?= ($theme === 'dark') ? '☀️' : '🌙' ?></a>
     <details class="dash-user-dropdown">
       <summary class="dash-user-toggle">
         <?= htmlspecialchars($_SESSION['full_name'] ?? '') ?> ▾
       </summary>
       <div class="dash-user-menu">
-        <a href="/mutadarrib/toggle_theme.php?redirect=<?= urlencode($_SERVER['REQUEST_URI'] ?? '../index.php') ?>">الوضع الداكن: <?= ($theme === 'dark') ? 'مفعل' : 'غير مفعل' ?></a>
         <a href="/mutadarrib/auth/logout.php">تسجيل الخروج</a>
       </div>
     </details>

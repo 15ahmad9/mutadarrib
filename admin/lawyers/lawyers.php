@@ -59,16 +59,18 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <?php include("../includes/sidebar.php"); ?>
 
 <div class="container">
+    <h2>قائمة المحامين</h2>  
 <div class="admin-page-head">
-  <h2>إدارة المحامين</h2>
+
   <form class="search-form" method="GET">
   <div class="search-input">
     <input type="text" name="search" placeholder="بحث بالاسم أو الرقم الوطني أو الهاتف أو البريد..." value="<?= htmlspecialchars($search) ?>" class="search-field">
     <svg class="in-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.3l4.4 4.4a1 1 0 0 0 1.4-1.4l-4.4-4.4A8 8 0 0 0 10 2Z"/></svg>
-  </div>
-  <button type="submit" class="btn btn-soft"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.3l4.4 4.4a1 1 0 0 0 1.4-1.4l-4.4-4.4A8 8 0 0 0 10 2Z"/></svg><span>بحث</span></button>
+   <button type="submit" class="btn btn-soft"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.3l4.4 4.4a1 1 0 0 0 1.4-1.4l-4.4-4.4A8 8 0 0 0 10 2Z"/></svg><span>بحث</span></button>
+
+</div>
     <!-- اختياري: زر إضافة محامي إذا عندك صفحة add_syndicate_lawyer.php -->
-    <a href="add_syndicate_lawyer.php" class="btn" style="background:#52b788;">إضافة محامي جديد</a>
+    <a href="add_syndicate_lawyer.php" class="btn" style="background:#52b788;">➕ إضافة محامي جديد</a>
 </form>
 </div>
 

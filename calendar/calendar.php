@@ -321,6 +321,6 @@ eventDidMount: function(info) {
     });
   });
 </script>
-
+<?php include("../includes/footer.php"); ?>
 </body>
 </html>

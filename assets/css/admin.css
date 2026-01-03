@@ -2,7 +2,8 @@
 
 
 /* Space for fixed header */
-body{ padding-top: calc(var(--header-h) + 18px); }
+body{ padding-top: calc(var(--header-h) + 18px); overflow-x: hidden; }
+html{ overflow-x: hidden; }
 /* ---------- Header ---------- */
 .admin-header {
   /* position: sticky; */
@@ -31,6 +32,52 @@ body{ padding-top: calc(var(--header-h) + 18px); }
 .user-info {
   color: var(--bg);
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Theme toggle icon in dashboard headers */
+.dash-theme-toggle{
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.06);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.dash-theme-toggle:hover,
+.dash-theme-toggle:focus-visible{
+  background: rgba(255,255,255,0.10);
+}
+
+
+/* ---------- Syndicate header (same as admin header) ---------- */
+.header{
+  position: fixed;
+  top: 0;
+  z-index: 120;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 18px;
+  background: linear-gradient(250deg, #070031, #556ab1);
+  backdrop-filter: blur(10px);
+  left: 0;
+  right: 0;
+}
+.header h2{
+  margin: 0;
+  font-size: 18px;
+  color: var(--bg);
 }
 
 /* ---------- Mobile toggle (CSS-only) ---------- */
@@ -199,6 +246,25 @@ body{ padding-top: calc(var(--header-h) + 18px); }
   padding: 18px;
 }
 
+/* Ensure .container does NOT use vw inside dashboards (prevents horizontal overflow behind sidebar) */
+.admin-container .container{
+  width: min(100%, var(--container));
+  max-width: 100%;
+  margin-inline: auto;
+  margin-top: 0;
+  box-sizing: border-box;
+}
+
+/* When .container is used directly under <body> with a fixed sidebar, also avoid vw width */
+body > .admin-sidebar ~ .container,
+body > .sidebar ~ .container{
+  width: min(100%, var(--container));
+  max-width: 100%;
+  margin-top: 0;
+  box-sizing: border-box;
+}
+
+
 /* Many admin pages render sidebar outside .admin-container, others render it inside.
    In both cases, keep enough right space on desktop. */
 @media (min-width: 992px) {
@@ -344,9 +410,13 @@ body{ padding-top: calc(var(--header-h) + 18px); }
   display: grid;
   direction: rtl;
   /* حجم طبيعي بدون تكبير/تصغير مبالغ + يمنع السلايدر */
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
   margin-top: 14px;
+}
+
+@media (max-width: 1100px){
+  .dash-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 .dash-card{
@@ -459,7 +529,7 @@ body{ padding-top: calc(var(--header-h) + 18px); }
 /* Responsive tighter dashboard */
 @media (max-width: 720px){
   .dashboard-container{ width: 100%; max-width: 100%; }
-  .dash-grid{ grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .dash-grid{ grid-template-columns: 1fr; }
   .dash-card-total{ font-size: 30px; }
   .dash-card{ padding: 12px; }
 }
@@ -553,12 +623,23 @@ form.filter-row input[type="text"] {
 
 /* ---------- Shared pages (documents/contact messages) ---------- */
 .wrap {
-  padding: 15px;
+  /* Card-like container for documents/contact/shared pages */
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(12,0,90,.06);
+  padding: 18px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow-x: auto; /* keep tables inside */
+  -webkit-overflow-scrolling: touch;
 }
 .tabs a {
   padding: 8px 12px;
   display: inline-block;
-  border-radius: 999px;
+    border-radius: 12px;
   border: 1px solid var(--border);
   margin-left: 6px;
   background: rgba(255, 255, 255, 0.65);
@@ -569,6 +650,140 @@ form.filter-row input[type="text"] {
   color: #fff;
   border-color: rgba(65, 95, 157, 0.5);
 }
+
+
+
+/* Shared pages header layout (Documents + Contact messages) */
+.admin-container .wrap .topbar{
+  /* Keep layout stable regardless of RTL by making the grid LTR,
+     and keep content RTL inside children. */
+  direction: ltr;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px 16px;
+  margin-bottom: 12px;
+}
+
+.admin-container .wrap .topbar > div,
+.admin-container .wrap .topbar > form{
+  direction: rtl;
+}
+
+.admin-container .wrap .topbar > div{
+  grid-column: 2;
+  text-align: center;
+  min-width: 280px;
+}
+
+.admin-container .wrap .topbar > div h2{
+  margin: 0;
+  font-size: 34px;
+  letter-spacing: .2px;
+}
+
+.admin-container .wrap .topbar > div .muted,
+.admin-container .wrap .topbar > div .hint{
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.admin-container .wrap .topbar > form{
+  grid-column: 3;
+  justify-self: end;
+  margin: 0;
+}
+
+.admin-container .wrap .topbar > form.filter-row,
+.admin-container .wrap .topbar > form.filters,
+.admin-container .wrap .topbar > form[method="GET"]{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-container .wrap .topbar > form input[type="text"]{
+  width: min(460px, 46vw);
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 14px;
+}
+
+.admin-container .wrap .topbar > form select{
+  min-width: 170px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 14px;
+}
+
+.admin-container .wrap .topbar > form button[type="submit"],
+.admin-container .wrap .topbar > form .btn{
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 14px;
+  font-weight: 800;
+}
+
+.admin-container .wrap .topbar > form .check{
+    display: grid;
+    align-items: center;
+    gap: 10px;
+    height: 60px;
+    padding: 0px 18px;
+
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.65);
+  color: var(--text);
+}
+
+.admin-container .wrap .topbar > form .check input{
+  transform: translateY(1px);
+}
+
+body[data-theme="dark"] .admin-container .wrap .topbar > form .check{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.12);
+}
+
+/* Responsive: stack header on small screens */
+@media (max-width: 900px){
+  .admin-container .wrap .topbar{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .admin-container .wrap .topbar > div{
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .admin-container .wrap .topbar > form{
+    grid-column: 1;
+    justify-self: stretch;
+  }
+
+  .admin-container .wrap .topbar > form input[type="text"]{
+    width: 100%;
+    min-width: 0;
+  }
+
+  .admin-container .wrap .topbar > form select,
+  .admin-container .wrap .topbar > form button[type="submit"],
+  .admin-container .wrap .topbar > form .btn{
+    flex: 1 1 auto;
+  }
+
+  .admin-container .wrap .topbar > form .check{
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
 
 .status {
   display: inline-flex;
@@ -663,38 +878,106 @@ form.filter-row input[type="text"] {
 
 /* ---------- Admin list/pages (tables + search) ---------- */
 .admin-page-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
+  /*
+    List pages header layout (RTL):
+    - Title centered
+    - Search / add actions aligned to the right
+    - Left spacer to keep the title visually centered
+  */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  /* LTR default: actions on the right */
+  grid-template-areas: "spacer title actions";
+  align-items: center;
+  gap: 12px;
   margin: 0 0 14px;
 }
+
+/* RTL: keep actions on the physical right */
+.admin-page-head:dir(rtl){
+  grid-template-areas: "actions title spacer";
+}
+.admin-page-head::before{
+  content: "";
+  grid-area: spacer;
+}
 .admin-page-head h2{
-  margin:0;
+  grid-area: title;
+  margin: 0;
   font-size: clamp(20px, 2.2vw, 30px);
   color: var(--ink);
   letter-spacing: .2px;
+  text-align: center;
 }
 @media (max-width: 768px){
   .admin-page-head{
-    flex-direction:column;
-    align-items:stretch;
+    grid-template-columns: 1fr;
+    grid-template-areas: "title" "actions";
+    align-items: stretch;
   }
-  .admin-page-head h2{
-    text-align:center;
-  }
+  .admin-page-head::before{ display:none; }
 }
 
 .search-form{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin:0;
+  grid-area: actions;
+  /* LTR: right side */
+  justify-self: end;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 0;
+}
+
+/* RTL: right side (start) */
+.search-form:dir(rtl){
+  justify-self: start;
+  justify-content: flex-start;
 }
 .search-form .search-input{
   position:relative;
-  flex: 1 1 420px;
-  min-width: 240px;
+  flex: 1 1 360px;
+  min-width: 260px;
+  order: 1;
+}
+
+/* Place add button next to the search input (same row) */
+.search-form > a.btn{
+  order: 2;
+  white-space: nowrap;
+}
+/* Search submit button after add */
+.search-form > button[type="submit"],
+.search-form > input[type="submit"]{
+  order: 3;
+  white-space: nowrap;
+}
+
+/* "إظهار الاسم الرباعي" goes under the first row */
+.search-form .js-toggle-name-parts{
+  order: 10;
+  flex: 0 0 100%;
+  width: fit-content;
+  margin: 4px 0 0 !important;
+}
+
+@media (max-width: 768px){
+  .search-form{
+    justify-self: stretch;
+  }
+  .search-form .search-input{
+    min-width: 0;
+    flex-basis: 100%;
+  }
+  .search-form > a.btn,
+  .search-form > button[type="submit"],
+  .search-form > input[type="submit"]{
+    flex: 1 1 auto;
+  }
+  .search-form .js-toggle-name-parts{
+    flex: 1 1 auto;
+  }
 }
 .search-form input[type="text"],
 .search-form input[type="search"]{
@@ -922,159 +1205,9 @@ form.filter-row input[type="text"] {
 }
 
 /* Card + grid shell (only the "big" forms that are direct children) */
-:is(.container, .admin-container, body) > form[method="POST"]{
-  max-width: var(--form-card-max);
-  margin: 26px auto 40px;
-  background: #fff;
-  border: 1px solid rgba(15,23,42,.10);
-  border-radius: 24px;
-  box-shadow: 0 18px 44px rgba(15,23,42,.08);
-  padding: 28px 28px 22px;
 
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--form-gap-x);
-  row-gap: var(--form-gap-y);
-  align-items: start;
-}
+/* (Form card styling moved to style.css to avoid override order issues) */
 
-/* Full-width separators inside those big forms (e.g., Add Trainee uses <hr>) */
-:is(.container, .admin-container, body) > form[method="POST"] hr{
-  grid-column: 1 / -1;
-  border: 0;
-  border-top: 1px solid rgba(15,23,42,.10);
-  margin: 10px 0 4px;
-}
-
-/* Mobile: single column */
-@media (max-width: 899px){
-  :is(.container, .admin-container, body) > form[method="POST"]{
-    grid-template-columns: 1fr;
-    padding: 22px 16px 18px;
-  }
-}
-
-/* Headings/alerts inside forms span full width */
-:is(.container, .admin-container, body) > form[method="POST"] :is(h2, h3, .alert, .message, .success, .error, .info){
-  grid-column: 1 / -1;
-  margin: 0 0 8px;
-}
-
-:is(.container, .admin-container, body) > form[method="POST"] h3{
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--ink);
-  padding-top: 6px;
-}
-
-/* Remove legacy <br> spacing in those forms */
-:is(.container, .admin-container, body) > form[method="POST"] br{ display:none; }
-
-/* Labels */
-:is(.container, .admin-container, body) > form[method="POST"] label{
-  display:block;
-  font-weight: 900;
-  color: var(--ink);
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-@media (max-width: 899px){
-  :is(.container, .admin-container, body) > form[method="POST"] label{
-    margin-top: 8px;
-  }
-}
-
-/* Two-column pairing: keep label + control in the same column (RTL: odd -> right column) */
-@media (min-width: 900px){
-  :is(.container, .admin-container, body) > form[method="POST"] label:nth-of-type(odd){
-    grid-column: 2;
-  }
-  :is(.container, .admin-container, body) > form[method="POST"] label:nth-of-type(odd) + :is(input, select, textarea){
-    grid-column: 2;
-  }
-
-  :is(.container, .admin-container, body) > form[method="POST"] label:nth-of-type(even){
-    grid-column: 1;
-  }
-  :is(.container, .admin-container, body) > form[method="POST"] label:nth-of-type(even) + :is(input, select, textarea){
-    grid-column: 1;
-  }
-}
-
-/* Inputs */
-:is(.container, .admin-container, body) > form[method="POST"] :is(input:not([type="hidden"]), select, textarea){
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(65,95,157,.22);
-  background: #fff;
-  font-size: 15px;
-  outline: none;
-  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
-}
-
-:is(.container, .admin-container, body) > form[method="POST"] textarea{
-  min-height: 120px;
-  resize: vertical;
-}
-
-:is(.container, .admin-container, body) > form[method="POST"] :is(input:not([type="hidden"]), select, textarea):focus{
-  border-color: rgba(65,95,157,.65);
-  box-shadow: 0 0 0 4px rgba(65,95,157,.18);
-}
-
-:is(.container, .admin-container, body) > form[method="POST"] :is(input:not([type="hidden"]), select, textarea):disabled{
-  opacity: .75;
-  cursor: not-allowed;
-  background: rgba(15,23,42,.04);
-}
-
-/* File inputs (if any) */
-:is(.container, .admin-container, body) > form[method="POST"] input[type="file"]{
-  padding: 10px 12px;
-}
-
-/* Submit / actions */
-:is(.container, .admin-container, body) > form[method="POST"] :is(button[type="submit"], .btn, a.btn){
-  grid-column: 1 / -1;
-  width: 100%;
-  margin-top: 12px;
-}
-
-:is(.container, .admin-container, body) > form[method="POST"] button[type="submit"]{
-  padding: 14px 16px;
-  border: none;
-  border-radius: 16px;
-  background: linear-gradient(135deg, var(--accent), #2f4c86);
-  color: #fff;
-  font-weight: 900;
-  cursor: pointer;
-  box-shadow: 0 16px 34px rgba(3,10,46,.18);
-  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
-}
-
-:is(.container, .admin-container, body) > form[method="POST"] button[type="submit"]:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 20px 44px rgba(3,10,46,.22);
-  filter: brightness(1.02);
-}
-
-/*
-  Some admin pages (notably: add_syndicate_lawyer.php) place the main form
-  directly under <body> (without a .container/.admin-container wrapper).
-  On wide screens with the fixed sidebar, this can feel visually "shifted".
-  We nudge those standalone elements left by نصف عرض السايدبار ليظهروا
-  مُتمركزين داخل مساحة المحتوى المتاحة.
-*/
-@media (min-width: 992px){
-  body > .admin-sidebar ~ form[method="POST"],
-  body > .admin-sidebar ~ :is(h1, h2, h3),
-  body > .admin-sidebar ~ div[style*="text-align:center"],
-  body > .admin-sidebar ~ a.back-link{
-    transform: translateX(calc(var(--sidebar-w) / -2));
-  }
-}
 
 /* Back link (used on some add/edit pages) */
 a.back-link{
@@ -1187,5 +1320,366 @@ a.back-link:hover{
   background:#dde6f7;
   border-color: rgba(65,95,157,.35);
   box-shadow: none;
+}
+
+
+/* ============================================================
+   Dark mode overrides (Admin)
+   admin.css imports theme.css at the top, then defines light
+   surfaces (white table cards + dark text). In dark mode we
+   override them here (after the light rules) so:
+   - Admin tables are fully dark (rows/backgrounds)
+   - Text remains readable
+   - Secondary buttons/inputs don't look "light".
+   ============================================================ */
+
+body[data-theme="dark"] .table-card{
+  background: rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.12);
+  box-shadow: 0 18px 54px rgba(0,0,0,0.32);
+}
+
+body[data-theme="dark"] .table tbody td,
+body[data-theme="dark"] table tbody td{
+  color: rgba(244,246,255,0.92);
+  border-bottom-color: rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+}
+
+body[data-theme="dark"] .table tbody tr:nth-child(even) td,
+body[data-theme="dark"] table tbody tr:nth-child(even) td{
+  background: rgba(255,255,255,0.015);
+}
+
+body[data-theme="dark"] .table tbody tr:hover td,
+body[data-theme="dark"] table tbody tr:hover td{
+  background: rgba(75,106,184,0.14);
+}
+
+/* Soft/secondary buttons used around tables/search */
+body[data-theme="dark"] .btn.btn-soft,
+body[data-theme="dark"] a.btn.btn-soft{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.14);
+  color: rgba(244,246,255,0.92);
+}
+body[data-theme="dark"] .btn.btn-soft:hover,
+body[data-theme="dark"] a.btn.btn-soft:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.20);
+}
+
+/* Standalone add/edit forms (some pages live inside admin.css) */
+body[data-theme="dark"] .admin-container > .card + form[method="POST"] :is(input:not([type="hidden"]), select, textarea){
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.16);
+  color: rgba(244,246,255,0.92);
+}
+
+body[data-theme="dark"] .admin-container > .card + form[method="POST"] a.btn{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.14);
+  color: rgba(244,246,255,0.92);
+}
+body[data-theme="dark"] .admin-container > .card + form[method="POST"] a.btn:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.20);
+}
+
+/* ===== Name parts columns toggle (First/Father/Grandfather/Family) ===== */
+.name-part-col{display:none;}
+body.show-name-parts .name-part-col{display:table-cell;}
+
+
+
+/* ============================================================
+   Header polish (lists): centered title + right toolbar (RTL)
+   - Keeps title centered (even when <h2> is outside .admin-page-head)
+   - Aligns search + action buttons to the right with consistent spacing
+   - Makes search input + submit button stay on one row when possible
+   ============================================================ */
+.admin-container .container > h1:first-child,
+.admin-container .container > h2:first-child{
+  text-align: center;
+  margin: 6px 0 14px;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: .2px;
+}
+
+.admin-page-head{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+/* When the title exists inside .admin-page-head */
+.admin-page-head > h1,
+.admin-page-head > h2{
+  text-align: center;
+  margin: 0;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: .2px;
+}
+
+/* Toolbar row: always align to the right (works for RTL pages) */
+.admin-page-head .search-form,
+.admin-container .container > form.search-form{
+  align-self: flex-end;
+}
+
+/* Make the toolbar look consistent */
+.search-form{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+/* On desktop keep controls on one row */
+@media (min-width: 992px){
+  .search-form{ flex-wrap: nowrap; }
+}
+
+/* Search input cluster (input + icon + optional submit button inside) */
+.search-form .search-input{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 1 560px;
+  min-width: 320px;
+}
+
+/* If the submit button is placed INSIDE .search-input, keep it inline */
+.search-form .search-input button[type="submit"],
+.search-form .search-input input[type="submit"]{
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+/* Inputs: use theme surface so they work in light/dark */
+.search-form input[type="text"],
+.search-form input[type="search"]{
+  width: auto;            /* override old width:100% so buttons can sit inline */
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 12px 14px;
+  padding-inline-start: 44px; /* room for icon (logical start) */
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+  font-size: 14px;
+}
+.search-form input::placeholder{
+  color: color-mix(in srgb, var(--muted) 92%, transparent);
+}
+
+/* Icon inside input: stick to inline-start (right in RTL, left in LTR) */
+.search-form .search-input .in-icon{
+  position: absolute;
+  inset-inline-start: 14px;
+  inset-inline-end: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  opacity: .65;
+  pointer-events: none;
+}
+
+/* Submit button if it is outside .search-input */
+.search-form > button[type="submit"],
+.search-form > input[type="submit"]{
+  flex: 0 0 auto;
+}
+
+/* Keep all toolbar buttons same height */
+.search-form .btn,
+.search-form a.btn,
+.search-form button.btn,
+.search-form button[type="submit"]{
+  height: 44px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* Make the "إظهار الاسم الرباعي" button sit under toolbar, aligned right */
+.js-toggle-name-parts{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  margin: 8px 0 14px;
+}
+
+/* Responsive: stack nicely */
+@media (max-width: 768px){
+  .search-form{
+    justify-content: stretch;
+  }
+  .search-form .search-input{
+    flex-basis: 100%;
+    min-width: 0;
+  }
+  .search-form .btn,
+  .search-form a.btn,
+  .search-form button[type="submit"]{
+    width: auto;
+  }
+}
+
+
+/* RTL: keep page header actions on the right side (logical start) */
+html[dir="rtl"] .admin-container .wrap .topbar > form{
+  justify-self: start;
+  justify-content: flex-start;
+}
+
+
+
+/* ============================================================
+   Edit Lawyer page + simple admin edit forms polish
+   (No markup changes required)
+   ============================================================ */
+
+.admin-container .container > h2{
+  text-align:center;
+  font-size: clamp(26px, 2.6vw, 42px);
+  margin: 6px auto 18px;
+  letter-spacing: .2px;
+}
+
+.admin-container .container form[method="POST"]{
+  max-width: 1040px;
+  margin: 14px auto 44px;
+  padding: 26px 26px 22px;
+  background: #fff;
+  border: 1px solid rgba(15,23,42,.10);
+  border-radius: 26px;
+  box-shadow: 0 18px 44px rgba(15,23,42,.08);
+}
+
+.admin-container .container form[method="POST"] label{
+  display:block;
+  font-weight: 800;
+  color: rgba(15,23,42,.86);
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.admin-container .container form[method="POST"] :is(input:not([type="hidden"]), select, textarea){
+  width: 100%;
+  height: 46px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid rgba(15,23,42,.14);
+  color: rgba(15,23,42,.92);
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.admin-container .container form[method="POST"] textarea{
+  min-height: 120px;
+  height: auto;
+  resize: vertical;
+}
+
+.admin-container .container form[method="POST"] :is(input:not([type="hidden"]), select, textarea):focus{
+  border-color: rgba(65,95,157,.55);
+  box-shadow: 0 0 0 4px rgba(65,95,157,.14);
+}
+
+.admin-container .container form[method="POST"] :is(input[disabled], select[disabled], textarea[disabled]){
+  opacity: .75;
+  cursor: not-allowed;
+  background: rgba(15,23,42,.04);
+}
+
+.admin-container .container form[method="POST"] button[type="submit"]{
+  margin-top: 14px;
+  width: 100%;
+  height: 50px;
+  border: 0;
+  border-radius: 16px;
+  background: #415f9d;
+  color: #fff;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: .2px;
+  box-shadow: 0 12px 26px rgba(65,95,157,.20);
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+.admin-container .container form[method="POST"] button[type="submit"]:hover{
+  filter: brightness(1.02);
+  box-shadow: 0 16px 34px rgba(65,95,157,.24);
+  transform: translateY(-1px);
+}
+
+.admin-container .container form[method="POST"] button[type="submit"]:active{
+  transform: translateY(0);
+  box-shadow: 0 10px 22px rgba(65,95,157,.18);
+}
+
+.admin-container .container p > a[href*="syndicate_lawyers.php"]{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(65,95,157,.10);
+  border: 1px solid rgba(65,95,157,.20);
+  color: #1f3f86;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.admin-container .container p > a[href*="syndicate_lawyers.php"]:hover{
+  background: rgba(65,95,157,.14);
+  border-color: rgba(65,95,157,.26);
+}
+
+/* Dark theme */
+body[data-theme="dark"] .admin-container .container form[method="POST"]{
+  background: rgba(16,26,51,.92);
+  border-color: rgba(255,255,255,.12);
+  box-shadow: 0 18px 44px rgba(0,0,0,.45);
+}
+
+body[data-theme="dark"] .admin-container .container form[method="POST"] label{
+  color: rgba(244,246,255,.88);
+}
+
+body[data-theme="dark"] .admin-container .container form[method="POST"] :is(input:not([type="hidden"]), select, textarea){
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.16);
+  color: rgba(244,246,255,.92);
+}
+
+body[data-theme="dark"] .admin-container .container form[method="POST"] :is(input[disabled], select[disabled], textarea[disabled]){
+  background: rgba(255,255,255,.04);
+}
+
+body[data-theme="dark"] .admin-container .container p > a[href*="syndicate_lawyers.php"]{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.14);
+  color: rgba(244,246,255,.92);
 }
 

@@ -75,17 +75,19 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="admin-container">
 <?php include("../includes/sidebar.php"); ?>
 <div class="container">
-
+<h2>قائمة سجل المحامين</h2>
 <div class="admin-page-head">
-  <h2>قائمة المحامين</h2>
+  
   <form class="search-form" method="GET">
   <div class="search-input">
     <input type="text" name="search" placeholder="بحث بالاسم أو الرقم الوطني..." value="<?= htmlspecialchars($search) ?>" class="search-field">
     <svg class="in-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.3l4.4 4.4a1 1 0 0 0 1.4-1.4l-4.4-4.4A8 8 0 0 0 10 2Z"/></svg>
-  </div>
-  <button type="submit" class="btn btn-soft"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.3l4.4 4.4a1 1 0 0 0 1.4-1.4l-4.4-4.4A8 8 0 0 0 10 2Z"/></svg><span>بحث</span></button>
+    <button type="submit" class="btn btn-soft"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.3l4.4 4.4a1 1 0 0 0 1.4-1.4l-4.4-4.4A8 8 0 0 0 10 2Z"/></svg><span>بحث</span></button>
+
+</div>
 </form>
 </div>
+      <button type="button" class="btn btn-soft js-toggle-name-parts" style="margin-right:8px;">إظهار الاسم الرباعي</button>
 
 <?php if ($lawyers): ?>
 <div class="table-card"><div class="table-wrap">
@@ -94,10 +96,10 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <tr>
     <th>#</th>
     <th>الاسم الكامل</th>
-    <th>الاسم الأول</th>
-    <th>اسم الأب</th>
-    <th>اسم الجد</th>
-    <th>اسم العائلة</th>
+    <th class="name-part-col">الاسم الأول</th>
+    <th class="name-part-col">اسم الأب</th>
+    <th class="name-part-col">اسم الجد</th>
+    <th class="name-part-col">اسم العائلة</th>
     <th>الرقم الوطني</th>
     <th>الهاتف</th>
     <th>البريد</th>
@@ -114,10 +116,10 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <tr>
     <td><?= $i+1 ?></td>
 <td><?= htmlspecialchars($l['synd_full_name'] ?: ($l['user_full_name'] ?: $l['lawyer_name'])) ?></td>
-<td><?= htmlspecialchars($l['synd_first_name'] ?? '-') ?></td>
-<td><?= htmlspecialchars($l['synd_father_name'] ?? '-') ?></td>
-<td><?= htmlspecialchars($l['synd_grandfather_name'] ?? '-') ?></td>
-<td><?= htmlspecialchars($l['synd_family_name'] ?? '-') ?></td>
+<td class="name-part-col"><?= htmlspecialchars($l['synd_first_name'] ?? '-') ?></td>
+<td class="name-part-col"><?= htmlspecialchars($l['synd_father_name'] ?? '-') ?></td>
+<td class="name-part-col"><?= htmlspecialchars($l['synd_grandfather_name'] ?? '-') ?></td>
+<td class="name-part-col"><?= htmlspecialchars($l['synd_family_name'] ?? '-') ?></td>
 
 <td><?= htmlspecialchars($l['synd_national_id'] ?: ($l['user_national_id'] ?: '-')) ?></td>
 <td><?= htmlspecialchars($l['synd_phone'] ?: ($l['user_phone'] ?: '-')) ?></td>
@@ -144,5 +146,7 @@ $lawyers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </div>
 </div>
+
+	<?php include("../includes/footer.php"); ?>
 </body>
 </html>

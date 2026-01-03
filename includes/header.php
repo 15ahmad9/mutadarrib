@@ -51,6 +51,7 @@ if (isset($_SESSION['user_id'])) {
 }
 
 $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'متدرب' : (($role === 'syndicate_admin') ? 'موظف النقابة' : 'مدير'));
+$redirect_uri = urlencode($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php');
 ?>
 
 <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
@@ -112,7 +113,7 @@ $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'مت�
           </a>
         </li>
 
-        
+      <li><a class="theme-toggle-icon" href="/mutadarrib/toggle_theme.php?redirect=<?= $redirect_uri ?>" aria-label="تبديل الوضع" title="تبديل الوضع"><?= ($theme === 'dark') ? '☀️' : '🌙' ?></a></li>
       <li class="user-dropdown">
         <button class="user-toggle" id="userToggle">
           <?= htmlspecialchars($_SESSION['full_name'] ?? '') ?> (<?= $role_ar ?>) ▾
@@ -131,13 +132,13 @@ $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'مت�
           <?php if ($role === 'syndicate_admin'): ?>
             <li><a href="/mutadarrib/syndicate/dashboard.php">لوحة النقابة</a></li>
           <?php endif; ?>
-          <li><a href="/mutadarrib/toggle_theme.php?redirect=<?= urlencode($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php') ?>">الوضع الداكن: <?= ($theme === 'dark') ? 'مفعل' : 'غير مفعل' ?></a></li>
 
           <li><a href="/mutadarrib/auth/logout.php">تسجيل الخروج</a></li>
         </ul>
       </li>
 
     <?php else: ?>
+      <li><a class="theme-toggle-icon" href="/mutadarrib/toggle_theme.php?redirect=<?= $redirect_uri ?>" aria-label="تبديل الوضع" title="تبديل الوضع"><?= ($theme === 'dark') ? '☀️' : '🌙' ?></a></li>
       <li><a href="/mutadarrib/auth/login.php" class="login-btn">تسجيل الدخول</a></li>
     <?php endif; ?>
   </ul>

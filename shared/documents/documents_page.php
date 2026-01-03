@@ -146,11 +146,8 @@ if ($layout_header_path && file_exists($layout_header_path)) {
   }
   ?>
 
-  <div class="wrap">
-    <div class="topbar">
-      <div>
-        <h2><?= htmlspecialchars($page_title) ?></h2>
-      </div>
+  <div class="wrap">      <h2><?= htmlspecialchars($page_title) ?></h2>
+  <div class="topbar">
 
       <form method="GET" class="filter-row">
         <input type="hidden" name="tab" value="<?= htmlspecialchars($tab) ?>">
@@ -160,17 +157,17 @@ if ($layout_header_path && file_exists($layout_header_path)) {
         <label class="check">
           <input type="checkbox" name="only_incomplete" value="1" <?= ($onlyIncomplete===1)?'checked':''; ?>>
           غير مكتملين فقط
-        </label>
+        </label><button type="submit" class="btn btn-soft">تطبيق</button>
 
-        <button type="submit">تطبيق</button>
+        
 
         <?php if ($search !== "" || $onlyIncomplete===1): ?>
-          <a class="btn btn-muted" href="?tab=<?= htmlspecialchars($tab) ?>">مسح الفلاتر</a>
+          <a class="btn btn-soft" href="?tab=<?= htmlspecialchars($tab) ?>">مسح الفلاتر</a>
         <?php endif; ?>
       </form>
     </div>
 
-    <div class="tabs" style="margin-top:10px;">
+    <div class="tabs" style="margin:10px;">
       <a href="?<?= htmlspecialchars(http_build_query(array_merge(['tab'=>'trainees'], $commonQS))) ?>"
          class="<?= $tab==='trainees'?'active':'' ?>">وثائق المتدربين</a>
 
@@ -248,14 +245,14 @@ if ($layout_header_path && file_exists($layout_header_path)) {
                 <a class="btn btn-view" target="_blank" href="<?= $base ?>&doc=no_conviction&disp=inline">عرض عدم محكومية</a>
                 <a class="btn btn-dl" href="<?= $base ?>&doc=no_conviction&disp=attachment">تنزيل</a>
               <?php else: ?>
-                <span class="btn btn-muted" style="cursor:default;">لا يوجد</span>
+                <span class="btn btn-soft" style="cursor:default;">لا يوجد</span>
               <?php endif; ?>
 
               <?php if ($hasGood): ?>
                 <a class="btn btn-view" target="_blank" href="<?= $base ?>&doc=good_conduct&disp=inline">عرض حسن سيرة</a>
                 <a class="btn btn-dl" href="<?= $base ?>&doc=good_conduct&disp=attachment">تنزيل</a>
               <?php else: ?>
-                <span class="btn btn-muted" style="cursor:default;">لا يوجد</span>
+                <span class="btn btn-soft" style="cursor:default;">لا يوجد</span>
               <?php endif; ?>
             </td>
           </tr>

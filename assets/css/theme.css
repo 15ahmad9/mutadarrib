@@ -27,6 +27,12 @@
   --shadow: 0 10px 30px rgba(12, 0, 90, 0.10);
   --shadow-sm: 0 6px 18px rgba(12, 0, 90, 0.08);
 
+  /* Semantic colors (used across badges/status/alerts) */
+  --success: #2d6a4f;
+  --danger: #c1121f;
+  --warning: #f59f00;
+  --info: #0ea5e9;
+
   --radius: 16px;
   --radius-sm: 12px;
   --radius-xs: 10px;
@@ -355,6 +361,12 @@ body[data-theme="dark"]{
   --primary-700: #3f5ea7;
   --primary-800: #365191;
 
+  /* Semantic colors (lifted for dark contrast) */
+  --success: #35c17a;
+  --danger: #ff5a6a;
+  --warning: #fbbf24;
+  --info: #38bdf8;
+
   /* Borders + shadows */
   --border: rgba(255,255,255,0.10);
   --border-strong: rgba(255,255,255,0.16);
@@ -502,3 +514,175 @@ body[data-theme="dark"] .about-viewport{
 /* body[data-theme="dark"] .about-slide h3, .about-slide p, .about-slide li{
   color: rgba(158, 32, 32, 0.92);
 } */
+/* ============================================================
+   Dark Theme Coverage (App-wide)
+   هدف هذا البلوك: ضمان تطبيق الوضع الداكن على كل الصفحات
+   (لوحة التحكم، الجداول، التقويم، مركز الإشعارات، البحث والفلاتر…)
+   ============================================================ */
+
+/* Admin header title contrast */
+body[data-theme="dark"] .admin-header h2{ color: rgba(255,255,255,0.96) !important; }
+
+/* Cards that were hard-coded as white in module CSS */
+body[data-theme="dark"] .table-card,
+body[data-theme="dark"] .filters-card,
+body[data-theme="dark"] .training-card,
+body[data-theme="dark"] .lawyer-card,
+body[data-theme="dark"] .profile-card,
+body[data-theme="dark"] .calendar-page #calendar,
+body[data-theme="dark"] .calendar-page .modal,
+body[data-theme="dark"] .notify-wrap,
+body[data-theme="dark"] .notify-card,
+body[data-theme="dark"] .notify-section{
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.10);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Admin forms that were styled with fixed light backgrounds */
+body[data-theme="dark"] .admin-container > .card + form[method="POST"],
+body[data-theme="dark"] .admin-container > .card + form[method="post"],
+body[data-theme="dark"] .admin-container form .card,
+body[data-theme="dark"] .admin-container .content .card{
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.10);
+}
+
+/* Search + filters (admin + syndicate + public) */
+body[data-theme="dark"] .search-form input[type="text"],
+body[data-theme="dark"] .search-form input[type="search"],
+body[data-theme="dark"] .search-form select,
+body[data-theme="dark"] .filters-card input,
+body[data-theme="dark"] .filters-card select,
+body[data-theme="dark"] .filters-card textarea,
+body[data-theme="dark"] .search-box input,
+body[data-theme="dark"] .search-box select,
+body[data-theme="dark"] .filter-row input,
+body[data-theme="dark"] .filter-row select{
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.16);
+  color: var(--text);
+}
+body[data-theme="dark"] .search-form .search-input .in-icon{
+  color: rgba(244,246,255,0.70);
+  fill: currentColor;
+  opacity: .9;
+}
+
+/* Soft buttons in admin filters */
+body[data-theme="dark"] .btn.btn-soft{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.18);
+  color: rgba(244,246,255,0.92);
+}
+body[data-theme="dark"] .btn.btn-soft:hover{
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.24);
+}
+
+/* Tables: text + zebra + hover (covers admin/syndicate/public tables) */
+body[data-theme="dark"] :where(table, .table){
+  color: rgba(244,246,255,0.90);
+}
+body[data-theme="dark"] :where(table tbody td, .table tbody td){
+  color: rgba(244,246,255,0.88);
+}
+body[data-theme="dark"] :where(table tbody tr:nth-child(even) td, .table tbody tr:nth-child(even) td){
+  background: rgba(255,255,255,0.015);
+}
+body[data-theme="dark"] :where(table tbody tr:hover td, .table tbody tr:hover td){
+  background: rgba(75,106,184,0.12);
+}
+
+/* Status badges readability on dark */
+body[data-theme="dark"] .status,
+body[data-theme="dark"] .badge{
+  color: rgba(244,246,255,0.96) !important;
+}
+
+/* Legacy blocks inside style.css (tabs/section/wrap/table) */
+body[data-theme="dark"] .section{
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.10);
+}
+body[data-theme="dark"] .tabs a{
+  background: rgba(255,255,255,0.03);
+  color: rgba(244,246,255,0.84);
+  border-color: rgba(255,255,255,0.12);
+}
+body[data-theme="dark"] .tabs a.active{
+  background: rgba(75,106,184,0.18);
+  color: rgba(244,246,255,0.96);
+  border-color: rgba(75,106,184,0.35);
+}
+body[data-theme="dark"] .muted{ color: var(--muted) !important; }
+
+/* Small "pill" helper used in a few pages */
+body[data-theme="dark"] .pill{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.14);
+  color: rgba(244,246,255,0.92);
+}
+
+/* Calendar (FullCalendar) */
+body[data-theme="dark"].calendar-page #calendar{
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+body[data-theme="dark"].calendar-page .fc{
+  --fc-border-color: rgba(255,255,255,0.10);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: rgba(255,255,255,0.03);
+  --fc-neutral-text-color: rgba(244,246,255,0.80);
+  --fc-today-bg-color: rgba(75,106,184,0.14);
+}
+body[data-theme="dark"].calendar-page .fc .fc-toolbar-title{ color: rgba(244,246,255,0.96); }
+body[data-theme="dark"].calendar-page .fc .fc-button{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(244,246,255,0.92);
+}
+body[data-theme="dark"].calendar-page .fc .fc-button:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.20);
+}
+body[data-theme="dark"].calendar-page .fc .fc-button:focus{
+  box-shadow: 0 0 0 4px rgba(75,106,184,0.20);
+}
+body[data-theme="dark"].calendar-page .fc .fc-col-header-cell{
+  background: rgba(255,255,255,0.04);
+}
+body[data-theme="dark"].calendar-page .fc .fc-daygrid-day-number{
+  color: rgba(244,246,255,0.86);
+}
+body[data-theme="dark"].calendar-page .fc .fc-daygrid-day-frame{
+  background: rgba(255,255,255,0.01);
+}
+body[data-theme="dark"].calendar-page .fc .fc-daygrid-day:hover .fc-daygrid-day-frame{
+  background: rgba(75,106,184,0.10);
+}
+body[data-theme="dark"].calendar-page .fc .fc-event,
+body[data-theme="dark"].calendar-page .fc .fc-event-main{
+  color: rgba(244,246,255,0.96);
+}
+
+/* Calendar modal */
+body[data-theme="dark"].calendar-page .modal-backdrop{ background: rgba(0,0,0,0.62); }
+body[data-theme="dark"].calendar-page .modal{
+  background: rgba(15,20,36,0.94);
+  border: 1px solid rgba(255,255,255,0.14);
+}
+body[data-theme="dark"].calendar-page .modal h3{ color: rgba(244,246,255,0.96); }
+body[data-theme="dark"].calendar-page .modal label{ color: rgba(244,246,255,0.72); }
+body[data-theme="dark"].calendar-page .modal .hint{ color: rgba(244,246,255,0.58); }
+
+/* Notifications dropdown/menu */
+body[data-theme="dark"] .dropdown-menu{
+  background: rgba(15,20,36,0.94);
+  border-color: rgba(255,255,255,0.14);
+}
+
+/* Dashboard cards hover shadow in dark */
+body[data-theme="dark"] .dash-card:hover{
+  box-shadow: 0 18px 52px rgba(0,0,0,0.44);
+}

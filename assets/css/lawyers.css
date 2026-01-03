@@ -24,7 +24,33 @@
 
 .header h2{ margin: 0; font-size: 18px; color: rgba(255,255,255,0.96); font-weight: 900; }
 
-.user-info{ color: rgba(255,255,255,0.92); font-weight: 800; }
+.user-info{
+  color: rgba(255,255,255,0.92);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Theme toggle icon in dashboard headers */
+.dash-theme-toggle{
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.06);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.dash-theme-toggle:hover,
+.dash-theme-toggle:focus-visible{
+  background: rgba(255,255,255,0.10);
+}
 
 /* ---------- Mobile toggle (CSS-only) ---------- */
 .dash-sidebar-toggle{
@@ -245,6 +271,61 @@
 }
 
 
+/* ============================================================
+   Dark mode overrides (lawyers/syndicate tables + filters)
+   NOTE: lawyers.css imports theme.css at the top, then defines
+   some light surfaces (white backgrounds). In dark mode we must
+   override them here (after the light rules) so tables/buttons
+   are truly dark across pages مثل طلبات التدريب/قائمة المستخدمين.
+   ============================================================ */
+
+body[data-theme="dark"] .table{
+  background: rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.12);
+}
+
+body[data-theme="dark"] .table tbody td{
+  background: rgba(255,255,255,0.03);
+  color: rgba(244,246,255,0.90);
+  border-top-color: rgba(255,255,255,0.10);
+}
+
+body[data-theme="dark"] .table tbody td + td{
+  border-inline-start-color: rgba(255,255,255,0.08);
+}
+
+body[data-theme="dark"] .table tbody tr:nth-child(even) td{
+  background: rgba(255,255,255,0.015);
+}
+
+body[data-theme="dark"] .table tbody tr:hover td{
+  background: rgba(75,106,184,0.14);
+}
+
+/* Action buttons inside tables */
+body[data-theme="dark"] .table td :where(button, .btn, a.btn){
+  border-color: rgba(255,255,255,0.16);
+  background: linear-gradient(135deg, rgba(12,0,90,0.92), rgba(65,95,157,0.90));
+  color: rgba(244,246,255,0.98);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.34);
+}
+
+/* Filters/search rows on some admin-like pages (syndicate) */
+body[data-theme="dark"] .admin-container .wrap :where(.filters, .filter-row){
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.10);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.22);
+}
+
+body[data-theme="dark"] .admin-container .wrap :where(.filters, .filter-row) input[type="text"],
+body[data-theme="dark"] .admin-container .wrap :where(.filters, .filter-row) input[type="search"],
+body[data-theme="dark"] .admin-container .wrap :where(.filters, .filter-row) select{
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.16);
+  color: rgba(244,246,255,0.92);
+}
+
+
 /* ---------- Widgets ---------- */
 /* Syndicate dashboard cards — same visual system as Admin dashboard (.dash-card) */
 .layout .content .stats{
@@ -385,12 +466,30 @@
   font-size: 12px;
   font-weight: 800;
   color: #fff;
+  line-height: 1;
+  letter-spacing: .2px;
 }
 
 .status.waiting_exam{ background: #7c3aed; }
 .status.scheduled{ background: var(--primary); }
 .status.passed{ background: #2d6a4f; }
 .status.failed{ background: #c1121f; }
+
+/* Application status pills (used in lawyer/applications.php)
+   Values come from DB: pending / accepted / rejected / completed
+   Keep colors consistent with the rest of the UI */
+.status.pending{
+  background: #f4a261;
+  color: rgba(15, 23, 42, 0.95); /* better contrast on light orange */
+}
+.status.accepted{ background: #2a9d8f; }
+.status.rejected{ background: #e63946; }
+.status.completed{ background: #457b9d; }
+
+/* Extra defensive mappings (in case status naming differs) */
+.status.in_progress{ background: #0077b6; }
+.status.cancelled,
+.status.canceled{ background: #6c757d; }
 
 /* ========== Public lawyer pages (specializations/lawyers) ========== */
 
@@ -1814,4 +1913,79 @@ body[data-theme="dark"] .admin-container .wrap table tbody tr:nth-child(even) td
 }
 body[data-theme="dark"] .admin-container .wrap table tbody tr:hover td{
   background: rgba(255,255,255,0.05);
+}
+
+
+/* ==========================================================
+   Dark Mode Fix — Contact Messages Page (shared/contact/messages_page.php)
+   الهدف: منع بقاء صندوق التفاصيل / الفلاتر / البيجر بلون فاتح في الوضع الداكن
+   ========================================================== */
+
+body[data-theme="dark"] .admin-container .wrap .topbar h2,
+body[data-theme="dark"] .admin-container .wrap .topbar .muted{
+  color: rgba(244,246,255,0.92);
+}
+
+/* View box (single message) */
+body[data-theme="dark"] .admin-container .wrap .view-box{
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.12);
+  box-shadow: var(--shadow-sm);
+}
+body[data-theme="dark"] .admin-container .wrap .view-box h3{
+  color: rgba(244,246,255,0.96);
+}
+body[data-theme="dark"] .admin-container .wrap .view-grid div,
+body[data-theme="dark"] .admin-container .wrap .view-grid strong{
+  color: rgba(244,246,255,0.90);
+}
+
+body[data-theme="dark"] .admin-container .wrap .view-msg{
+  background: rgba(255,255,255,0.035);
+  border-color: rgba(255,255,255,0.16);
+  color: rgba(244,246,255,0.92);
+}
+
+body[data-theme="dark"] .admin-container .wrap .view-actions select{
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.16);
+  color: rgba(244,246,255,0.92);
+}
+
+/* Badges */
+body[data-theme="dark"] .admin-container .wrap .badge{
+  border-color: rgba(255,255,255,0.14);
+}
+body[data-theme="dark"] .admin-container .wrap .badge.b-new{
+  background: rgba(124, 58, 237, 0.22);
+  border-color: rgba(124, 58, 237, 0.36);
+  color: rgba(244,246,255,0.94);
+}
+body[data-theme="dark"] .admin-container .wrap .badge.b-read{
+  background: rgba(75,106,184,0.22);
+  border-color: rgba(75,106,184,0.36);
+  color: rgba(244,246,255,0.94);
+}
+body[data-theme="dark"] .admin-container .wrap .badge.b-closed{
+  background: rgba(148, 163, 184, 0.18);
+  border-color: rgba(148, 163, 184, 0.30);
+  color: rgba(244,246,255,0.88);
+}
+
+/* Pager */
+body[data-theme="dark"] .admin-container .wrap .pager a{
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.12);
+  color: rgba(244,246,255,0.92);
+}
+body[data-theme="dark"] .admin-container .wrap .pager a:hover{
+  background: rgba(255,255,255,0.07);
+}
+body[data-theme="dark"] .admin-container .wrap .pager .muted{
+  color: rgba(244,246,255,0.70);
+}
+
+/* Filters buttons (Apply / Clear) */
+body[data-theme="dark"] .admin-container .wrap :where(.filters,.filter-row) a.btn{
+  border-color: rgba(255,255,255,0.14);
 }

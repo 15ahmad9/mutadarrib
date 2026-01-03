@@ -97,7 +97,7 @@ $today = new DateTime('today');
 <head>
 <meta charset="UTF-8">
 <title>مدة التدريب والمتبقي</title>
-<link rel="stylesheet" href="../assets/css/admin.css">
+<!-- <link rel="stylesheet" href="../assets/css/admin.css"> -->
 <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body data-theme="<?= htmlspecialchars($theme) ?>">

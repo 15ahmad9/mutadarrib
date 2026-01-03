@@ -2,7 +2,13 @@
 session_start();
 require_once __DIR__ . "/../../config/db.php";
 
-if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'syndicate_admin') {
+// if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'syndicate_admin') {
+//   header("Location: /mutadarrib/auth/login.php");
+//   exit;
+// }
+
+// السماح للنقابة + الأدمن
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['syndicate_admin','admin'], true)) {
   header("Location: /mutadarrib/auth/login.php");
   exit;
 }

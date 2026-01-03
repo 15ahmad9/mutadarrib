@@ -173,12 +173,8 @@ if ($layout_header_path && file_exists($layout_header_path)) include $layout_hea
   <div class="container">
   <?php if ($layout_sidebar_path && file_exists($layout_sidebar_path)) include $layout_sidebar_path; ?>
 
-  <div class="wrap">
+  <div class="wrap"><h2><?= h($page_title) ?></h2>
     <div class="topbar">
-      <div>
-        <h2><?= h($page_title) ?></h2>
-        <div class="muted">عرض الرسائل وتغيير الحالة إلى new/read/closed.</div>
-      </div>
 
       <form method="GET" class="filters">
         <input type="text" name="search" placeholder="بحث بالاسم/الإيميل/الهاتف/الموضوع/الرسالة..." value="<?= h($search) ?>">
@@ -188,10 +184,10 @@ if ($layout_header_path && file_exists($layout_header_path)) include $layout_hea
           <option value="read"  <?= $statusFilter==='read'?'selected':''; ?>>مقروء</option>
           <option value="closed"<?= $statusFilter==='closed'?'selected':''; ?>>مغلق</option>
         </select>
-        <button type="submit">تطبيق</button>
+        <button type="submit" class="btn btn-soft">تطبيق</button>
 
         <?php if ($search !== '' || $statusFilter !== 'all'): ?>
-          <a class="btn btn-read" href="?">مسح الفلاتر</a>
+          <a class="btn btn-soft" href="?">مسح الفلاتر</a>
         <?php endif; ?>
       </form>
     </div>
@@ -215,7 +211,7 @@ if ($layout_header_path && file_exists($layout_header_path)) include $layout_hea
       <div class="view-box">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
           <h3 style="margin:0;">تفاصيل الرسالة #<?= (int)$viewRow['message_id'] ?></h3>
-          <a class="btn btn-read" href="?<?= h(http_build_query($commonQS)) ?>">العودة للقائمة</a>
+          <a class="btn btn-soft" href="?<?= h(http_build_query($commonQS)) ?>">العودة للقائمة</a>
         </div>
 
         <div class="view-grid" style="margin-top:10px;">
