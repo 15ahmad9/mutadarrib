@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 26, 2025 at 02:58 AM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Generation Time: Jan 04, 2026 at 10:15 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -39,15 +39,7 @@ CREATE TABLE `calendar_events` (
   `reminder_minutes` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `calendar_events`
---
-
-INSERT INTO `calendar_events` (`event_id`, `user_id`, `title`, `description`, `start_at`, `end_at`, `all_day`, `type`, `reminder_minutes`, `created_at`, `updated_at`) VALUES
-(1, 27, 'تجربة', 'تجربة', '2025-12-21 21:05:00', '2025-12-22 00:00:00', 1, 'event', 10, '2025-12-21 20:21:43', '2025-12-21 20:53:49'),
-(2, 3, 'تجربة 2', 'تجربة 2تجربة 2تجربة 2تجربة 2', '2025-12-22 21:00:00', '2025-12-23 00:00:00', 1, 'task', 1440, '2025-12-21 20:59:50', '2025-12-21 20:59:50');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -65,19 +57,16 @@ CREATE TABLE `contact_messages` (
   `message` text NOT NULL,
   `status` enum('new','read','closed') NOT NULL DEFAULT 'new',
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `contact_messages`
 --
 
 INSERT INTO `contact_messages` (`message_id`, `user_id`, `name`, `email`, `phone`, `subject`, `message`, `status`, `created_at`) VALUES
-(1, NULL, 'Ahmad Ghanem', 'ahmad@example.com', NULL, 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:41:08'),
-(2, NULL, 'Ahmad Ghanem', 'ahmad@example.com', NULL, 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:41:55'),
-(3, NULL, 'Ahmad Ghanem', 'ahmad@example.com', NULL, 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:42:14'),
-(4, NULL, 'Ahmad Ghanem', 'ahmad@example.com', NULL, 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:42:22'),
-(5, NULL, 'moh', 'moh@example.com', '+962780000', 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:42:34'),
-(6, NULL, 'moh', 'moh@example.com', '+962780000', 'تجربة', 'تجربةتجربةتجربةتجربةتجربةتجربة', 'new', '2025-12-22 20:42:57');
+(8001, 201, 'ليث الشريدة', 'laith@gmail.com', '0795566001', 'استفسار عن التدريب', 'هل التدريب يتطلب دوام كامل؟', 'new', '2026-01-03 13:05:00'),
+(8002, NULL, 'زائر', 'visitor@gmail.com', '0790000000', 'معلومة عامة', 'هل يمكن التسجيل لغير المحامين؟', 'read', '2026-01-03 13:10:00'),
+(8003, 103, 'سامي الطراونة', 'sami@gmail.com', '0794433221', 'تحديث بيانات', 'أرجو تحديث عنوان المكتب في النظام.', 'closed', '2026-01-03 13:20:00');
 
 -- --------------------------------------------------------
 
@@ -111,15 +100,20 @@ CREATE TABLE `lawyers` (
   `highschool_certificate` varchar(10) DEFAULT 'لا',
   `university_degree` varchar(10) DEFAULT 'لا',
   `social_security_number` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `lawyers`
 --
 
 INSERT INTO `lawyers` (`lawyer_id`, `user_id`, `syndicate_id`, `office_address`, `password`, `verified`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`, `identity_front`, `identity_back`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `highschool_certificate`, `university_degree`, `social_security_number`) VALUES
-(10, 26, 1, 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 1, '2025-11-29 17:26:12', '2025-12-22 20:57:59', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', NULL, NULL, '', '', '', 'لا', 'دكتوراه', NULL),
-(11, 28, 9, 'إربد – وسط البلد20', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 1, '2025-11-29 20:37:07', '2025-12-20 23:16:57', 'يوسف محمود علي الديري', 'يوسف', 'محمود', 'علي', 'الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', NULL, NULL, NULL, NULL, 'نعم', 'نعم', 'بكالوريوس', '1000000002');
+(1, 101, 1, 'عمان - الشميساني', '$2y$10$ZJfx/jrxCJTcGFBTPjDCbORecVF4tzK2L1yqmxer2P7Hrfia3Segq', 1, '2026-01-02 10:00:00', '2026-01-04 23:57:39', 'خالد محمود أحمد الزعبي', 'خالد', 'محمود', 'أحمد', 'الزعبي', '7012945836', '0791122334', 'khaled@gmail.com', 'عمان - تلاع العلي', NULL, NULL, NULL, NULL, 'نعم', 'نعم', 'بكالوريوس', '7012945836'),
+(2, 102, 1, 'إربد - الحي الشرقي', '$2y$10$o7lnMn3PqaTAL6gXyZUVyO6zyESvR53qkO/oeE4ZZKwWo2Y72w04i', 1, '2026-01-02 10:05:00', '2026-01-04 23:57:39', 'أحمد عادل يوسف العموش', 'أحمد', 'عادل', 'يوسف', 'العموش', '8391054721', '0786655443', 'ahmad@gmail.com', 'إربد - شارع الجامعة', NULL, NULL, NULL, NULL, 'لا', 'نعم', 'ماجستير', NULL),
+(3, 103, 1, 'الكرك - وسط البلد', '$2y$10$gM8dJ0/Cs2QUzcVsJXaPju8m/0gegtEOtIfIbRlt6t0nNby7rB1UC', 1, '2026-01-02 10:10:00', '2026-01-04 23:57:39', 'سامي جهاد حسن الطراونة', 'سامي', 'جهاد', 'حسن', 'الطراونة', '6158739204', '0794433221', 'sami@gmail.com', 'الكرك - المرج', NULL, NULL, NULL, NULL, 'نعم', 'نعم', 'بكالوريوس', '6158739204'),
+(4, 104, 1, 'مادبا - قرب المحكمة', '$2y$10$ir7kSa/RPUmB.zAjXTYZIO0LbyyUB0wjBeJyF0MnYC2q0OEiF3J9C', 0, '2026-01-02 10:12:00', '2026-01-04 23:57:39', 'يوسف فادي محمود المجالي', 'يوسف', 'فادي', 'محمود', 'المجالي', '9024763158', '0779988776', 'yousef@gmail.com', 'مادبا - وسط البلد', NULL, NULL, NULL, NULL, 'لا', 'نعم', 'بكالوريوس', NULL),
+(5, 105, 1, 'الزرقاء - الجديدة', '$2y$10$RSQELcoXo8niHBz19LxS9.GMpF0AL4Avm2irrOxmk213P2M/OlM16', 1, '2026-01-02 10:15:00', '2026-01-04 23:57:39', 'محمود رائد سليمان بني ياسين', 'محمود', 'رائد', 'سليمان', 'بني ياسين', '7483629105', '0792211345', 'mahmoud@gmail.com', 'الزرقاء - حي الأمير حسن', NULL, NULL, NULL, NULL, 'نعم', 'نعم', 'دكتوراه', ''),
+(6, 106, 1, 'عمان - جبل الحسين', '$2y$10$/o5XXUBi7P3R6Zb.cUVA0OBEV8AJhbAdklbZ3SMCKuMu3kKwkMTF2', 0, '2026-01-02 10:20:00', '2026-01-04 23:57:50', 'عمر ناصر محمد الحراحشة', 'عمر', 'ناصر', 'محمد', 'الحراحشة', '5630198472', '0783344556', 'omar@gmail.com', 'عمان - جبل التاج', NULL, NULL, NULL, NULL, 'لا', 'نعم', 'بكالوريوس', NULL),
+(10, 26, 1, 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 1, '2025-11-29 17:26:12', '2025-12-22 20:57:59', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', NULL, NULL, '', '', '', 'لا', 'دكتوراه', NULL);
 
 -- --------------------------------------------------------
 
@@ -150,7 +144,7 @@ CREATE TABLE `lawyers_syndicate` (
   `good_conduct_doc` varchar(255) DEFAULT NULL,
   `social_security` enum('نعم','لا') DEFAULT 'لا',
   `social_security_number` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `lawyers_syndicate`
@@ -158,17 +152,25 @@ CREATE TABLE `lawyers_syndicate` (
 
 INSERT INTO `lawyers_syndicate` (`syndicate_id`, `lawyer_name`, `national_id`, `office_address`, `phone`, `email`, `identity_front`, `identity_back`, `notes`, `role`, `created_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `highschool_certificate`, `university_degree`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `social_security_number`) VALUES
 (1, 'محمد المحامي', '1111111111', 'عمان', '0790000000', 'lawyer1@example.com', NULL, NULL, 'مسجل لدى النقابة', 'lawyer', '2025-11-12 00:18:50', 'محمد احمد محمد المحامي', 'محمد', 'احمد', 'محمد', 'المحامي', 'لا', '', '', '', 'نعم', '1111111111'),
-(6, '', '7878787878', 'عمان', '0787878787', 'sara@example.com', NULL, NULL, NULL, 'lawyer', '2025-11-14 21:21:18', 'سارة علي محمد المحامية', 'سارة', 'علي', 'محمد', 'المحامية', 'نعم', 'ماجستير', '', '', 'نعم', '7878787878'),
-(8, 'محمد أحمد الخطيب', '1000000001', 'عمّان – جبل الحسين', '0790000001', 'lawyer1@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'محمد أحمد مصطفى الخطيب', 'محمد', 'أحمد', 'مصطفى', 'الخطيب', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '1000000001'),
-(9, 'يوسف محمود علي الديري', '1000000002', 'إربد – وسط البلد20', '0790000002', 'lawyer2@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'يوسف محمود علي الديري', 'يوسف', 'محمود', 'علي', 'الديري', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '1000000002'),
-(10, 'خالد صالح الرواشدة', '1000000003', 'الزرقاء – الجديدة', '0790000003', 'lawyer3@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'خالد صالح محمد الرواشدة', 'خالد', 'صالح', 'محمد', 'الرواشدة', 'نعم', 'ماجستير', NULL, NULL, 'نعم', '1000000003'),
-(11, 'أنس فواز عادل الطراونة', '1000000004', 'الكرك – وسط المدينة', '0790000004', 'lawyer4@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'أنس فواز عادل الطراونة', 'أنس', 'فواز', 'عادل', 'الطراونة', 'نعم', 'بكالوريوس', '', '', 'نعم', '1000000004'),
-(12, 'رامي حسن الخليفات', '1000000005', 'مأدبا – البلد', '0790000005', 'lawyer5@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'رامي حسن فهد الخليفات', 'رامي', 'حسن', 'فهد', 'الخليفات', 'نعم', 'ماجستير', NULL, NULL, 'نعم', '1000000005'),
-(13, 'طارق أمين الزعبي', '1000000006', 'إربد – الحصن', '0790000006', 'lawyer6@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'طارق أمين شاكر الزعبي', 'طارق', 'أمين', 'شاكر', 'الزعبي', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
-(14, 'علي وائل المناصير', '1000000007', 'عمّان – خلدا', '0790000007', 'lawyer7@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'علي وائل كريم المناصير', 'علي', 'وائل', 'كريم', 'المناصير', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
-(15, 'سامر يوسف المحادين', '1000000008', 'السلط – المدينة', '0790000008', 'lawyer8@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'سامر يوسف جابر المحادين', 'سامر', 'يوسف', 'جابر', 'المحادين', 'نعم', 'ماجستير', NULL, NULL, 'لا', NULL),
-(16, 'سامي عارف الكساسبة', '1000000009', 'العقبة – الجنوب', '0790000009', 'lawyer9@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'سامي عارف سالم الكساسبة', 'سامي', 'عارف', 'سالم', 'الكساسبة', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
-(17, 'بهاء ناصر العجارمة', '1000000010', 'عمّان – تلاع العلي', '0790000010', 'lawyer10@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'بهاء ناصر طلال العجارمة', 'بهاء', 'ناصر', 'طلال', 'العجارمة', 'نعم', 'دكتوراه', NULL, NULL, 'لا', NULL);
+(2, 'محمد أحمد الخطيب', '1000000001', 'عمّان – جبل الحسين', '0790000001', 'lawyer1@test.com', NULL, NULL, NULL, 'lawyer', '2025-11-29 19:50:19', 'محمد أحمد مصطفى الخطيب', 'محمد', 'أحمد', 'مصطفى', 'الخطيب', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '1000000001'),
+(3, 'خالد الزعبي', '7012945836', 'عمان - الشميساني', '0791122334', 'khaled@gmail.com', NULL, NULL, 'مسجل لدى النقابة', 'lawyer', '2025-12-10 09:12:21', 'خالد محمود أحمد الزعبي', 'خالد', 'محمود', 'أحمد', 'الزعبي', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '7012945836'),
+(4, 'أحمد العموش', '8391054721', 'إربد - الحي الشرقي', '0786655443', 'ahmad@gmail.com', NULL, NULL, 'خبرة 6 سنوات', 'lawyer', '2025-12-11 14:35:10', 'أحمد عادل يوسف العموش', 'أحمد', 'عادل', 'يوسف', 'العموش', 'نعم', 'ماجستير', NULL, NULL, 'لا', NULL),
+(5, 'سامي الطراونة', '6158739204', 'الكرك - وسط البلد', '0794433221', 'sami@gmail.com', NULL, NULL, 'مكتب تدريب معتمد', 'lawyer', '2025-12-12 11:03:44', 'سامي جهاد حسن الطراونة', 'سامي', 'جهاد', 'حسن', 'الطراونة', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '6158739204'),
+(6, 'يوسف المجالي', '9024763158', 'مادبا - قرب المحكمة', '0779988776', 'yousef@gmail.com', NULL, NULL, 'يقبل متدربين', 'lawyer', '2025-12-13 16:22:05', 'يوسف فادي محمود المجالي', 'يوسف', 'فادي', 'محمود', 'المجالي', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
+(7, 'محمود بني ياسين', '7483629105', 'الزرقاء - الجديدة', '0792211345', 'mahmoud@gmail.com', NULL, NULL, 'متاح للتدريب المسائي', 'lawyer', '2025-12-14 10:47:59', 'محمود رائد سليمان بني ياسين', 'محمود', 'رائد', 'سليمان', 'بني ياسين', 'نعم', 'دكتوراه', NULL, NULL, 'نعم', '7483629105'),
+(8, 'عمر الحراحشة', '5630198472', 'عمان - جبل الحسين', '0783344556', 'omar@gmail.com', NULL, NULL, 'اختصاص مدني وتجاري', 'lawyer', '2025-12-15 13:19:33', 'عمر ناصر محمد الحراحشة', 'عمر', 'ناصر', 'محمد', 'الحراحشة', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
+(9, 'ليث الشريدة', '3109754628', 'البلقاء - الفحيص', '0795566001', 'laith@gmail.com', NULL, NULL, 'خريج حديث', 'trainee', '2025-12-20 09:05:02', 'ليث إبراهيم صالح الشريدة', 'ليث', 'إبراهيم', 'صالح', 'الشريدة', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
+(10, 'يحيى العدوان', '4286019735', 'عمان - طبربور', '0782233002', 'yahya@gmail.com', NULL, NULL, 'يرغب بتدريب مكتب تجاري', 'trainee', '2025-12-21 18:40:11', 'يحيى فؤاد عبدالكريم العدوان', 'يحيى', 'فؤاد', 'عبدالكريم', 'العدوان', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '4286019735'),
+(11, 'رامي العناسوة', '1567430298', 'إربد - الحصن', '0797788003', 'rami@gmail.com', NULL, NULL, 'يبحث عن تدريب قريب', 'trainee', '2025-12-22 12:14:28', 'رامي جمال أمين العناسوة', 'رامي', 'جمال', 'أمين', 'العناسوة', 'نعم', 'ماجستير', NULL, NULL, 'لا', NULL),
+(12, 'تامر الرواشدة', '9073146251', 'الكرك - المرج', '0774455004', 'tamer@gmail.com', NULL, NULL, 'خريج حقوق', 'trainee', '2025-12-23 08:27:40', 'تامر مازن خليل الرواشدة', 'تامر', 'مازن', 'خليل', 'الرواشدة', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '9073146251'),
+(13, 'سيف الجازي', '6642087319', 'الزرقاء - الغويرية', '0793344005', 'saif@gmail.com', NULL, NULL, 'يفضل تدريب صباحي', 'trainee', '2025-12-24 10:58:06', 'سيف سامر يوسف الجازي', 'سيف', 'سامر', 'يوسف', 'الجازي', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
+(14, 'مالك الخلايلة', '9073146251', 'مادبا - مليح', '0789900116', 'malek@gmail.com', NULL, NULL, 'جاهز للمقابلة', 'trainee', '2025-12-25 15:09:52', 'مالك عيسى طلال الخلايلة', 'مالك', 'عيسى', 'طلال', 'الخلايلة', 'نعم', 'دكتوراه', NULL, NULL, 'نعم', '2751908643'),
+(15, 'خالد الزعبي', '7012945836', 'عمان - الشميساني', '0791122334', 'خالد@gmail.com', NULL, NULL, 'مسجل لدى النقابة', 'lawyer', '2025-10-03 09:12:21', 'خالد محمود أحمد الزعبي', 'خالد', 'محمود', 'أحمد', 'الزعبي', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '7012945836'),
+(16, 'أحمد العموش', '8391054721', 'إربد - الحي الشرقي', '0786655443', 'أحمد@gmail.com', NULL, NULL, 'خبرة 6 سنوات', 'lawyer', '2025-10-07 14:35:10', 'أحمد عادل يوسف العموش', 'أحمد', 'عادل', 'يوسف', 'العموش', 'نعم', 'ماجستير', NULL, NULL, 'لا', NULL),
+(17, 'سامي الطراونة', '6158739204', 'الكرك - وسط البلد', '0794433221', 'سامي@gmail.com', NULL, NULL, 'مكتب تدريب معتمد', 'lawyer', '2025-10-12 11:03:44', 'سامي جهاد حسن الطراونة', 'سامي', 'جهاد', 'حسن', 'الطراونة', 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '6158739204'),
+(18, 'يوسف المجالي', '9024763158', 'مادبا - قرب المحكمة', '0779988776', 'يوسف@gmail.com', NULL, NULL, 'يقبل متدربين', 'lawyer', '2025-10-18 16:22:05', 'يوسف فادي محمود المجالي', 'يوسف', 'فادي', 'محمود', 'المجالي', 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL),
+(19, 'محمود بني ياسين', '7483629105', 'الزرقاء - الجديدة', '0792211345', 'محمود@gmail.com', NULL, NULL, 'متاح للتدريب المسائي', 'lawyer', '2025-10-22 10:47:59', 'محمود رائد سليمان بني ياسين', 'محمود', 'رائد', 'سليمان', 'بني ياسين', 'نعم', 'دكتوراه', NULL, NULL, 'نعم', '7483629105'),
+(20, 'علي المشاقبة', '2579031486', 'المفرق - شارع الجامعة', '0774455667', 'علي@gmail.com', NULL, NULL, 'متاح لاستقبال 2 متدربين', 'lawyer', '2025-11-13 08:27:40', 'علي مازن خليل المشاقبة', 'علي', 'مازن', 'خليل', 'المشاقبة', 'نعم', NULL, NULL, NULL, 'لا', NULL);
 
 -- --------------------------------------------------------
 
@@ -207,7 +209,21 @@ CREATE TABLE `membership_requests` (
   `reviewed_by` int(11) DEFAULT NULL,
   `rejection_reason` text DEFAULT NULL,
   `approved_syndicate_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `membership_requests`
+--
+
+INSERT INTO `membership_requests` (`request_id`, `public_code`, `user_id`, `role`, `status`, `syndicate_id`, `identity_front`, `identity_back`, `no_conviction_doc`, `good_conduct_doc`, `lawyer_name`, `national_id`, `office_address`, `phone`, `email`, `notes`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `highschool_certificate`, `university_degree`, `social_security`, `social_security_number`, `created_at`, `reviewed_at`, `reviewed_by`, `rejection_reason`, `approved_syndicate_id`) VALUES
+(6001, 'AB12CD34EF56', 104, 'lawyer', 'pending', 1, 'uploads/ids/104_front.jpg', 'uploads/ids/104_back.jpg', NULL, NULL, 'يوسف المجالي', '9024763158', 'مادبا - قرب المحكمة', '0779988776', 'yousef@gmail.com', 'بانتظار المراجعة', 'يوسف فادي محمود المجالي', 'يوسف', 'فادي', 'محمود', 'المجالي', 'نعم', 'بكالوريوس', 'لا', NULL, '2026-01-02 12:30:00', NULL, NULL, NULL, NULL),
+(6002, 'ZX98YU76TR54', 203, 'trainee', 'approved', 1, 'uploads/ids/203_front.jpg', 'uploads/ids/203_back.jpg', NULL, NULL, 'رامي العناسوة', '1567430298', 'إربد - الحصن', '0797788003', 'rami@gmail.com', 'تمت الموافقة', 'رامي جمال أمين العناسوة', 'رامي', 'جمال', 'أمين', 'العناسوة', 'نعم', 'ماجستير', 'لا', NULL, '2026-01-02 12:40:00', '2026-01-03 09:00:00', 999, NULL, 1),
+(6010, 'LM12NP34QR56', NULL, 'lawyer', 'pending', 1, 'uploads/ids/6010_front.jpg', 'uploads/ids/6010_back.jpg', 'uploads/docs/6010_ncv.pdf', 'uploads/docs/6010_gc.pdf', 'زياد القضاة', '3347619208', 'عمان - عبدون', '0771122899', 'ziad@gmail.com', 'طلب تسجيل محامي جديد', 'زياد فؤاد عبدالكريم القضاة', 'زياد', 'فؤاد', 'عبدالكريم', 'القضاة', 'نعم', 'بكالوريوس', 'لا', NULL, '2026-01-03 10:10:00', NULL, NULL, NULL, NULL),
+(6011, 'GH78JK90MN12', NULL, 'trainee', 'pending', 1, 'uploads/ids/6011_front.jpg', 'uploads/ids/6011_back.jpg', NULL, NULL, 'نادر السرحان', '5196082743', 'عمان - ماركا', '0798877665', 'nader@gmail.com', 'خريج جديد ويطلب اعتماد', 'نادر محمود أحمد السرحان', 'نادر', 'محمود', 'أحمد', 'السرحان', 'نعم', 'بكالوريوس', 'نعم', '5196082743', '2026-01-03 10:20:00', NULL, NULL, NULL, NULL),
+(6012, 'AA11BB22CC33', NULL, 'trainee', 'rejected', 1, 'uploads/ids/6012_front.jpg', 'uploads/ids/6012_back.jpg', NULL, NULL, 'معتز الزوايدة', '6802519734', 'إربد - شارع الجامعة', '0786677001', 'moataz@gmail.com', 'نواقص وثائق', 'معتز سالم حسن الزوايدة', 'معتز', 'سالم', 'حسن', 'الزوايدة', 'لا', 'بكالوريوس', 'لا', NULL, '2026-01-03 10:30:00', '2026-01-03 18:05:00', 999, 'يرجى إرفاق شهادة الثانوية', 0),
+(6013, 'DD44EE55FF66', NULL, 'lawyer', 'approved', 1, 'uploads/ids/6013_front.jpg', 'uploads/ids/6013_back.jpg', 'uploads/docs/6013_ncv.pdf', 'uploads/docs/6013_gc.pdf', 'فراس العبادي', '9851734062', 'السلط - السرو', '0797788990', 'feras@gmail.com', 'مكتب تدريب جديد', 'فراس جمال أمين العبادي', 'فراس', 'جمال', 'أمين', 'العبادي', 'نعم', 'ماجستير', 'نعم', '9851734062', '2026-01-03 10:40:00', '2026-01-04 09:00:00', 999, NULL, 1),
+(6014, 'HH77II88JJ99', NULL, 'lawyer', 'rejected', 1, 'uploads/ids/6014_front.jpg', 'uploads/ids/6014_back.jpg', 'uploads/docs/6014_ncv.pdf', NULL, 'رائد العجارمة', '8065129473', 'عمان - تلاع العلي', '0793344991', 'raed@gmail.com', 'وثائق غير مكتملة', 'رائد سامر يوسف العجارمة', 'رائد', 'سامر', 'يوسف', 'العجارمة', 'نعم', 'بكالوريوس', 'نعم', '8065129473', '2026-01-03 10:50:00', '2026-01-03 19:10:00', 999, 'يرجى إرفاق شهادة حسن السيرة والسلوك', NULL),
+(6015, 'KK10LL20MM30', NULL, 'trainee', 'approved', 1, 'uploads/ids/6015_front.jpg', 'uploads/ids/6015_back.jpg', NULL, NULL, 'عمار الحياري', '7420193856', 'الزرقاء - الجديدة', '0791122007', 'ammar@gmail.com', 'تم استكمال المتطلبات', 'عمار نزار خليل الحياري', 'عمار', 'نزار', 'خليل', 'الحياري', 'نعم', 'بكالوريوس', 'لا', NULL, '2026-01-03 11:05:00', '2026-01-04 09:30:00', 999, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -223,14 +239,20 @@ CREATE TABLE `syndicate_exam_requests` (
   `status` enum('waiting_exam','scheduled','passed','failed') NOT NULL DEFAULT 'waiting_exam',
   `exam_date` date DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `syndicate_exam_requests`
 --
 
 INSERT INTO `syndicate_exam_requests` (`request_id`, `application_id`, `trainee_id`, `lawyer_id`, `status`, `exam_date`, `created_at`) VALUES
-(5, 14, 0, 10, 'scheduled', '2025-12-31', '2025-12-12 00:49:20');
+(9001, 5002, 12, 1, 'scheduled', '2026-01-18', '2026-01-04 09:00:00'),
+(9002, 5004, 14, 3, 'waiting_exam', NULL, '2026-01-04 09:05:00'),
+(9003, 5006, 16, 5, 'scheduled', '2026-01-22', '2026-01-04 09:10:00'),
+(9005, 5004, 14, 3, 'scheduled', '2026-02-08', '2026-01-05 09:15:00'),
+(9007, 5002, 12, 1, 'passed', '2026-01-18', '2026-01-18 12:00:00'),
+(9008, 5004, 14, 3, 'failed', '2026-02-08', '2026-02-08 15:30:00'),
+(9009, 5006, 16, 5, 'scheduled', '2026-02-12', '2026-01-05 09:25:00');
 
 -- --------------------------------------------------------
 
@@ -262,15 +284,19 @@ CREATE TABLE `trainees` (
   `identity_back` varchar(255) DEFAULT NULL,
   `is_archived` tinyint(1) NOT NULL DEFAULT 0,
   `archived_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `trainees`
 --
 
 INSERT INTO `trainees` (`trainee_id`, `user_id`, `highschool_certificate`, `university_degree`, `no_conviction_doc`, `good_conduct_doc`, `social_security`, `social_security_number`, `created_at`, `updated_at`, `full_name`, `first_name`, `father_name`, `grandfather_name`, `family_name`, `national_id`, `phone`, `email`, `home_address`, `identity_front`, `identity_back`, `is_archived`, `archived_at`) VALUES
-(2, 12, 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL, '2025-11-14 14:05:13', '2025-11-14 15:06:16', 'ريم', 'ريم', NULL, NULL, NULL, '0505050505', '0780505050', 'reem@example.com', 'عمان', NULL, NULL, 0, NULL),
-(3, 27, 'نعم', 'بكالوريوس', '', '', 'نعم', '1000000001', '2025-11-29 19:53:21', '2025-12-22 00:33:39', 'محمد أحمد مصطفى الخطيب', 'محمد', 'أحمد', 'مصطفى', 'الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', NULL, NULL, 0, '2025-12-12 17:47:48');
+(3, 27, 'نعم', 'بكالوريوس', '', '', 'نعم', '1000000001', '2025-11-29 19:53:21', '2025-12-22 00:33:39', 'محمد أحمد مصطفى الخطيب', 'محمد', 'أحمد', 'مصطفى', 'الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', NULL, NULL, 0, '2025-12-12 17:47:48'),
+(11, 201, 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL, '2026-01-02 11:10:00', '2026-01-02 11:35:00', 'ليث إبراهيم صالح الشريدة', 'ليث', 'إبراهيم', 'صالح', 'الشريدة', '3109754628', '0795566001', 'laith@gmail.com', 'البلقاء - الفحيص', NULL, NULL, 0, NULL),
+(12, 202, 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '4286019735', '2026-01-02 11:15:00', '2026-01-02 11:40:00', 'يحيى فؤاد عبدالكريم العدوان', 'يحيى', 'فؤاد', 'عبدالكريم', 'العدوان', '4286019735', '0782233002', 'yahya@gmail.com', 'عمان - طبربور', NULL, NULL, 0, NULL),
+(13, 203, 'نعم', 'ماجستير', NULL, NULL, 'لا', NULL, '2026-01-02 11:20:00', '2026-01-02 11:20:00', 'رامي جمال أمين العناسوة', 'رامي', 'جمال', 'أمين', 'العناسوة', '1567430298', '0797788003', 'rami@gmail.com', 'إربد - الحصن', NULL, NULL, 0, NULL),
+(14, 204, 'نعم', 'بكالوريوس', NULL, NULL, 'نعم', '9073146251', '2026-01-02 11:22:00', '2026-01-02 11:55:00', 'تامر مازن خليل الرواشدة', 'تامر', 'مازن', 'خليل', 'الرواشدة', '9073146251', '0774455004', 'tamer@gmail.com', 'الكرك - المرج', NULL, NULL, 0, NULL),
+(15, 205, 'نعم', 'بكالوريوس', NULL, NULL, 'لا', NULL, '2026-01-02 11:25:00', '2026-01-02 11:25:00', 'سيف سامر يوسف الجازي', 'سيف', 'سامر', 'يوسف', 'الجازي', '6642087319', '0793344005', 'saif@gmail.com', 'الزرقاء - الغويرية', NULL, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -291,17 +317,18 @@ CREATE TABLE `trainings` (
   `seats` int(11) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `trainings`
 --
 
 INSERT INTO `trainings` (`training_id`, `lawyer_id`, `title`, `description`, `duration_months`, `location`, `start_date`, `end_date`, `status`, `seats`, `created_at`, `updated_at`) VALUES
-(1, 10, 'تدريب قانوني في القضايا المدنية', 'تدريب عملي في مكتب محاماة', 3, 'عمان', NULL, NULL, 'open', 5, '2025-11-29 22:04:44', '2025-12-25 21:40:30'),
-(2, 26, 'تدريب تيست', 'تدريب تيست تدريب تيست', 6, 'Amman', '2025-12-01', '2026-05-30', 'open', 3, '2025-11-29 22:32:32', '2025-11-29 22:32:32'),
-(3, 28, 'تدريب تيست', 'تدريب تيست تدريب تيست', 12, 'Amman', '2025-12-01', '2026-12-30', 'open', 3, '2025-11-29 22:34:00', '2025-11-29 22:34:00'),
-(4, 10, 'تدريب مهني', 'تدريب مهني تدريب مهني تدريب مهني', 24, 'عم', '2026-01-01', '2028-01-01', 'open', 10, '2025-12-25 19:28:11', '2025-12-25 19:28:11');
+(1001, 1, 'تدريب محاماة مدني وتجاري', 'برنامج تدريب عملي على الدعاوى المدنية وصياغة اللوائح والمرافعات.', 6, 'عمان - الشميساني', '2026-01-15', '2026-07-15', 'open', 2, '2026-01-03 09:00:00', '2026-01-03 09:00:00'),
+(1002, 2, 'تدريب قضايا أحوال شخصية', 'جلسات عملية على لوائح الأحوال الشخصية وإجراءات المحاكم الشرعية.', 4, 'إربد - الحي الشرقي', '2026-01-20', '2026-05-20', 'open', 1, '2026-01-03 09:10:00', '2026-01-03 09:10:00'),
+(1003, 3, 'تدريب إجراءات جزائية ومرافعات', 'تطبيقات على ملفات جزائية ومحاضر ضبط ومرافعات.', 5, 'الكرك - وسط البلد', '2026-02-01', '2026-07-01', 'open', 2, '2026-01-03 09:20:00', '2026-01-03 09:20:00'),
+(1004, 5, 'تدريب صياغة العقود', 'صياغة عقود بيع/إيجار/شراكة + مراجعة مخاطر قانونية.', 3, 'الزرقاء - الجديدة', '2026-01-25', '2026-04-25', 'open', 3, '2026-01-03 09:30:00', '2026-01-03 09:30:00'),
+(1005, 4, 'تدريب مبتدئين - مكتب عام', 'مقدمة عملية لإدارة ملف العميل والمراسلات والمتابعة.', 3, 'مادبا - قرب المحكمة', '2026-02-10', '2026-05-10', 'open', 1, '2026-01-03 09:40:00', '2026-01-03 09:40:00');
 
 -- --------------------------------------------------------
 
@@ -319,15 +346,19 @@ CREATE TABLE `training_applications` (
   `reviewed_at` datetime DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `syndicate_notified` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `training_applications`
 --
 
 INSERT INTO `training_applications` (`application_id`, `trainee_id`, `training_id`, `status`, `trainee_seen`, `applied_at`, `reviewed_at`, `notes`, `syndicate_notified`) VALUES
-(14, 0, 1, 'completed', 1, '2025-12-07 00:35:02', '2025-12-07 00:35:19', NULL, 1),
-(24, 3, 4, 'accepted', 1, '2025-12-25 22:11:47', NULL, NULL, 0);
+(5001, 11, 1001, 'pending', 1, '2026-01-03 12:00:00', NULL, 'يفضل دوام صباحي', 0),
+(5002, 12, 1001, 'accepted', 1, '2026-01-03 12:10:00', '2026-01-03 16:00:00', 'تم القبول - يرجى إحضار السيرة الذاتية', 1),
+(5003, 13, 1002, 'rejected', 1, '2026-01-03 12:20:00', '2026-01-03 17:10:00', 'اكتمال المقاعد', 1),
+(5004, 14, 1003, 'accepted', 0, '2026-01-03 12:30:00', '2026-01-03 18:00:00', 'موعد مقابلة قبل البدء', 1),
+(5005, 15, 1004, 'pending', 0, '2026-01-03 12:40:00', NULL, 'قريب من مكان السكن', 0),
+(5006, 16, 1004, 'accepted', 1, '2026-01-03 12:50:00', '2026-01-03 18:30:00', 'قبول مبدئي', 1);
 
 -- --------------------------------------------------------
 
@@ -348,7 +379,7 @@ CREATE TABLE `users` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `profile_completed` tinyint(1) NOT NULL DEFAULT 0,
   `profile_completed_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -359,7 +390,17 @@ INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `a
 (3, 'موظف نقابة رقم 1', '9999999999', '0799999999', 'syndicate_admin@example.com', 'النقابة', '$2y$10$Azlsa2XqFhNZHWBkRwlT9.JlDKgcX/BrgpM5d/YgGZ1L1iTZVfAFe', 'syndicate_admin', '2025-12-11 23:35:03', '2025-12-12 17:48:52', 0, NULL),
 (26, 'محمد احمد محمد المحامي', '1111111111', '0790000000', 'lawyer1@example.com', 'عمان', '$2y$10$QjzUou/jsvmvSHZ2VHYS6OUHf5jfnKaAr148QrNvEUEExQBQ/VC/G', 'lawyer', '2025-11-29 17:26:12', '2025-12-22 20:58:22', 0, '0000-00-00 00:00:00'),
 (27, 'محمد أحمد مصطفى الخطيب', '1000000001', '0790000001', 'lawyer1@test.com', 'عمان', '$2y$10$KiNjGQHAmt4wCVQPzEZlAODYuM0tRreeUdbZ9.aSkz/u9R.nhiV0a', 'trainee', '2025-11-29 19:53:21', '2025-12-22 00:14:50', 0, '0000-00-00 00:00:00'),
-(28, 'يوسف محمود علي الديري', '1000000002', '0790000002', 'lawyer2@test.com', 'عمان', '$2y$10$uL0QwjUnJ740uHlwjiExauOvmuZj/ljri.K/AtHAp/WnafkmUTgTy', 'lawyer', '2025-11-29 20:37:07', '2025-12-11 23:26:26', 0, NULL);
+(101, 'خالد محمود أحمد الزعبي', '7012945836', '0791122334', 'khaled@gmail.com', 'عمان - الشميساني', '$2y$10$vP2Jzy0wojTXzqtTaB9p1ufYkVICqYSOAWrm32CGi7BCRkLTODnMS', 'lawyer', '2026-01-02 10:00:00', '2026-01-04 23:49:24', 1, '2026-01-02 10:30:00'),
+(102, 'أحمد عادل يوسف العموش', '8391054721', '0786655443', 'ahmad@gmail.com', 'إربد - الحي الشرقي', '$2y$10$BheuoAYgnih9H1ybAG76WuXExIWnPa3GwwNYsWE.Z.xWXxAkAaeJy', 'lawyer', '2026-01-02 10:05:00', '2026-01-04 23:49:24', 1, '2026-01-02 10:40:00'),
+(103, 'سامي جهاد حسن الطراونة', '6158739204', '0794433221', 'sami@gmail.com', 'الكرك - وسط البلد', '$2y$10$4YnmA7sab2X9VoWuEzYAM.fdpNbCb9UH8u77rGqpvgL2vTC3Bxx/W', 'lawyer', '2026-01-02 10:10:00', '2026-01-04 23:49:24', 1, '2026-01-02 10:45:00'),
+(104, 'يوسف فادي محمود المجالي', '9024763158', '0779988776', 'yousef@gmail.com', 'مادبا - قرب المحكمة', '$2y$10$fQBYqVfqjveiR1w7DMN9oODdfaNCX3pgnEz/hHtcecOXveZGYSHBK', 'lawyer', '2026-01-02 10:12:00', '2026-01-04 23:49:24', 0, NULL),
+(105, 'محمود رائد سليمان بني ياسين', '7483629105', '0792211345', 'mahmoud@gmail.com', 'الزرقاء - الجديدة', '$2y$10$dsiL/wEQYAoYPJS3HsORou11vUYBLy99kqcd5Mlp1wroHYwHWqRF.', 'lawyer', '2026-01-02 10:15:00', '2026-01-04 23:49:24', 1, '2026-01-02 11:00:00'),
+(106, 'عمر ناصر محمد الحراحشة', '5630198472', '0783344556', 'omar@gmail.com', 'عمان - جبل الحسين', '$2y$10$51lOPSTWAyMweEcgYtRj5u6g1wu7Kv66B76DqXM5GUMPYOAdhNoga', 'lawyer', '2026-01-02 10:20:00', '2026-01-04 23:49:24', 0, NULL),
+(201, 'ليث إبراهيم صالح الشريدة', '3109754628', '0795566001', 'laith@gmail.com', 'البلقاء - الفحيص', '$2y$10$DfRwwfjilYSflJhmrEYMB.nhBgGMmtkUcLhW3O7twFkXfALed0bXm', 'trainee', '2026-01-02 11:10:00', '2026-01-04 23:49:24', 1, '2026-01-02 11:35:00'),
+(202, 'يحيى فؤاد عبدالكريم العدوان', '4286019735', '0782233002', 'yahya@gmail.com', 'عمان - طبربور', '$2y$10$ldvzQBOh9nYIlxzum0.XS.fVcyiPkOunn5tRZpqDBtMjrjCE2/dE.', 'trainee', '2026-01-02 11:15:00', '2026-01-04 23:49:24', 1, '2026-01-02 11:40:00'),
+(203, 'رامي جمال أمين العناسوة', '1567430298', '0797788003', 'rami@gmail.com', 'إربد - الحصن', '$2y$10$EDFtDxdUmv/fif7g/g3DweO67GgC6duNGMKxAZPQguiCHY4KtTg1.', 'trainee', '2026-01-02 11:20:00', '2026-01-04 23:49:24', 0, NULL),
+(204, 'تامر مازن خليل الرواشدة', '9073146251', '0774455004', 'tamer@gmail.com', 'الكرك - المرج', '$2y$10$H6YaTTrqWcesPRBEsfbGZOqFunOM1xulh/5fXCl93YHIn0t/NSKV6', 'trainee', '2026-01-02 11:22:00', '2026-01-04 23:49:24', 1, '2026-01-02 11:55:00'),
+(205, 'سيف سامر يوسف الجازي', '6642087319', '0793344005', 'saif@gmail.com', 'الزرقاء - الغويرية', '$2y$10$OKQD73la/ZuoUDdeFeNBtOdqo3X6ISanXyT/6MmGECSVIAoOipyDK', 'trainee', '2026-01-02 11:25:00', '2026-01-04 23:49:24', 0, NULL);
 
 --
 -- Indexes for dumped tables
@@ -445,7 +486,7 @@ ALTER TABLE `calendar_events`
 -- AUTO_INCREMENT for table `contact_messages`
 --
 ALTER TABLE `contact_messages`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8004;
 
 --
 -- AUTO_INCREMENT for table `lawyers`
@@ -463,37 +504,37 @@ ALTER TABLE `lawyers_syndicate`
 -- AUTO_INCREMENT for table `membership_requests`
 --
 ALTER TABLE `membership_requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6016;
 
 --
 -- AUTO_INCREMENT for table `syndicate_exam_requests`
 --
 ALTER TABLE `syndicate_exam_requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9010;
 
 --
 -- AUTO_INCREMENT for table `trainees`
 --
 ALTER TABLE `trainees`
-  MODIFY `trainee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `trainee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `trainings`
 --
 ALTER TABLE `trainings`
-  MODIFY `training_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `training_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1006;
 
 --
 -- AUTO_INCREMENT for table `training_applications`
 --
 ALTER TABLE `training_applications`
-  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5007;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=207;
 
 --
 -- Constraints for dumped tables
