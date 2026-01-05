@@ -68,7 +68,15 @@ function saveUpload($fileKey, $destDirRel, $allowedExt = ['jpg','jpeg','png','pd
 }
 
 function normalizeSpaces($s) {
-  return trim(preg_replace('/\s+/', ' ', $s));
+  return trim(preg_replace('/\s+/', ' ', (string)$s));
+}
+
+/**
+ * تنظيف الرقم الوطني: أرقام فقط + أول 10 أرقام
+ */
+function normalizeNationalId($s) {
+  $digits = preg_replace('/\D+/', '', (string)$s);
+  return substr($digits, 0, 10);
 }
 
 $message = "";
@@ -85,16 +93,21 @@ $def_full_preview = normalizeSpaces(($profile['full_name'] ?? ''));
 // AJAX: تحقق سريع من وجود الرقم الوطني في جدول النقابة
 if (isset($_GET['action']) && $_GET['action'] === 'check_national_id') {
   header('Content-Type: application/json; charset=utf-8');
-  $nid = normalizeSpaces($_POST['national_id'] ?? $_GET['national_id'] ?? '');
-  if ($nid === '') {
-    echo json_encode(['ok' => true, 'exists' => false]);
+
+  $nidRaw = $_POST['national_id'] ?? $_GET['national_id'] ?? '';
+  $nid = normalizeNationalId($nidRaw);
+
+  // لا نفحص DB إلا إذا كان 10 أرقام
+  if (strlen($nid) !== 10) {
+    echo json_encode(['ok' => true, 'valid' => false, 'exists' => false]);
     exit;
   }
+
   try {
     $stmt = $pdo->prepare("SELECT syndicate_id FROM lawyers_syndicate WHERE national_id=? LIMIT 1");
     $stmt->execute([$nid]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo json_encode(['ok' => true, 'exists' => (bool)$row]);
+    echo json_encode(['ok' => true, 'valid' => true, 'exists' => (bool)$row]);
   } catch (Throwable $t) {
     echo json_encode(['ok' => false, 'error' => 'db_error']);
   }
@@ -112,34 +125,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
 
+    // =========================
+    // الرقم الوطني (10 أرقام فقط)
+    // =========================
+    $national_id = normalizeNationalId($_POST['national_id'] ?? '');
 
-// الرقم الوطني (إجباري) + تحقق من وجوده في جدول النقابة قبل فتح بقية الحقول
-$national_id = normalizeSpaces($_POST['national_id'] ?? '');
-if ($national_id === '') {
-  throw new Exception("الرقم الوطني مطلوب.");
-}
+    if ($national_id === '') {
+      throw new Exception("الرقم الوطني مطلوب.");
+    }
+    if (!preg_match('/^\d{10}$/', $national_id)) {
+      throw new Exception("الرقم الوطني يجب أن يكون 10 أرقام فقط.");
+    }
 
-// منع تقديم طلب انتساب إذا كان مسجلاً مسبقاً لدى النقابة (lawyers_syndicate)
-$chkSynd = $pdo->prepare("SELECT COUNT(*) FROM lawyers_syndicate WHERE national_id = ? LIMIT 1");
-$chkSynd->execute([$national_id]);
-if ((int)$chkSynd->fetchColumn() > 0) {
-  throw new Exception("انت مسجل في النقابة يمكنك انشاء حساب");
-}
+    // منع تقديم طلب انتساب إذا كان مسجلاً مسبقاً لدى النقابة (lawyers_syndicate)
+    $chkSynd = $pdo->prepare("SELECT COUNT(*) FROM lawyers_syndicate WHERE national_id = ? LIMIT 1");
+    $chkSynd->execute([$national_id]);
+    if ((int)$chkSynd->fetchColumn() > 0) {
+      throw new Exception("انت مسجل في النقابة يمكنك انشاء حساب");
+    }
 
-// الاسم الرباعي (إجباري كأجزاء منفصلة)
-$first_name       = normalizeSpaces($_POST['first_name'] ?? '');
-$father_name      = normalizeSpaces($_POST['father_name'] ?? '');
-$grandfather_name = normalizeSpaces($_POST['grandfather_name'] ?? '');
-$family_name      = normalizeSpaces($_POST['family_name'] ?? '');
+    // =========================
+    // قراءة باقي الحقول
+    // =========================
+    $office_address   = normalizeSpaces($_POST['office_address'] ?? '');
+    $phone            = normalizeSpaces($_POST['phone'] ?? '');
+    $email            = normalizeSpaces($_POST['email'] ?? '');
+    $notes            = normalizeSpaces($_POST['notes'] ?? '');
+    $highschool       = normalizeSpaces($_POST['highschool_certificate'] ?? 'لا');
+    $university       = normalizeSpaces($_POST['university_degree'] ?? '');
+    $social_security  = normalizeSpaces($_POST['social_security'] ?? 'لا');
+    $social_number    = normalizeSpaces($_POST['social_security_number'] ?? '');
 
-if ($first_name === '' || $father_name === '' || $grandfather_name === '' || $family_name === '') {
-  throw new Exception("يرجى تعبئة الاسم الرباعي بالكامل (كل جزء في حقل منفصل).");
-}
+    // الاسم الرباعي (إجباري كأجزاء منفصلة)
+    $first_name       = normalizeSpaces($_POST['first_name'] ?? '');
+    $father_name      = normalizeSpaces($_POST['father_name'] ?? '');
+    $grandfather_name = normalizeSpaces($_POST['grandfather_name'] ?? '');
+    $family_name      = normalizeSpaces($_POST['family_name'] ?? '');
 
-// توليد الاسم الكامل تلقائياً
-$full_name = normalizeSpaces($first_name . " " . $father_name . " " . $grandfather_name . " " . $family_name);
+    if ($first_name === '' || $father_name === '' || $grandfather_name === '' || $family_name === '') {
+      throw new Exception("يرجى تعبئة الاسم الرباعي بالكامل (كل جزء في حقل منفصل).");
+    }
 
-// منع وجود طلب pending لنفس الرقم الوطني
+    // توليد الاسم الكامل تلقائياً
+    $full_name = normalizeSpaces($first_name . " " . $father_name . " " . $grandfather_name . " " . $family_name);
+
+    // منع وجود طلب pending لنفس الرقم الوطني
     $chk = $pdo->prepare("SELECT COUNT(*) FROM membership_requests WHERE national_id=? AND status='pending'");
     $chk->execute([$national_id]);
     if ((int)$chk->fetchColumn() > 0) {
@@ -153,49 +183,49 @@ $full_name = normalizeSpaces($first_name . " " . $father_name . " " . $grandfath
       throw new Exception("يجب رفع صورة الهوية من الجهتين.");
     }
 
-    // وثائق اختيارية
+    // وثائق (حسب نموذجك: أنت عاملها required في HTML)
     $noConviction = saveUpload('no_conviction_doc', '/uploads/membership_docs', ['jpg','jpeg','png','pdf'], 5_000_000);
     $goodConduct  = saveUpload('good_conduct_doc',  '/uploads/membership_docs', ['jpg','jpeg','png','pdf'], 5_000_000);
 
     // lawyer_name في الجدول (إن وجد) نجعله نفس full_name
     $lawyer_name = $full_name;
 
-$publicCode = strtoupper(substr(bin2hex(random_bytes(6)), 0, 10));
+    $publicCode = strtoupper(substr(bin2hex(random_bytes(6)), 0, 10));
 
     $stmtIns = $pdo->prepare("
-  INSERT INTO membership_requests
-    (public_code, user_id, role, status,
-     identity_front, identity_back,
-     no_conviction_doc, good_conduct_doc,
-     lawyer_name, national_id, office_address, phone, email, notes,
-     full_name, first_name, father_name, grandfather_name, family_name,
-     highschool_certificate, university_degree,
-     social_security, social_security_number)
-  VALUES
-    (?, ?, ?, 'pending',
-     ?, ?,
-     ?, ?,
-     ?, ?, ?, ?, ?, ?,
-     ?, ?, ?, ?, ?,
-     ?, ?,
-     ?, ?)
-");
+      INSERT INTO membership_requests
+        (public_code, user_id, role, status,
+         identity_front, identity_back,
+         no_conviction_doc, good_conduct_doc,
+         lawyer_name, national_id, office_address, phone, email, notes,
+         full_name, first_name, father_name, grandfather_name, family_name,
+         highschool_certificate, university_degree,
+         social_security, social_security_number)
+      VALUES
+        (?, ?, ?, 'pending',
+         ?, ?,
+         ?, ?,
+         ?, ?, ?, ?, ?, ?,
+         ?, ?, ?, ?, ?,
+         ?, ?,
+         ?, ?)
+    ");
 
-$stmtIns->execute([
-  $publicCode,
-  $userId, $applicantType,
-  $idFront, $idBack,
-  $noConviction, $goodConduct,
-  $lawyer_name, $national_id, $office_address, $phone, $email, $notes,
-  $full_name, $first_name, $father_name, $grandfather_name, $family_name,
-  $highschool, $university,
-  $social_security, ($social_security === 'نعم' ? ($social_number ?: null) : null)
-]);
+    $stmtIns->execute([
+      $publicCode,
+      $userId, $applicantType,
+      $idFront, $idBack,
+      $noConviction, $goodConduct,
+      $lawyer_name, $national_id, $office_address, $phone, $email, $notes,
+      $full_name, $first_name, $father_name, $grandfather_name, $family_name,
+      $highschool, $university,
+      $social_security, ($social_security === 'نعم' ? ($social_number ?: null) : null)
+    ]);
 
-$_SESSION['membership_public_code'] = $publicCode;
-$_SESSION['membership_national_id'] = $national_id;
-header("Location: /mutadarrib/membership/request_success.php");
-exit;
+    $_SESSION['membership_public_code'] = $publicCode;
+    $_SESSION['membership_national_id'] = $national_id;
+    header("Location: /mutadarrib/membership/request_success.php");
+    exit;
 
   } catch (Exception $e) {
     $message = "<div class='alert alert-error'>" . htmlspecialchars($e->getMessage()) . "</div>";
@@ -261,8 +291,10 @@ $def_ssn = htmlspecialchars($profile['social_security_number'] ?? '');
     </div>
 
     <?= $message ?>
-<form method="POST" enctype="multipart/form-data" class="auth-form">
+
+    <form method="POST" enctype="multipart/form-data" class="auth-form">
       <div class="auth-grid">
+
         <?php if (!$isKnownApplicant): ?>
           <div class="auth-field col-6">
             <label>نوع مقدم الطلب</label>
@@ -281,125 +313,134 @@ $def_ssn = htmlspecialchars($profile['social_security_number'] ?? '');
 
         <div class="auth-field col-6">
           <label>الرقم الوطني</label>
-          <input type="text" name="national_id" required value="<?= $def_national ?>">
+          <input
+            type="text"
+            name="national_id"
+            required
+            value="<?= $def_national ?>"
+            maxlength="10"
+            inputmode="numeric"
+            pattern="\d{10}"
+            autocomplete="off"
+          >
+          <div class="syndicate-hint" id="nidHint" style="display:none;">
+            يجب إدخال 10 أرقام لفتح باقي الحقول.
+          </div>
         </div>
 
-<div class="auth-field col-12" id="syndicateMsg" style="display:none;"></div>
+        <div class="auth-field col-12" id="syndicateMsg" style="display:none;"></div>
 
-<div id="extraFields" class="extra-fields hidden">
+        <div id="extraFields" class="extra-fields hidden">
 
-        <div class="auth-field col-12">
-          <label>الاسم الرباعي (كل مقطع منفرد)</label>
-        </div>
+          <div class="auth-field col-12">
+            <label>الاسم الرباعي (كل مقطع منفرد)</label>
+          </div>
 
-        <div class="auth-field col-3">
-          <label for="first_name">الاسم الأول</label>
-          <input id="first_name" type="text" name="first_name" required value="<?= $def_first ?>">
-        </div>
+          <div class="auth-field col-3">
+            <label for="first_name">الاسم الأول</label>
+            <input id="first_name" type="text" name="first_name" required value="<?= $def_first ?>">
+          </div>
 
-        <div class="auth-field col-3">
-          <label for="father_name">اسم الأب</label>
-          <input id="father_name" type="text" name="father_name" required value="<?= $def_father ?>">
-        </div>
+          <div class="auth-field col-3">
+            <label for="father_name">اسم الأب</label>
+            <input id="father_name" type="text" name="father_name" required value="<?= $def_father ?>">
+          </div>
 
-        <div class="auth-field col-3">
-          <label for="grandfather_name">اسم الجد</label>
-          <input id="grandfather_name" type="text" name="grandfather_name" required value="<?= $def_grand ?>">
-        </div>
+          <div class="auth-field col-3">
+            <label for="grandfather_name">اسم الجد</label>
+            <input id="grandfather_name" type="text" name="grandfather_name" required value="<?= $def_grand ?>">
+          </div>
 
-        <div class="auth-field col-3">
-          <label for="family_name">اسم العائلة</label>
-          <input id="family_name" type="text" name="family_name" required value="<?= $def_family ?>">
-        </div>
+          <div class="auth-field col-3">
+            <label for="family_name">اسم العائلة</label>
+            <input id="family_name" type="text" name="family_name" required value="<?= $def_family ?>">
+          </div>
 
-        <div class="auth-field col-12">
-          <label>الاسم الكامل</label>
-          <input type="text" id="full_name_preview" class="readonly" readonly>
-        </div>
+          <div class="auth-field col-12">
+            <label>الاسم الكامل</label>
+            <input type="text" id="full_name_preview" class="readonly" readonly>
+          </div>
 
-        <div class="auth-field col-6">
-          <label>الهاتف</label>
-          <input type="text" name="phone" value="<?= $def_phone ?>">
-        </div>
+          <div class="auth-field col-6">
+            <label>الهاتف</label>
+            <input type="text" name="phone" value="<?= $def_phone ?>">
+          </div>
 
-        <div class="auth-field col-6">
-          <label>البريد الإلكتروني</label>
-          <input type="email" name="email" value="<?= $def_email ?>">
-        </div>
+          <div class="auth-field col-6">
+            <label>البريد الإلكتروني</label>
+            <input type="email" name="email" value="<?= $def_email ?>">
+          </div>
 
-        <div class="auth-field col-6">
-          <label>عنوان المكتب (اختياري)</label>
-          <input type="text" name="office_address" value="<?= $def_office ?>">
-        </div>
+          <div class="auth-field col-6">
+            <label>عنوان المكتب (اختياري)</label>
+            <input type="text" name="office_address" value="<?= $def_office ?>">
+          </div>
 
-        <div class="auth-field col-6">
-          <label>شهادة ثانوية</label>
-          <select name="highschool_certificate">
-            <option value="لا"  <?= ($def_highschool==='لا')?'selected':''; ?>>لا</option>
-            <option value="نعم" <?= ($def_highschool==='نعم')?'selected':''; ?>>نعم</option>
-          </select>
-        </div>
+          <div class="auth-field col-6">
+            <label>شهادة ثانوية</label>
+            <select name="highschool_certificate">
+              <option value="لا"  <?= ($def_highschool==='لا')?'selected':''; ?>>لا</option>
+              <option value="نعم" <?= ($def_highschool==='نعم')?'selected':''; ?>>نعم</option>
+            </select>
+          </div>
 
-        <div class="auth-field col-6">
-          <label>هل يوجد ضمان اجتماعي؟</label>
-          <select name="social_security" id="ssSel" onchange="toggleSS()">
-            <option value="لا"  <?= ($def_ss==='لا')?'selected':''; ?>>لا</option>
-            <option value="نعم" <?= ($def_ss==='نعم')?'selected':''; ?>>نعم</option>
-          </select>
-        </div>
+          <div class="auth-field col-6">
+            <label>هل يوجد ضمان اجتماعي؟</label>
+            <select name="social_security" id="ssSel" onchange="toggleSS()">
+              <option value="لا"  <?= ($def_ss==='لا')?'selected':''; ?>>لا</option>
+              <option value="نعم" <?= ($def_ss==='نعم')?'selected':''; ?>>نعم</option>
+            </select>
+          </div>
 
-        <div class="auth-field col-6">
-          <label>رقم الضمان الاجتماعي</label>
-          <input type="text" name="social_security_number" id="ssNum" value="<?= $def_ssn ?>">
-        </div>
+          <div class="auth-field col-6">
+            <label>رقم الضمان الاجتماعي</label>
+            <input type="text" name="social_security_number" id="ssNum" value="<?= $def_ssn ?>">
+          </div>
 
+          <div class="auth-field col-12">
+            <label>الدرجة العلمية</label>
+            <select name="university_degree">
+              <option value="" <?= ($def_uni==='')?'selected':''; ?>>---</option>
+              <option value="بكالوريوس" <?= ($def_uni==='بكالوريوس')?'selected':''; ?>>بكالوريوس</option>
+              <option value="ماجستير"   <?= ($def_uni==='ماجستير')?'selected':''; ?>>ماجستير</option>
+              <option value="دكتوراه"   <?= ($def_uni==='دكتوراه')?'selected':''; ?>>دكتوراه</option>
+            </select>
+          </div>
 
+          <div class="auth-field col-12">
+            <label>ملاحظات (اختياري)</label>
+            <textarea name="notes" rows="4"><?= $def_notes ?></textarea>
+          </div>
 
-        <div class="auth-field col-12">
-          <label>الدرجة العلمية</label>
-          <select name="university_degree">
-            <option value="" <?= ($def_uni==='')?'selected':''; ?>>---</option>
-            <option value="بكالوريوس" <?= ($def_uni==='بكالوريوس')?'selected':''; ?>>بكالوريوس</option>
-            <option value="ماجستير"   <?= ($def_uni==='ماجستير')?'selected':''; ?>>ماجستير</option>
-            <option value="دكتوراه"   <?= ($def_uni==='دكتوراه')?'selected':''; ?>>دكتوراه</option>
-          </select>
-        </div>
+          <hr class="auth-divider">
 
+          <div class="auth-field col-6">
+            <label>صورة الهوية (أمامي)</label>
+            <input type="file" name="identity_front" accept=".jpg,.jpeg,.png,.pdf" required>
+          </div>
 
+          <div class="auth-field col-6">
+            <label>صورة الهوية (خلفي)</label>
+            <input type="file" name="identity_back" accept=".jpg,.jpeg,.png,.pdf" required>
+          </div>
 
-        <div class="auth-field col-12">
-          <label>ملاحظات (اختياري)</label>
-          <textarea name="notes" rows="4"><?= $def_notes ?></textarea>
-        </div>
+          <div class="auth-field col-6">
+            <label>عدم محكومية</label>
+            <input type="file" name="no_conviction_doc" accept=".jpg,.jpeg,.png,.pdf" required>
+          </div>
 
-        <hr class="auth-divider">
+          <div class="auth-field col-6">
+            <label>حسن السيرة والسلوك</label>
+            <input type="file" name="good_conduct_doc" accept=".jpg,.jpeg,.png,.pdf" required>
+          </div>
 
-        <div class="auth-field col-6">
-          <label>صورة الهوية (أمامي)</label>
-          <input type="file" name="identity_front" accept=".jpg,.jpeg,.png,.pdf" required>
-        </div>
+          <div class="auth-field col-12">
+            <button type="submit" class="auth-submit">إرسال الطلب</button>
+          </div>
 
-        <div class="auth-field col-6">
-          <label>صورة الهوية (خلفي)</label>
-          <input type="file" name="identity_back" accept=".jpg,.jpeg,.png,.pdf" required>
-        </div>
+        </div><!-- /extraFields -->
 
-        <div class="auth-field col-6">
-          <label>عدم محكومية</label>
-          <input type="file" name="no_conviction_doc" accept=".jpg,.jpeg,.png,.pdf" required>
-        </div>
-
-        <div class="auth-field col-6">
-          <label>حسن السيرة والسلوك</label>
-          <input type="file" name="good_conduct_doc" accept=".jpg,.jpeg,.png,.pdf" required>
-        </div>
-
-        <div class="auth-field col-12">
-          <button type="submit" class="auth-submit">إرسال الطلب</button>
-        </div>
-
-        </div>
-      </div>
+      </div><!-- /auth-grid -->
     </form>
 
   </div>
@@ -408,54 +449,65 @@ $def_ssn = htmlspecialchars($profile['social_security_number'] ?? '');
 <?php include(__DIR__ . "/../includes/footer.php"); ?>
 
 <script>
+// ===== Helpers =====
 function normalizeSpaces(s){
   return (s || '').replace(/\s+/g,' ').trim();
 }
-
-function updateFullName(){
-  const a = normalizeSpaces(document.getElementById('first_name').value);
-  const b = normalizeSpaces(document.getElementById('father_name').value);
-  const c = normalizeSpaces(document.getElementById('grandfather_name').value);
-  const d = normalizeSpaces(document.getElementById('family_name').value);
-  document.getElementById('full_name_preview').value = normalizeSpaces([a,b,c,d].filter(Boolean).join(' '));
+function sanitizeNID(val){
+  return (val || '').replace(/\D/g,'').slice(0,10);
 }
 
+// ===== Full name preview =====
+function updateFullName(){
+  const a = normalizeSpaces(document.getElementById('first_name')?.value);
+  const b = normalizeSpaces(document.getElementById('father_name')?.value);
+  const c = normalizeSpaces(document.getElementById('grandfather_name')?.value);
+  const d = normalizeSpaces(document.getElementById('family_name')?.value);
+  const out = [a,b,c,d].filter(Boolean).join(' ');
+  const prev = document.getElementById('full_name_preview');
+  if(prev) prev.value = normalizeSpaces(out);
+}
 ['first_name','father_name','grandfather_name','family_name'].forEach(id=>{
   const el = document.getElementById(id);
   if(el) el.addEventListener('input', updateFullName);
 });
 updateFullName();
 
+// ===== Social security toggle =====
 function toggleSS(){
   const ss = document.getElementById('ssSel');
   const num = document.getElementById('ssNum');
+  if(!ss || !num) return;
   num.disabled = (ss.value !== 'نعم');
 }
 toggleSS();
 
-
-// تحقق من الرقم الوطني: إذا كان موجوداً في جدول النقابة نظهر رسالة ونغلق بقية الحقول
-const nationalInput = document.querySelector('input[name="national_id"]');
-const extraFields = document.getElementById('extraFields');
-const syndicateMsg = document.getElementById('syndicateMsg');
-
-// إغلاق الحقول مبدئياً إلى أن يتم التحقق من الرقم الوطني
-if(extraFields && extraFields.classList.contains('hidden')){
-  extraFields.querySelectorAll('input, select, textarea, button').forEach(el=>{ el.disabled = true; });
-}
-
-
+// ===== National ID gating + syndicate check =====
+const nationalInput  = document.querySelector('input[name="national_id"]');
+const extraFields    = document.getElementById('extraFields');
+const syndicateMsg   = document.getElementById('syndicateMsg');
+const nidHint        = document.getElementById('nidHint');
 
 function toggleExtraFieldsDisabled(disabled){
   if(!extraFields) return;
   extraFields.querySelectorAll('input, select, textarea, button').forEach(el=>{
-    // لا نغلق زر التتبع الموجود خارج extraFields
     el.disabled = !!disabled;
   });
 }
 
 function setSyndicateState(state){
   if(!extraFields || !syndicateMsg) return;
+
+  if(state === 'need10'){
+    if(nidHint) nidHint.style.display = '';
+    syndicateMsg.style.display = 'none';
+    syndicateMsg.innerHTML = '';
+    toggleExtraFieldsDisabled(true);
+    extraFields.classList.add('hidden');
+    return;
+  }
+
+  if(nidHint) nidHint.style.display = 'none';
 
   if(state === 'exists'){
     toggleExtraFieldsDisabled(true);
@@ -469,24 +521,44 @@ function setSyndicateState(state){
           <a href="/mutadarrib/auth/register.php">إنشاء حساب</a>
         </div>
       </div>`;
-  } else if (state === 'not_exists'){
+    return;
+  }
+
+  if(state === 'not_exists'){
     syndicateMsg.style.display = 'none';
     syndicateMsg.innerHTML = '';
     extraFields.classList.remove('hidden');
     toggleExtraFieldsDisabled(false);
-  } else { // empty/unknown
-    syndicateMsg.style.display = 'none';
-    syndicateMsg.innerHTML = '';
-    toggleExtraFieldsDisabled(true);
-    extraFields.classList.add('hidden');
+    return;
+  }
+
+  if(state === 'error'){
+    // نفتح الحقول (طالما الرقم 10 أرقام) لكن نعرض تنبيه خفيف
+    syndicateMsg.style.display = '';
+    syndicateMsg.innerHTML = `
+      <div class="syndicate-alert">
+        تعذر التحقق من سجل النقابة حالياً. يمكنك المتابعة، وسيتم التحقق عند الإرسال.
+      </div>`;
+    extraFields.classList.remove('hidden');
+    toggleExtraFieldsDisabled(false);
+    return;
   }
 }
 
+// إغلاق الحقول مبدئياً
+setSyndicateState('need10');
+
 let _nidTimer = null;
+
 async function checkNationalId(){
-  const nid = (nationalInput?.value || '').trim();
-  if(!nid){
-    setSyndicateState('empty');
+  if(!nationalInput) return;
+
+  const nid = sanitizeNID(nationalInput.value);
+  nationalInput.value = nid;
+
+  // لا نفتح ولا نفحص إلا إذا 10 أرقام
+  if(nid.length !== 10){
+    setSyndicateState('need10');
     return;
   }
 
@@ -496,57 +568,34 @@ async function checkNationalId(){
       headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
       body: new URLSearchParams({ national_id: nid }).toString()
     });
+
     const data = await res.json();
-    if(data && data.ok){
+
+    if(data && data.ok && data.valid){
       setSyndicateState(data.exists ? 'exists' : 'not_exists');
     }else{
-      // في حال فشل التحقق نفتح الحقول حتى لا نمنع المستخدم
-      setSyndicateState('not_exists');
+      setSyndicateState('error');
     }
   }catch(e){
-    setSyndicateState('not_exists');
+    setSyndicateState('error');
   }
 }
 
 function scheduleCheck(){
   if(_nidTimer) clearTimeout(_nidTimer);
-  _nidTimer = setTimeout(checkNationalId, 450);
+  _nidTimer = setTimeout(checkNationalId, 250);
 }
 
 if(nationalInput){
-  nationalInput.addEventListener('input', scheduleCheck);
+  nationalInput.addEventListener('input', () => {
+    nationalInput.value = sanitizeNID(nationalInput.value);
+    scheduleCheck();
+  });
   nationalInput.addEventListener('blur', checkNationalId);
+
   // تشغيل مبدئي لو كان الرقم موجوداً مسبقاً (معبأ من البروفايل)
-  scheduleCheck();
+  checkNationalId();
 }
-
-function sanitizePhpNoise(){
-  const bad = /(Warning:|Notice:|Undefined variable|C:\\xampp|on line\s*\d+|<\/?b>)/i;
-
-  // Clear any input/textarea values polluted by PHP warnings
-  document.querySelectorAll('input, textarea').forEach(el => {
-    if (typeof el.value === 'string' && bad.test(el.value)) {
-      el.value = '';
-    }
-  });
-
-  // Hide standalone warning dumps (if they appear as text in the form)
-  document.querySelectorAll('form, .auth-card').forEach(root => {
-    root.querySelectorAll('*').forEach(node => {
-      node.childNodes.forEach(ch => {
-        if (ch.nodeType === Node.TEXT_NODE && bad.test(ch.textContent || '')) {
-          ch.textContent = '';
-        }
-      });
-      if (node.tagName === 'B' && bad.test(node.textContent || '')) {
-        const par = node.parentElement;
-        if (par && bad.test(par.textContent || '')) par.style.display = 'none';
-      }
-    });
-  });
-}
-
-sanitizePhpNoise();
 </script>
 
 </body>

@@ -18,7 +18,8 @@ require_once __DIR__ . '/includes/theme_init.php';
   <div class="hero-content">
     <h1>مرحبًا بك في منصة <span style="color:#ffd700;">متدرب</span></h1>
     <p>منصة للتدريب المهني تربط المتدربين بجهات التدريب المعتمدة في مختلف التخصصات.</p>
-    <button class="hero-cta" onclick="window.location.href='/mutadarrib/specializations/lawyers/index.php'">ابدأ رحلتك المهنية</button>
+    <p>جسر الطالب نحو المستقبل المهني</p>
+    <button class="hero-cta" onclick="window.location.href='/mutadarrib/index.php#specializations'">ابدأ رحلتك المهنية</button>
   </div>
 
   <!-- Animated separator to create a smooth transition to the next section -->
@@ -87,7 +88,7 @@ require_once __DIR__ . '/includes/theme_init.php';
 </section>
 
 <!-- ========= SPECIALIZATIONS ========= -->
-<section class="specializations reveal" data-reveal="up">
+<section id="specializations" class="specializations reveal" data-reveal="up">
   <h2>التخصصات المتاحة</h2>
 
   <div class="cards" data-stagger>

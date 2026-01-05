@@ -69,6 +69,15 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <svg class="in-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.3l4.4 4.4a1 1 0 0 0 1.4-1.4l-4.4-4.4A8 8 0 0 0 10 2Z"/></svg>
   </div>
   <button type="submit" class="btn btn-soft"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.3l4.4 4.4a1 1 0 0 0 1.4-1.4l-4.4-4.4A8 8 0 0 0 10 2Z"/></svg><span>بحث</span></button>
+
+  <select name="status">
+        <option value="pending" <?= $status==='pending'?'selected':'' ?>>قيد المراجعة</option>
+        <option value="approved" <?= $status==='approved'?'selected':'' ?>>مقبول</option>
+        <option value="rejected" <?= $status==='rejected'?'selected':'' ?>>مرفوض</option>
+        <option value="all" <?= $status==='all'?'selected':'' ?>>الكل</option>
+      </select>
+      <button type="submit">تطبيق</button>
+
 </form>
 </div>
 

@@ -16,11 +16,6 @@ if ($lawyer_id <= 0) {
     die("رقم المحامي غير صالح.");
 }
 
-/**
- * تجهيز رابط الملف كما هو مخزن في DB
- * - إذا كان الرابط يبدأ بـ http أو / نستخدمه كما هو.
- * - غير ذلك نضيف ../../ لأننا داخل admin/lawyers/
- */
 function fileUrl(?string $path): ?string {
     $path = trim((string)$path);
     if ($path === '') return null;
