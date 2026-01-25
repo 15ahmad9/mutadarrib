@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 04, 2026 at 10:15 PM
+-- Generation Time: Jan 25, 2026 at 08:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,6 +67,86 @@ INSERT INTO `contact_messages` (`message_id`, `user_id`, `name`, `email`, `phone
 (8001, 201, 'ليث الشريدة', 'laith@gmail.com', '0795566001', 'استفسار عن التدريب', 'هل التدريب يتطلب دوام كامل؟', 'new', '2026-01-03 13:05:00'),
 (8002, NULL, 'زائر', 'visitor@gmail.com', '0790000000', 'معلومة عامة', 'هل يمكن التسجيل لغير المحامين؟', 'read', '2026-01-03 13:10:00'),
 (8003, 103, 'سامي الطراونة', 'sami@gmail.com', '0794433221', 'تحديث بيانات', 'أرجو تحديث عنوان المكتب في النظام.', 'closed', '2026-01-03 13:20:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `it_applications`
+--
+
+CREATE TABLE `it_applications` (
+  `application_id` int(11) NOT NULL,
+  `internship_id` int(11) NOT NULL,
+  `trainee_user_id` int(11) NOT NULL,
+  `cover_letter` text DEFAULT NULL,
+  `cv_file_path` varchar(255) DEFAULT NULL,
+  `status` enum('submitted','in_review','shortlisted','accepted','rejected','withdrawn') NOT NULL DEFAULT 'submitted',
+  `applied_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `it_internships`
+--
+
+CREATE TABLE `it_internships` (
+  `internship_id` int(11) NOT NULL,
+  `provider_user_id` int(11) NOT NULL,
+  `title` varchar(200) NOT NULL,
+  `description` text NOT NULL,
+  `field` varchar(100) DEFAULT NULL,
+  `internship_type` enum('onsite','remote','hybrid') NOT NULL DEFAULT 'onsite',
+  `city` varchar(100) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `duration_weeks` smallint(6) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `required_skills` text DEFAULT NULL,
+  `seats` smallint(6) DEFAULT 1,
+  `status` enum('draft','published','closed') NOT NULL DEFAULT 'published',
+  `published_at` datetime DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `it_providers`
+--
+
+CREATE TABLE `it_providers` (
+  `user_id` int(11) NOT NULL,
+  `company_name` varchar(200) NOT NULL,
+  `company_registration_no` varchar(50) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `it_trainees`
+--
+
+CREATE TABLE `it_trainees` (
+  `user_id` int(11) NOT NULL,
+  `university` varchar(200) DEFAULT NULL,
+  `major` varchar(150) DEFAULT NULL,
+  `graduation_year` smallint(6) DEFAULT NULL,
+  `skills` text DEFAULT NULL,
+  `github_url` varchar(255) DEFAULT NULL,
+  `linkedin_url` varchar(255) DEFAULT NULL,
+  `cv_file_path` varchar(255) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -374,7 +454,7 @@ CREATE TABLE `users` (
   `email` varchar(150) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('trainee','lawyer','admin','syndicate_admin') NOT NULL DEFAULT 'trainee',
+  `role` enum('trainee','lawyer','admin','syndicate_admin','IT_Provider','IT_Trainee') NOT NULL DEFAULT 'trainee',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `profile_completed` tinyint(1) NOT NULL DEFAULT 0,
@@ -419,6 +499,41 @@ ALTER TABLE `calendar_events`
 ALTER TABLE `contact_messages`
   ADD PRIMARY KEY (`message_id`),
   ADD KEY `idx_user_id` (`user_id`);
+
+--
+-- Indexes for table `it_applications`
+--
+ALTER TABLE `it_applications`
+  ADD PRIMARY KEY (`application_id`),
+  ADD UNIQUE KEY `uq_application_unique` (`internship_id`,`trainee_user_id`),
+  ADD KEY `idx_it_applications_internship` (`internship_id`),
+  ADD KEY `idx_it_applications_trainee` (`trainee_user_id`),
+  ADD KEY `idx_it_applications_status` (`status`),
+  ADD KEY `idx_it_applications_applied_at` (`applied_at`);
+
+--
+-- Indexes for table `it_internships`
+--
+ALTER TABLE `it_internships`
+  ADD PRIMARY KEY (`internship_id`),
+  ADD KEY `idx_it_internships_provider` (`provider_user_id`),
+  ADD KEY `idx_it_internships_status` (`status`),
+  ADD KEY `idx_it_internships_city` (`city`),
+  ADD KEY `idx_it_internships_published_at` (`published_at`);
+
+--
+-- Indexes for table `it_providers`
+--
+ALTER TABLE `it_providers`
+  ADD PRIMARY KEY (`user_id`),
+  ADD KEY `idx_it_providers_company_name` (`company_name`);
+
+--
+-- Indexes for table `it_trainees`
+--
+ALTER TABLE `it_trainees`
+  ADD PRIMARY KEY (`user_id`),
+  ADD KEY `idx_it_trainees_graduation_year` (`graduation_year`);
 
 --
 -- Indexes for table `lawyers`
@@ -470,7 +585,9 @@ ALTER TABLE `training_applications`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `national_id` (`national_id`);
+  ADD UNIQUE KEY `national_id` (`national_id`),
+  ADD UNIQUE KEY `uq_users_national_id` (`national_id`),
+  ADD UNIQUE KEY `uq_users_email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -487,6 +604,18 @@ ALTER TABLE `calendar_events`
 --
 ALTER TABLE `contact_messages`
   MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8004;
+
+--
+-- AUTO_INCREMENT for table `it_applications`
+--
+ALTER TABLE `it_applications`
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `it_internships`
+--
+ALTER TABLE `it_internships`
+  MODIFY `internship_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `lawyers`
@@ -545,6 +674,31 @@ ALTER TABLE `users`
 --
 ALTER TABLE `calendar_events`
   ADD CONSTRAINT `fk_calendar_events_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `it_applications`
+--
+ALTER TABLE `it_applications`
+  ADD CONSTRAINT `fk_it_applications_internship` FOREIGN KEY (`internship_id`) REFERENCES `it_internships` (`internship_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_it_applications_trainee` FOREIGN KEY (`trainee_user_id`) REFERENCES `it_trainees` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `it_internships`
+--
+ALTER TABLE `it_internships`
+  ADD CONSTRAINT `fk_it_internships_provider` FOREIGN KEY (`provider_user_id`) REFERENCES `it_providers` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `it_providers`
+--
+ALTER TABLE `it_providers`
+  ADD CONSTRAINT `fk_it_providers_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `it_trainees`
+--
+ALTER TABLE `it_trainees`
+  ADD CONSTRAINT `fk_it_trainees_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
