@@ -105,7 +105,7 @@ require_once __DIR__ . '/includes/theme_init.php';
         <span class="btn-card">دخول القسم</span>
     </a>
 
-    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
+    <a class="card card-link reveal-item" href="/mutadarrib/specializations/it/index.php">
         <h3>💻 تكنولوجيا المعلومات</h3>
         <p>تدريب برمجة، شبكات، دعم فني وتطوير أنظمة.</p>
         <span class="btn-card">دخول القسم</span>
