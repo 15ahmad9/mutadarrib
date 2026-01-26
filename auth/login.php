@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['role']      = 'IT_Trainee';
         $_SESSION['full_name'] = $itTrainee['full_name'];
 
-        header("Location: ../it/trainee_dashboard.php"); // عدّل المسار حسب مشروعك
+        header("Location: ../index.php"); // عدّل المسار حسب مشروعك
         exit;
     }
 

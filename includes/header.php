@@ -50,7 +50,14 @@ if (isset($_SESSION['user_id'])) {
   $calendarRemindersCount = (int) $stmtRem->fetchColumn();
 }
 
-$role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'متدرب' : (($role === 'syndicate_admin') ? 'موظف النقابة' : 'مدير'));
+// $role_ar = ($role === 'lawyer') ? 'مزاول' : (($role === 'trainee') ? 'متدرب' : (($role === 'syndicate_admin') ? 'موظف النقابة' : 'مدير'));
+$role_ar =
+    ($role === 'lawyer') ? 'مزاول' :
+    (($role === 'trainee') ? 'متدرب' :
+    (($role === 'syndicate_admin') ? 'موظف النقابة' :
+    (($role === 'admin') ? 'مدير' :
+    (($role === 'IT_Provider') ? 'مزود تدريب / شركة IT' :
+    (($role === 'IT_Trainee') ? 'متدرب IT' : 'غير معروف')))));
 $redirect_uri = urlencode($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php');
 ?>
 
@@ -127,6 +134,10 @@ $redirect_uri = urlencode($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php');
 
           <?php if ($role === 'lawyer'): ?>
             <li><a href="/mutadarrib/lawyer/dashboard.php">لوحة المحامي</a></li>
+          <?php endif; ?>
+
+          <?php if ($role === 'it_provider'): ?>
+            <li><a href="/mutadarrib/it/dashboard.php">لوحة المحامي</a></li>
           <?php endif; ?>
 
           <?php if ($role === 'syndicate_admin'): ?>
