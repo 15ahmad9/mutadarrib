@@ -1,9 +1,9 @@
 <?php
-require_once __DIR__ . '/../includes/theme_init.php';
+require_once __DIR__ . '/../../includes/theme_init.php';
 
 session_start();
-require_once("../config/db.php");
-include("../includes/header.php");
+require_once("../../config/db.php");
+include("../../includes/header.php");
 
 function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 
@@ -201,6 +201,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 .auth-field textarea{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12)}
 </style>
 
-<?php include("../includes/footer.php"); ?>
+<?php include("../../includes/footer.php"); ?>
 </body>
 </html>

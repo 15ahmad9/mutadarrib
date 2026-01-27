@@ -136,9 +136,9 @@ $redirect_uri = urlencode($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php');
             <li><a href="/mutadarrib/lawyer/dashboard.php">لوحة المحامي</a></li>
           <?php endif; ?>
 
-          <?php if ($role === 'it_provider'): ?>
-            <li><a href="/mutadarrib/it/dashboard.php">لوحة المحامي</a></li>
-          <?php endif; ?>
+          <?php if ($role === 'IT_Provider'): ?>
+  <li><a href="/mutadarrib/it/dashboard.php">لوحة مزود IT</a></li>
+<?php endif; ?>
 
           <?php if ($role === 'syndicate_admin'): ?>
             <li><a href="/mutadarrib/syndicate/dashboard.php">لوحة النقابة</a></li>
