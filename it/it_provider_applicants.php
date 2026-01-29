@@ -1,15 +1,105 @@
 <?php
-include __DIR__ . "/includes/it_provider_layout.php";
+require_once __DIR__ . '/../includes/theme_init.php';
+
+session_start();
+require_once("../config/db.php");
+
 function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
+
+// حماية: فقط IT_Provider
+if (($_SESSION['role'] ?? null) !== 'IT_Provider') {
+  header("Location: /mutadarrib/auth/login.php");
+  exit;
+}
 
 $provider_user_id = (int)($_SESSION['user_id'] ?? 0);
 
-$internship_id = (int)($_GET['internship_id'] ?? 0);
+// ✅ دعم اسمين للباراميتر: internship_id أو id
+$internship_id = (int)($_GET['internship_id'] ?? ($_GET['id'] ?? 0));
+
+// ===== output يبدأ هنا =====
+include __DIR__ . "/includes/it_provider_layout.php";
+
+/**
+ * 1) لو ما وصل internship_id: اعرض قائمة فرص المزود لاختيار واحدة
+ */
 if ($internship_id <= 0) {
-  echo "<p class='error'>❌ internship_id غير صحيح.</p>";
+
+  $stmtPick = $pdo->prepare("
+    SELECT internship_id, title, status, created_at
+    FROM it_internships
+    WHERE provider_user_id = ?
+    ORDER BY internship_id DESC
+    LIMIT 50
+  ");
+  $stmtPick->execute([$provider_user_id]);
+  $items = $stmtPick->fetchAll(PDO::FETCH_ASSOC);
+
+  ?>
+  <div class="it-main-head">
+    <div>
+      <h1>المتقدمون</h1>
+      <p class="muted">اختر فرصة تدريب لعرض المتقدمين عليها.</p>
+    </div>
+  </div>
+
+  <?php if (!$items): ?>
+    <div class="empty-state">
+      لا يوجد لديك فرص تدريب بعد.
+      <div style="margin-top:10px;">
+        <a class="btn btn-outline" href="/mutadarrib/it/it_internship_create.php">+ إضافة فرصة تدريب</a>
+      </div>
+    </div>
+  <?php else: ?>
+    <div class="table-wrap" style="margin-top:12px;">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th>الفرصة</th>
+            <th>الحالة</th>
+            <th>تاريخ الإضافة</th>
+            <th>عرض المتقدمين</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($items as $it): ?>
+            <tr>
+              <td><strong><?= h($it['title']) ?></strong> <span class="muted">#<?= (int)$it['internship_id'] ?></span></td>
+              <td><?= h($it['status']) ?></td>
+              <td class="muted"><?= h($it['created_at'] ?? '-') ?></td>
+              <td>
+                <a class="btn btn-outline btn-sm"
+                   href="/mutadarrib/it/it_provider_applicants.php?internship_id=<?= (int)$it['internship_id'] ?>">
+                  فتح
+                </a>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  <?php endif; ?>
+
+  <style>
+  .table-wrap{overflow:auto;border-radius:14px;border:1px solid rgba(15,23,42,.08)}
+  .dash-table{width:100%;border-collapse:collapse;background:#fff}
+  .dash-table th,.dash-table td{padding:12px;border-bottom:1px solid rgba(15,23,42,.08);text-align:right;vertical-align:top}
+  .dash-table th{background:#f7f8ff;color:#1b2a7a;font-weight:900}
+  .muted{color:#8890b4;font-size:12px;margin-top:6px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:14px;text-decoration:none;font-weight:800;border:0;cursor:pointer}
+  .btn-outline{background:#fff;color:#4154d0;border:2px solid #4154d0}
+  .btn-sm{padding:8px 12px;border-radius:12px;font-size:13px}
+  .empty-state{padding:18px;background:#fff;border:1px dashed rgba(15,23,42,.18);border-radius:16px;color:#5b5f85}
+  </style>
+
+  <?php
   include __DIR__ . "/includes/it_provider_layout_footer.php";
   exit;
 }
+
+/**
+ * 2) وصل internship_id: كمل طبيعي
+ */
 
 // تأكد أن الفرصة تخص هذا المزود
 $stmtI = $pdo->prepare("
@@ -22,7 +112,7 @@ $stmtI->execute([$internship_id, $provider_user_id]);
 $internship = $stmtI->fetch(PDO::FETCH_ASSOC);
 
 if (!$internship) {
-  echo "<p class='error'>❌ لا تملك صلاحية على هذه الفرصة.</p>";
+  echo "<p class='error'>❌ لا تملك صلاحية على هذه الفرصة أو غير موجودة.</p>";
   include __DIR__ . "/includes/it_provider_layout_footer.php";
   exit;
 }
@@ -51,10 +141,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['application_id'], $_P
     if (!$ok) {
       $message = "<p class='error'>❌ لا تملك صلاحية تعديل هذا الطلب.</p>";
     } else {
-      $stmtUp = $pdo->prepare("UPDATE it_applications SET status = ? WHERE application_id = ? LIMIT 1");
-      $stmtUp->execute([$new_status, $application_id]);
+$stmtUp = $pdo->prepare("
+  UPDATE it_applications
+  SET status = ?, reviewed_at = NOW(), trainee_seen = 0
+  WHERE application_id = ? LIMIT 1
+");
+$stmtUp->execute([$new_status, $application_id]);
       $message = "<p class='success'>✅ تم تحديث حالة الطلب.</p>";
+
     }
+
   }
 }
 
@@ -92,7 +188,7 @@ $statusAr = [
     <p>الفرصة: <strong><?= h($internship['title']) ?></strong> — الحالة: <?= h($internship['status']) ?></p>
   </div>
   <div style="display:flex;gap:10px;flex-wrap:wrap">
-    <a class="btn btn-ghost" href="/mutadarrib/it/dashboard.php">↩️ الرجوع للوحة المزود</a>
+    <a class="btn btn-ghost" href="/mutadarrib/it/provider_internships.php">↩️ الرجوع لإدارة الفرص</a>
   </div>
 </div>
 
@@ -169,7 +265,6 @@ $statusAr = [
 <?php endif; ?>
 
 <style>
-/* نفس ستايل لوحة المزود (fallback) */
 .table-wrap{overflow:auto;border-radius:14px;border:1px solid rgba(15,23,42,.08)}
 .dash-table{width:100%;border-collapse:collapse;background:#fff}
 .dash-table th,.dash-table td{padding:12px;border-bottom:1px solid rgba(15,23,42,.08);text-align:right;vertical-align:top}

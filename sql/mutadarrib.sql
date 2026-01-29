@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 25, 2026 at 08:12 PM
+-- Generation Time: Jan 28, 2026 at 03:15 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -82,8 +82,17 @@ CREATE TABLE `it_applications` (
   `cv_file_path` varchar(255) DEFAULT NULL,
   `status` enum('submitted','in_review','shortlisted','accepted','rejected','withdrawn') NOT NULL DEFAULT 'submitted',
   `applied_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `trainee_seen` tinyint(1) NOT NULL DEFAULT 0,
+  `reviewed_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `it_applications`
+--
+
+INSERT INTO `it_applications` (`application_id`, `internship_id`, `trainee_user_id`, `cover_letter`, `cv_file_path`, `status`, `applied_at`, `updated_at`, `trainee_seen`, `reviewed_at`) VALUES
+(2, 8, 208, NULL, NULL, 'accepted', '2026-01-28 13:38:20', '2026-01-28 17:14:28', 1, '2026-01-28 17:14:25');
 
 -- --------------------------------------------------------
 
@@ -111,6 +120,21 @@ CREATE TABLE `it_internships` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `it_internships`
+--
+
+INSERT INTO `it_internships` (`internship_id`, `provider_user_id`, `title`, `description`, `field`, `internship_type`, `city`, `country`, `duration_weeks`, `start_date`, `end_date`, `required_skills`, `seats`, `status`, `published_at`, `created_at`, `updated_at`) VALUES
+(1, 207, 'fdsvgdfvgsd', 'sdfvdsv sdv sdvgsdvgdsvv dsvv ds', NULL, 'onsite', 'Amman', 'الأردن', 16, '2026-01-01', '2026-08-31', 'php', 5, 'closed', '2026-01-26 22:15:28', '2026-01-26 21:32:01', '2026-01-26 22:15:54'),
+(2, 207, 'fdsvgdfvgsd', 'sdfvdsv sdv sdvgsdvgdsvv dsvv ds', NULL, 'onsite', 'Amman', 'الأردن', 16, '2026-01-01', '2026-08-31', 'php', 5, 'published', '2026-01-26 21:32:32', '2026-01-26 21:32:32', '2026-01-26 21:32:32'),
+(3, 207, 'fdsvgdfvgsd', 'sdfvdsv sdv sdvgsdvgdsvv dsvv ds', NULL, 'onsite', 'Amman', 'الأردن', 16, '2026-01-01', '2026-08-31', 'php', 5, 'published', '2026-01-26 21:32:42', '2026-01-26 21:32:42', '2026-01-26 21:32:42'),
+(4, 207, 'dfhnbxfthbfxhnb', 'dfzgbdfx  gdfxgbdxf hgdfx rdsf  gxdfg', NULL, 'onsite', 'Amman', 'الأردن', 16, '2026-01-01', '2026-08-31', 'php', 5, 'published', '2026-01-26 21:33:02', '2026-01-26 21:33:02', '2026-01-26 21:33:02'),
+(5, 207, 'dfhnbxfthbfxhnb', 'dfzgbdfx  gdfxgbdxf hgdfx rdsf  gxdfg', NULL, 'onsite', 'Amman', 'الأردن', 16, '2026-01-01', '2026-08-31', 'php', 5, 'published', '2026-01-26 21:34:10', '2026-01-26 21:34:10', '2026-01-26 21:34:10'),
+(6, 207, 'hgvkftyujftj', 'dtfj djctht drfghjdtyjh  rtrtrth', NULL, 'onsite', 'Amman', 'الأردن', 16, '2026-01-01', '2026-08-31', 'php', 5, 'published', '2026-01-26 21:34:30', '2026-01-26 21:34:30', '2026-01-26 21:34:30'),
+(7, 207, 'hgvkftyujftj', 'dtfj djctht drfghjdtyjh  rtrtrth', NULL, 'onsite', 'Amman', 'الأردن', 16, '2026-01-01', '2026-08-31', 'php', 5, 'published', '2026-01-26 21:42:21', '2026-01-26 21:42:21', '2026-01-26 21:42:21'),
+(8, 207, 'hgvkftyujftj', 'dtfj djctht drfghjdtyjh  rtrtrth', NULL, 'onsite', 'Amman', 'الأردن', 16, '2026-01-01', '2026-08-31', 'php', 5, 'published', '2026-01-26 21:42:26', '2026-01-26 21:42:26', '2026-01-26 21:42:26'),
+(9, 207, 'ergvsedrg', 'serdgs rse egserg', NULL, 'onsite', 'Amman', 'الأردن', 16, '2026-01-01', '2026-08-31', 'php', 5, 'closed', '2026-01-26 21:42:47', '2026-01-26 21:42:47', '2026-01-26 22:16:16');
+
 -- --------------------------------------------------------
 
 --
@@ -128,6 +152,14 @@ CREATE TABLE `it_providers` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `it_providers`
+--
+
+INSERT INTO `it_providers` (`user_id`, `company_name`, `company_registration_no`, `website`, `description`, `city`, `country`, `created_at`, `updated_at`) VALUES
+(207, 'company', NULL, NULL, NULL, NULL, 'الأردن', '2026-01-26 21:12:39', '2026-01-26 21:12:39'),
+(209, '2company', NULL, NULL, NULL, NULL, 'الأردن', '2026-01-26 22:17:55', '2026-01-26 22:17:55');
 
 -- --------------------------------------------------------
 
@@ -147,6 +179,13 @@ CREATE TABLE `it_trainees` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `it_trainees`
+--
+
+INSERT INTO `it_trainees` (`user_id`, `university`, `major`, `graduation_year`, `skills`, `github_url`, `linkedin_url`, `cv_file_path`, `created_at`, `updated_at`) VALUES
+(208, 'zuj', 'se', 2025, 'php', NULL, NULL, NULL, '2026-01-26 21:47:50', '2026-01-26 21:47:50');
 
 -- --------------------------------------------------------
 
@@ -449,7 +488,7 @@ INSERT INTO `training_applications` (`application_id`, `trainee_id`, `training_i
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `full_name` varchar(200) NOT NULL,
-  `national_id` varchar(30) NOT NULL,
+  `national_id` varchar(10) DEFAULT NULL,
   `phone` varchar(30) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
@@ -480,7 +519,10 @@ INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `a
 (202, 'يحيى فؤاد عبدالكريم العدوان', '4286019735', '0782233002', 'yahya@gmail.com', 'عمان - طبربور', '$2y$10$ldvzQBOh9nYIlxzum0.XS.fVcyiPkOunn5tRZpqDBtMjrjCE2/dE.', 'trainee', '2026-01-02 11:15:00', '2026-01-04 23:49:24', 1, '2026-01-02 11:40:00'),
 (203, 'رامي جمال أمين العناسوة', '1567430298', '0797788003', 'rami@gmail.com', 'إربد - الحصن', '$2y$10$EDFtDxdUmv/fif7g/g3DweO67GgC6duNGMKxAZPQguiCHY4KtTg1.', 'trainee', '2026-01-02 11:20:00', '2026-01-04 23:49:24', 0, NULL),
 (204, 'تامر مازن خليل الرواشدة', '9073146251', '0774455004', 'tamer@gmail.com', 'الكرك - المرج', '$2y$10$H6YaTTrqWcesPRBEsfbGZOqFunOM1xulh/5fXCl93YHIn0t/NSKV6', 'trainee', '2026-01-02 11:22:00', '2026-01-04 23:49:24', 1, '2026-01-02 11:55:00'),
-(205, 'سيف سامر يوسف الجازي', '6642087319', '0793344005', 'saif@gmail.com', 'الزرقاء - الغويرية', '$2y$10$OKQD73la/ZuoUDdeFeNBtOdqo3X6ISanXyT/6MmGECSVIAoOipyDK', 'trainee', '2026-01-02 11:25:00', '2026-01-04 23:49:24', 0, NULL);
+(205, 'سيف سامر يوسف الجازي', '6642087319', '0793344005', 'saif@gmail.com', 'الزرقاء - الغويرية', '$2y$10$OKQD73la/ZuoUDdeFeNBtOdqo3X6ISanXyT/6MmGECSVIAoOipyDK', 'trainee', '2026-01-02 11:25:00', '2026-01-04 23:49:24', 0, NULL),
+(207, 'company', NULL, '0784564566', 'company@example.com', 'amman', '$2y$10$QnHL0feBKB8hwdamzNbwPezQO7x1gVlq5Vy8wzNcUQC.HTqK4sBSW', 'IT_Provider', '2026-01-26 21:12:39', '2026-01-26 21:12:39', 0, NULL),
+(208, 'محمد احمد لؤي تيست', '1010101010', '0780000001', 'moh@example.com', 'amman', '$2y$10$hDK.EbimjfqYSFnfeNJm0eISKbmfm86DBnYFRCJIprnbs9UoRZnLK', 'IT_Trainee', '2026-01-26 21:47:50', '2026-01-26 21:47:50', 0, NULL),
+(209, '2company', NULL, '0784564556', 'company2@example.com', 'amman', '$2y$10$pE3msYYhe.X7Kpuw1tYBdOEmJao4vVT5H8Y19G6WvMHME3dsuuVG6', 'IT_Provider', '2026-01-26 22:17:55', '2026-01-26 22:17:55', 0, NULL);
 
 --
 -- Indexes for dumped tables
@@ -609,13 +651,13 @@ ALTER TABLE `contact_messages`
 -- AUTO_INCREMENT for table `it_applications`
 --
 ALTER TABLE `it_applications`
-  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `it_internships`
 --
 ALTER TABLE `it_internships`
-  MODIFY `internship_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `internship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `lawyers`
@@ -663,7 +705,7 @@ ALTER TABLE `training_applications`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=207;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=210;
 
 --
 -- Constraints for dumped tables

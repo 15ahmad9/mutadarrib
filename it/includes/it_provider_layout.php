@@ -284,11 +284,7 @@ if (!empty($_SESSION['user_id'])) {
             <span class="label">➕ <span class="text">إضافة فرصة تدريب</span></span>
           </a>
         </li>
-        <li>
-          <a href="/mutadarrib/it/it_internship_edit.php" class="<?= (strpos($_SERVER['REQUEST_URI'] ?? '', 'provider_internship_manage.php') !== false) ? 'active' : '' ?>">
-            <span class="label">🛠️ <span class="text">إدارة فرص التدريب</span></span>
-          </a>
-        </li>
+
         <li>
           <a href="/mutadarrib/it/provider_internships.php" class="<?= (strpos($_SERVER['REQUEST_URI'] ?? '', 'provider_internships.php') !== false) ? 'active' : '' ?>">
             <span class="label">📋 <span class="text">فرصي التدريبية</span></span>
@@ -298,7 +294,6 @@ if (!empty($_SESSION['user_id'])) {
         <li>
           <a href="/mutadarrib/it/it_provider_applicants.php" class="<?= (strpos($_SERVER['REQUEST_URI'] ?? '', 'it_provider_applicants.php') !== false) ? 'active' : '' ?>">
             <span class="label">🧾 <span class="text">طلبات المتقدمين</span></span>
-            <span class="badge">جديد</span>
           </a>
         </li>
 
@@ -309,11 +304,7 @@ if (!empty($_SESSION['user_id'])) {
           </a>
         </li>
 
-        <li>
-          <a href="/mutadarrib/contact.php">
-            <span class="label">☎️ <span class="text">تواصل معنا</span></span>
-          </a>
-        </li>
+        
 
         <li>
           <a href="/mutadarrib/index.php">
