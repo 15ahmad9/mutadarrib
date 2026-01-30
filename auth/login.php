@@ -228,10 +228,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button class="auth-submit" type="submit">تسجيل الدخول</button>
         </form>
 
-        <div class="auth-foot">
-            <span>ليس لديك حساب؟</span>
-            <a class="auth-link" href="choose_specialization.php">إنشاء حساب</a>
-        </div>
+        <div class="auth-foot" style="margin-top:10px; justify-content:space-between;">
+  <a class="auth-link" href="/mutadarrib/auth/forgot_password.php">نسيت كلمة السر؟</a>
+
+  <div>
+    <span>ليس لديك حساب؟</span>
+    <a class="auth-link" href="choose_specialization.php">إنشاء حساب</a>
+  </div>
+</div>
+
     </section>
 </main>
 

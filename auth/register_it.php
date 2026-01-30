@@ -13,7 +13,6 @@ function norm_url($url) {
     if (!preg_match('~^https?://~i', $url)) $url = 'https://' . $url;
     return $url;
 }
-
 function h($s) {
     return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
 }
@@ -37,8 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $country                 = trim($_POST['country'] ?? '');
 
     // ===== Trainee fields =====
-    $national_id = trim($_POST['national_id'] ?? '');
-
     $first_name        = trim($_POST['first_name'] ?? '');
     $father_name       = trim($_POST['father_name'] ?? '');
     $grandfather_name  = trim($_POST['grandfather_name'] ?? '');
@@ -75,18 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "العنوان مطلوب.";
     }
 
-    // ===== role-specific validations =====
+    // role-specific
     if ($role === 'IT_Provider') {
-        if ($company_name === '') {
-            $errors[] = "اسم الشركة/الجهة مطلوب.";
-        }
+        if ($company_name === '') $errors[] = "اسم الشركة/الجهة مطلوب.";
     }
 
     if ($role === 'IT_Trainee') {
-        if (!preg_match('/^\d{10}$/', $national_id)) {
-            $errors[] = "الرقم الوطني يجب أن يكون 10 أرقام.";
-        }
-
         if ($first_name === '' || $father_name === '' || $grandfather_name === '' || $family_name === '') {
             $errors[] = "يرجى تعبئة الاسم الرباعي بالكامل.";
         }
@@ -102,35 +93,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cv_path = null;
 
         try {
-            // check email uniqueness
+            // email uniqueness
             $checkEmail = $pdo->prepare("SELECT user_id FROM users WHERE email = ? LIMIT 1");
             $checkEmail->execute([$email]);
             if ($checkEmail->rowCount() > 0) {
                 $message = "<p class='error'>هذا البريد الإلكتروني مستخدم مسبقاً.</p>";
             } else {
 
-                // check national id uniqueness only for trainee
-                if ($role === 'IT_Trainee') {
-                    $checkUser = $pdo->prepare("SELECT user_id FROM users WHERE national_id = ? LIMIT 1");
-                    $checkUser->execute([$national_id]);
-                    if ($checkUser->rowCount() > 0) {
-                        $message = "<p class='error'>يوجد حساب بهذا الرقم الوطني، يمكنك تسجيل الدخول.</p>";
-                        throw new Exception("stop");
-                    }
-                }
-
                 $pdo->beginTransaction();
 
                 // ===== Create user =====
-                if ($role === 'IT_Provider') {
-                    // company user
-                    $users_full_name = $company_name;
-                    $users_national_id = null; // IMPORTANT: requires national_id NULL in DB
-                } else {
-                    // trainee user
-                    $users_full_name = $full_name;
-                    $users_national_id = $national_id;
-                }
+                $users_full_name = ($role === 'IT_Provider') ? $company_name : $full_name;
+
+                // ✅ لا رقم وطني نهائياً
+                $users_national_id = null;
 
                 $insertUser = $pdo->prepare("
                     INSERT INTO users (full_name, national_id, phone, email, address, password, role)
@@ -167,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]);
 
                     $pdo->commit();
-                    $message = "<p class='success'>تم إنشاء حساب الشركة/مزود IT بنجاح!</p>";
+                    $message = "<p class='success'>✅ تم إنشاء حساب الشركة/مزود IT بنجاح!</p>";
 
                 } else { // IT_Trainee
 
@@ -232,22 +208,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]);
 
                     $pdo->commit();
-                    $message = "<p class='success'>تم إنشاء حساب متدرب IT بنجاح!</p>";
+                    $message = "<p class='success'>✅ تم إنشاء حساب متدرب IT بنجاح!</p>";
                 }
             }
 
         } catch (Exception $e) {
-            if ($e->getMessage() === "stop") {
-                // already has message
-            } else {
-                if ($pdo->inTransaction()) $pdo->rollBack();
 
-                if ($uploadedCvAbsPath && file_exists($uploadedCvAbsPath)) {
-                    @unlink($uploadedCvAbsPath);
-                }
+            if ($pdo->inTransaction()) $pdo->rollBack();
 
-                $message = "<p class='error'>❌ خطأ: " . h($e->getMessage()) . "</p>";
+            if ($uploadedCvAbsPath && file_exists($uploadedCvAbsPath)) {
+                @unlink($uploadedCvAbsPath);
             }
+
+            $message = "<p class='error'>❌ خطأ: " . h($e->getMessage()) . "</p>";
         }
     }
 }
@@ -262,6 +235,49 @@ $pref_role = $_GET['role'] ?? '';
   <title>تسجيل IT</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- تحسينات ستايل للصفحة لتطلع مثل الصورة -->
+  <style>
+    .auth-card--wide{ width:min(980px, 94vw); }
+
+    /* مجموعات حقول role: لازم تكون Grid وتاخذ كامل العرض */
+    .role-group{
+      grid-column: span 12;
+      display: none;            /* مخفية افتراضياً */
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 12px 14px;
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(15,23,42,.08);
+    }
+    .role-group.active{ display: grid; }
+
+    /* عنوان قسم داخل الفورم */
+    .form-section-title{
+      grid-column: span 12;
+      font-weight: 900;
+      color: #0b0f5c;
+      margin: 6px 0 -2px;
+      font-size: 16px;
+    }
+
+    /* تحسين عرض select/input */
+    .auth-field select,
+    .auth-field input,
+    .auth-field textarea{
+      width: 100%;
+    }
+
+    /* على الشاشات الصغيرة: كل الأعمدة تصير سطر كامل */
+    @media (max-width: 820px){
+      .role-group .auth-field.col-6,
+      .role-group .auth-field.col-4,
+      .role-group .auth-field.col-3,
+      .role-group .auth-field.col-12{
+        grid-column: span 12;
+      }
+    }
+  </style>
 </head>
 
 <body data-theme="<?= h($theme) ?>">
@@ -278,6 +294,7 @@ $pref_role = $_GET['role'] ?? '';
     <form method="POST" class="auth-form" autocomplete="on" enctype="multipart/form-data">
       <div class="auth-grid">
 
+        <!-- ===== Shared ===== -->
         <div class="auth-field col-6">
           <label for="role">نوع الحساب:</label>
           <select name="role" id="role" required>
@@ -310,7 +327,9 @@ $pref_role = $_GET['role'] ?? '';
         <!-- ========================= -->
         <!-- ===== Provider fields ==== -->
         <!-- ========================= -->
-        <div id="provider_fields" style="display:none; width:100%;">
+        <div id="provider_fields" class="role-group">
+          <div class="form-section-title">بيانات الشركة / مزود IT</div>
+
           <div class="auth-field col-12">
             <label for="company_name">اسم الشركة / الجهة:</label>
             <input type="text" name="company_name" id="company_name" value="<?= h($_POST['company_name'] ?? '') ?>">
@@ -345,13 +364,10 @@ $pref_role = $_GET['role'] ?? '';
         <!-- ========================= -->
         <!-- ===== Trainee fields ===== -->
         <!-- ========================= -->
-        <div id="trainee_fields" style="display:none; width:100%;">
+        <div id="trainee_fields" class="role-group">
+          <div class="form-section-title">بيانات المتدرب IT</div>
 
-          <div class="auth-field col-6">
-            <label for="national_id">الرقم الوطني:</label>
-            <input type="text" name="national_id" id="national_id" maxlength="10" value="<?= h($_POST['national_id'] ?? '') ?>">
-          </div>
-
+          <!-- ✅ الآن رح تطلع 4 حقول على نفس السطر مثل الصورة -->
           <div class="auth-field col-3">
             <label for="first_name">الاسم الأول:</label>
             <input type="text" name="first_name" id="first_name" value="<?= h($_POST['first_name'] ?? '') ?>">
@@ -435,35 +451,31 @@ $("#first_name, #father_name, #grandfather_name, #family_name").on('input', upda
 function toggleRoleFields(){
   const role = $("#role").val();
 
-  if(role === "IT_Provider"){
-    $("#provider_fields").show();
-    $("#trainee_fields").hide();
+  // اخفاء الكل
+  $("#provider_fields, #trainee_fields").removeClass("active");
 
-    // required provider
+  if(role === "IT_Provider"){
+    $("#provider_fields").addClass("active");
     $("#company_name").prop("required", true);
 
-    // trainee fields not required
-    $("#national_id, #first_name, #father_name, #grandfather_name, #family_name").prop("required", false);
+    $("#first_name, #father_name, #grandfather_name, #family_name").prop("required", false);
 
   } else if(role === "IT_Trainee"){
-    $("#provider_fields").hide();
-    $("#trainee_fields").show();
+    $("#trainee_fields").addClass("active");
 
-    // trainee required
-    $("#national_id, #first_name, #father_name, #grandfather_name, #family_name").prop("required", true);
-
-    // provider not required
+    $("#first_name, #father_name, #grandfather_name, #family_name").prop("required", true);
     $("#company_name").prop("required", false);
 
   } else {
-    $("#provider_fields").hide();
-    $("#trainee_fields").hide();
     $("#company_name").prop("required", false);
-    $("#national_id, #first_name, #father_name, #grandfather_name, #family_name").prop("required", false);
+    $("#first_name, #father_name, #grandfather_name, #family_name").prop("required", false);
   }
 }
 
-$("#role").on("change", toggleRoleFields);
+$("#role").on("change", function(){
+  toggleRoleFields();
+  updateFullName();
+});
 
 $(document).ready(function(){
   updateFullName();
