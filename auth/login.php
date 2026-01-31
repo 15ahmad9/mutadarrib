@@ -153,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['role']      = 'IT_Provider';
         $_SESSION['full_name'] = $itProvider['full_name'];
 
-        header("Location: ../it/provider_dashboard.php"); // عدّل المسار حسب مشروعك
+        header("Location: ../it/dashboard.php"); 
         exit;
     }
 
@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['role']      = 'IT_Trainee';
         $_SESSION['full_name'] = $itTrainee['full_name'];
 
-        header("Location: ../index.php"); // عدّل المسار حسب مشروعك
+        header("Location: ../index.php");
         exit;
     }
 
@@ -229,7 +229,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
 
         <div class="auth-foot" style="margin-top:10px; justify-content:space-between;">
-  <a class="auth-link" href="/mutadarrib/auth/forgot_password.php">نسيت كلمة السر؟</a>
+  <!-- <a class="auth-link" href="/mutadarrib/auth/forgot_password.php">نسيت كلمة السر؟</a> -->
 
   <div>
     <span>ليس لديك حساب؟</span>

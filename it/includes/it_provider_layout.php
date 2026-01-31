@@ -219,6 +219,210 @@ if (!empty($_SESSION['user_id'])) {
   .it-body{ grid-template-columns: 1fr; }
   .it-sidebar{ position:relative; top:auto; height:auto; }
 }
+
+/* =======================================================================
+   Admin-like restyle for IT Provider panel (STYLE ONLY)
+   ======================================================================= */
+
+:root{
+  --it-bg: var(--bg);
+  --it-card: var(--surface);
+  --it-text: var(--text);
+  --it-muted: var(--muted);
+  --it-border: var(--border);
+  --it-shadow: var(--shadow);
+  --it-grad-a: #070031;
+  --it-grad-b: #556ab1;
+  --it-accent: var(--primary);
+}
+
+.it-shell{background:var(--it-bg);}
+
+.it-topbar{
+  background: linear-gradient(250deg,var(--it-grad-a),var(--it-grad-b));
+  border-bottom: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+}
+
+.it-topnav a{
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.18);
+  color:#fff;
+  border-radius: 22px;
+  padding: 10px 16px;
+  transition: .2s ease;
+  text-decoration: none;
+}
+
+.it-topnav a:hover{background:rgba(255,255,255,.18);}
+.it-topnav a.active{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.28);}
+
+.it-userbox,
+.it-iconbtn{
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.18);
+  color:#fff;
+}
+
+.it-iconbtn:hover{background: rgba(255,255,255,.18);}
+
+.it-body{padding:24px;gap:24px;}
+
+.it-sidebar{
+  background: linear-gradient(210deg, rgba(7,0,49,.98), rgba(85,106,177,.96));
+  box-shadow: 0 18px 40px rgba(0,0,0,.25);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.it-side-top{
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.14);
+}
+
+.it-side-link{
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 18px;
+  padding: 14px 16px;
+}
+
+.it-side-link:hover{background: rgba(255,255,255,.16);}
+.it-side-link.active{background: rgba(255,255,255,.20);border-color: rgba(255,255,255,.22);}
+
+.it-side-ico{
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.it-main{
+  background: var(--it-card);
+  border: 1px solid var(--it-border);
+  box-shadow: 0 18px 45px rgba(0,0,0,.10);
+  border-radius: 26px;
+}
+
+/* Hide placeholder heading shipped inside layout (all IT pages already render their own heading) */
+.it-main > .it-main-head:first-child{display:none;}
+
+.it-main-head{
+  margin-bottom: 18px;
+  padding: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.it-main-head > div:last-child{
+  justify-content: center !important;
+}
+
+.it-main-head h1{
+  margin: 0;
+  font-size: 38px;
+  letter-spacing: .2px;
+  color: var(--it-text);
+}
+
+.it-main-head p{
+  margin: 0;
+  color: var(--it-muted);
+  max-width: 760px;
+}
+
+.it-main .btn,
+.it-main a.btn{
+  border-radius: 16px;
+  padding: 12px 18px;
+  font-weight: 800;
+  border: 1px solid transparent;
+  box-shadow: 0 10px 20px rgba(0,0,0,.08);
+}
+
+.it-main .btn-primary{
+  background: linear-gradient(135deg, rgba(7,0,49,.95), rgba(85,106,177,.95));
+  color: #fff;
+  border-color: rgba(255,255,255,.16);
+}
+
+.it-main .btn-primary:hover{filter: brightness(1.05);}
+
+.it-main .btn-outline{
+  background: rgba(255,255,255,.70);
+  color: var(--it-grad-a);
+  border-color: rgba(7,0,49,.25);
+}
+
+[data-theme="dark"] .it-main .btn-outline{
+  background: rgba(255,255,255,.08);
+  color: var(--it-text);
+  border-color: rgba(255,255,255,.18);
+}
+
+.it-main .btn-ghost{
+  background: rgba(255,255,255,.55);
+  color: var(--it-grad-a);
+  border-color: rgba(7,0,49,.12);
+}
+
+[data-theme="dark"] .it-main .btn-ghost{
+  background: rgba(255,255,255,.06);
+  color: var(--it-text);
+  border-color: rgba(255,255,255,.12);
+}
+
+/* Dashboard cards (IT) – match Admin dashboard feeling */
+.it-main .stats-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 10px;
+}
+
+@media (max-width: 1100px){
+  .it-main .stats-grid{grid-template-columns: 1fr;}
+}
+
+.it-main .stat-card{
+  background: linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.62));
+  border: 1px solid rgba(7,0,49,.10);
+  border-radius: 22px;
+  padding: 18px 18px;
+  display: flex;
+  flex-direction: row-reverse; /* put big number on the left like Admin dashboard */
+  align-items: center;
+  justify-content: space-between;
+  min-height: 112px;
+}
+
+[data-theme="dark"] .it-main .stat-card{
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border-color: rgba(255,255,255,.10);
+}
+
+.it-main .stat-num{
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--it-text);
+  min-width: 48px;
+  text-align: left;
+}
+
+.it-main .stat-label{
+  font-size: 14px;
+  color: var(--it-muted);
+  font-weight: 800;
+}
+
 </style>
 
 <div class="it-shell" id="itShell">

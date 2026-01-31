@@ -100,7 +100,7 @@ $redirect_uri = urlencode($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php');
     <li><a href="/mutadarrib/contact.php">تواصل معنا</a></li>
     <li><a href="/mutadarrib/index.php#services">الخدمات</a></li>
 
-    <li><a href="/mutadarrib/membership/request_membership.php">طلب انتساب</a></li>
+    <!-- <li><a href="/mutadarrib/membership/request_membership.php">طلب انتساب</a></li> -->
 
     <?php if (isset($_SESSION['user_id'])): ?>
 
