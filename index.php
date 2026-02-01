@@ -92,8 +92,14 @@ require_once __DIR__ . '/includes/theme_init.php';
   <h2>التخصصات المتاحة</h2>
 
   <div class="cards" data-stagger>
-      
-    <a class="card card-link reveal-item" href="specializations/lawyers/index.php">
+     
+      <a class="card card-link reveal-item" href="/mutadarrib/specializations/it/index.php">
+        <h3>💻 تكنولوجيا المعلومات</h3>
+        <p>تدريب برمجة، شبكات، دعم فني وتطوير أنظمة.</p>
+        <span class="btn-card">دخول القسم</span>
+    </a>
+
+    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
         <h3>⚖️ المحاماة</h3>
         <p>تدريب مهني تحت إشراف محامين مزاولين معتمدين.</p>
         <span class="btn-card">دخول القسم</span>
@@ -105,11 +111,7 @@ require_once __DIR__ . '/includes/theme_init.php';
         <span class="btn-card">دخول القسم</span>
     </a>
 
-    <a class="card card-link reveal-item" href="/mutadarrib/specializations/it/index.php">
-        <h3>💻 تكنولوجيا المعلومات</h3>
-        <p>تدريب برمجة، شبكات، دعم فني وتطوير أنظمة.</p>
-        <span class="btn-card">دخول القسم</span>
-    </a>
+
 
     <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
         <h3>💊 الصيدلة</h3>

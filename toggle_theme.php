@@ -10,6 +10,7 @@ setcookie('site_theme', $new, time() + 60*60*24*180, '/', '', false, true);
 
 // Redirect safely
 $redirect = $_GET['redirect'] ?? '';
+$redirect = urldecode($redirect);
 if (is_string($redirect) && $redirect !== '') {
   // Allow only same-site relative paths
   if (strpos($redirect, '/') === 0 && strpos($redirect, '//') !== 0) {

@@ -8,8 +8,8 @@
 
 /* =========================
    IT Provider layout fix
-   Ensures tables/text never sit under the right sidebar
-   Matches Admin dashboard behavior (fixed sidebar + shifted content)
+   - Sidebar in IT pages uses class="sidebar" (same as admin)
+   - Ensure main content (tables/text) never goes under the right sidebar
    ========================= */
 
 .it-shell{
@@ -18,12 +18,22 @@
 }
 
 /* Base structure */
-.it-body{ width:100%; }
-.it-main{ width: 100%; box-sizing: border-box; }
+.it-shell .it-body{
+  width: 100%;
+  display: flex;
+  gap: var(--it-gap);
+  align-items: flex-start;
+}
+.it-shell .it-main{
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0; /* important for overflow within flex */
+}
 
 /* Desktop: fixed sidebar on the right + content shifted */
 @media (min-width: 992px){
-  .it-sidebar{
+  /* IT sidebar is rendered as .sidebar (NOT .it-sidebar) */
+  .it-shell .sidebar{
     position: fixed;
     top: var(--header-h);
     right: 0;
@@ -33,18 +43,23 @@
     overflow: auto;
     z-index: 110;
   }
-  .it-main,
-  .it-main-head,
-  /* some pages render headings/forms before main */
-  .it-sidebar ~ :is(h1,h2,h3,form,div.container,.container){
+
+  /* push the main area away from the fixed sidebar */
+  .it-shell .it-main{
     margin-right: calc(var(--it-sidebar-w) + var(--it-gap));
+    padding-left: 18px;
+    padding-right: 18px;
   }
-  .it-main{ padding-left: 18px; padding-right: 18px; }
 }
 
-/* Mobile: sidebar off-canvas (optional) */
+/* Mobile: off-canvas sidebar via the existing checkbox toggle (#dash-sidebar-toggle) */
 @media (max-width: 991px){
-  .it-sidebar{
+  .it-shell .it-body{
+    flex-direction: column;
+    padding: 14px;
+  }
+
+  .it-shell .sidebar{
     position: fixed;
     top: var(--header-h);
     right: -110%;
@@ -53,8 +68,17 @@
     transition: right .25s ease;
     z-index: 130;
   }
-  .it-shell.sidebar-open .it-sidebar{ right: 0; }
-  .it-main, .it-main-head{ margin-right: 0; }
+
+  /* admin.css already supports this selector, but we keep it here as a safety net */
+  .dash-sidebar-toggle:checked ~ .sidebar{
+    right: 0;
+  }
+
+  .it-shell .it-main{
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 
@@ -362,30 +386,11 @@ body[data-theme='dark'] .chip {
 }
 
 @media (max-width: 1024px) {
-  .it-shell .it-body {
-    flex-direction: column;
-    padding: 14px;
-  }
+  .it-actions { gap: 10px; }
+  .it-search { max-width: none; }
 
-  .it-shell .sidebar.it-sidebar {
-    position: relative !important;
-    top: 0 !important;
-    width: 100% !important;
-    height: auto !important;
-    border-radius: 22px !important;
-  }
-
-  .it-actions {
-    gap: 10px;
-  }
-
-  .it-search {
-    max-width: none;
-  }
-
-  .it-shell table.dash-table {
-    min-width: 860px;
-  }
+  /* keep tables readable; .table-wrap provides horizontal scroll */
+  .it-shell table.dash-table { min-width: 860px; }
 }
 
 @media (max-width: 640px) {

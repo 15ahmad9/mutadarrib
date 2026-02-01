@@ -25,11 +25,12 @@ require_once __DIR__ . '/../includes/theme_init.php';
             <label for="specialization">اختر التخصص</label>
             <select id="specialization" required>
               <option value="">اختر</option>
-                            <option value="it">تكنولوجيا معلومات</option>
-              <option value="lawyer" class="disabled-option" disabled>(غير متاح حاليًا)محاماه</option>
+              <option value="it">تكنولوجيا معلومات</option>
+              <option value="lawyer" class="disabled-option" disabled>محاماه (غير متاح حاليًا)</option>
               <option value="engineering" class="disabled-option" disabled>هندسة (غير متاح حاليًا)</option>
               <option value="pharmacy" class="disabled-option" disabled>صيدلة (غير متاح حاليًا)</option>
               <option value="nursing" class="disabled-option" disabled>تمريض (غير متاح حاليًا)</option>
+              <option value="business" class="disabled-option" disabled>الأعمال (غير متاح حاليًا)</option>
             </select>
           </div>
 
@@ -67,6 +68,10 @@ function goToRegister() {
 
         case "it":
             window.location.href = "register_it.php";
+            break;
+
+            case "business":
+            window.location.href = "register_business.php";
             break;
 
         default:

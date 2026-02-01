@@ -86,11 +86,11 @@ require_once __DIR__ . '/../../includes/theme_init.php';
 }
 .landing-hero{
   text-align:center;
-  margin: 10px auto 30px;
+  margin: -20px auto 5px;
   max-width: 980px;
 }
 .landing-title{
-  font-size: 44px;
+  font-size: 34px;
   margin: 0 0 10px;
   color: #0b0f5c;
 }
@@ -113,8 +113,8 @@ require_once __DIR__ . '/../../includes/theme_init.php';
 
 .landing-card{
   background: #fff;
-  border-radius: 22px;
-  padding: 22px;
+  border-radius: 18px;
+  padding: 16px;
   box-shadow: 0 12px 30px rgba(0,0,0,.08);
   border: 1px solid rgba(15, 23, 42, .06);
   position: relative;
@@ -146,20 +146,20 @@ require_once __DIR__ . '/../../includes/theme_init.php';
   font-size: 14px;
 }
 .landing-icon{
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   border-radius: 12px;
   display:flex;
   align-items:center;
   justify-content:center;
   background:#eef1ff;
-  font-size: 20px;
+  font-size: 18px;
   position: relative;
   z-index: 1;
 }
 .landing-card-title{
   margin: 10px 0 10px;
-  font-size: 22px;
+  font-size: 18px;
   color:#0b0f5c;
   position: relative;
   z-index: 1;

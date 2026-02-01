@@ -13,7 +13,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'IT_Provider') {
 // function h($v){ return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 
 // redirect for theme toggle
-$redirect_uri = urlencode($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php');
+$redirect_uri = ($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php');
 
 // user display name
 $displayName = $_SESSION['full_name'] ?? 'IT Provider';

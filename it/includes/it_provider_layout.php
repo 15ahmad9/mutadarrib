@@ -9,7 +9,7 @@ if ($role !== 'IT_Provider') {
   exit;
 }
 
-$redirect_uri = urlencode($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php');
+$redirect_uri = ($_SERVER['REQUEST_URI'] ?? '/mutadarrib/index.php');
 
 // اسم المستخدم
 $displayName = $_SESSION['full_name'] ?? 'IT Provider';

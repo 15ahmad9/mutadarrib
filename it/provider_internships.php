@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../includes/theme_init.php';
 require_once __DIR__ . "/includes/auth_check.php";
 
 function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
