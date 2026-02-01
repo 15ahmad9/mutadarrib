@@ -162,6 +162,7 @@ if (!$page_error && $_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?
   <title>تعديل فرصة تدريب</title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
+  <link rel="stylesheet" href="/mutadarrib/assets/css/it.css">
 </head>
 
 <body data-theme="<?= h($theme) ?>">
@@ -288,13 +289,7 @@ if (!$page_error && $_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?
           </button>
         </form>
 
-        <style>
-          /* fallback helpers (إذا ما كانت موجودة في admin.css) */
-          .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:14px;text-decoration:none;font-weight:800;border:0;cursor:pointer}
-          .btn-outline{background:#fff;color:#4154d0;border:2px solid #4154d0}
-          .btn-ghost{background:#f4f6ff;color:#1b2a7a}
-          .muted{color:#8890b4;font-size:12px}
-        </style>
+        <!-- تم نقل fallback helpers إلى assets/css/it.css -->
 
       <?php endif; ?>
 

@@ -76,31 +76,9 @@ $newLast7Days = (int)$stmtNew7->fetchColumn();
   <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
   <!-- ستايل الأدمن (يعطي شكل الصورة) -->
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
+  <link rel="stylesheet" href="/mutadarrib/assets/css/it.css">
 
-  <style>
-    /* تحسينات بسيطة للبطاقات لتطلع مثل الصورة أكثر */
-    .dash-grid{gap:22px;}
-    .dash-card{border-radius:18px;}
-    .dash-card-total{font-size:44px;}
-    .dash-breakdown .dash-row{padding:10px 0;border-bottom:1px solid rgba(0,0,0,.06);}
-    .dash-breakdown .dash-row:last-child{border-bottom:0;}
-    .dash-actions-row{
-      display:flex; gap:10px; flex-wrap:wrap;
-      justify-content:center; margin: 14px 0 6px;
-    }
-    .dash-actions-row a{
-      text-decoration:none;
-      padding:10px 14px;
-      border-radius:14px;
-      font-weight:800;
-      border:1px solid rgba(0,0,0,.08);
-      background: rgba(255,255,255,.7);
-    }
-    [data-theme="dark"] .dash-actions-row a{
-      background: rgba(255,255,255,.06);
-      border-color: rgba(255,255,255,.12);
-    }
-  </style>
+  <!-- moved dashboard tweaks to /assets/css/it.css -->
 </head>
 
 <body data-theme="<?= h($theme) ?>">

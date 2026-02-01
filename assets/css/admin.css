@@ -1683,3 +1683,21 @@ body[data-theme="dark"] .admin-container .container p > a[href*="syndicate_lawye
   color: rgba(244,246,255,.92);
 }
 
+
+
+
+/* =========================
+   Fix: content under fixed sidebar (Admin)
+   Ensure main content doesn't slide beneath sidebar
+   ========================= */
+@media (min-width: 992px){
+  .admin-container{
+    position: relative;
+  }
+  .admin-container > .container{
+    margin-right: calc(var(--sidebar-w) + 16px);
+    width: min(100%, var(--container));
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}

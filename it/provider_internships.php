@@ -110,6 +110,7 @@ if (isset($_GET['updated']) && $_GET['updated'] == 1) {
   <title>فرصي التدريبية</title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
+  <link rel="stylesheet" href="/mutadarrib/assets/css/it.css">
 </head>
 
 <body data-theme="<?= h($theme) ?>">
@@ -241,35 +242,6 @@ if (isset($_GET['updated']) && $_GET['updated'] == 1) {
 
         <?php endif; ?>
       </div>
-
-      <style>
-        /* fallback */
-        .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:14px;text-decoration:none;font-weight:800;border:0;cursor:pointer}
-        .btn-primary{background:#4154d0;color:#fff}
-        .btn-outline{background:#fff;color:#4154d0;border:2px solid #4154d0}
-        .btn-ghost{background:#f4f6ff;color:#1b2a7a}
-        .btn-sm{padding:8px 12px;border-radius:12px;font-size:13px}
-        .inp{padding:12px 14px;border-radius:14px;border:1px solid rgba(15,23,42,.14);min-width:240px}
-        @media(max-width:720px){.inp{min-width:100%}}
-
-        .panel{background:#fff;border:1px solid rgba(15,23,42,.06);border-radius:18px;box-shadow:0 10px 26px rgba(0,0,0,.06);padding:16px}
-        .panel-title{margin:0 0 6px;color:#0b0f5c}
-        .panel-sub{margin:0;color:#5b5f85}
-        .muted{color:#8890b4;font-size:12px;margin-top:6px}
-
-        .table-wrap{overflow:auto;border-radius:14px;border:1px solid rgba(15,23,42,.08)}
-        .dash-table{width:100%;border-collapse:collapse;background:#fff}
-        .dash-table th,.dash-table td{padding:12px;border-bottom:1px solid rgba(15,23,42,.08);text-align:right;vertical-align:top}
-        .dash-table th{background:#f7f8ff;color:#1b2a7a;font-weight:900}
-        .actions-cell{white-space:nowrap}
-
-        .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px}
-        .badge-green{background:#e8fff1;color:#137a3a}
-        .badge-gray{background:#f1f3f7;color:#556}
-        .badge-blue{background:#eef1ff;color:#1b2a7a}
-
-        .empty-state{padding:18px;background:#fff;border:1px dashed rgba(15,23,42,.18);border-radius:16px;color:#5b5f85}
-      </style>
 
     </main>
   </div>

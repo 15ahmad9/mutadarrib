@@ -118,6 +118,7 @@ $statusAr = [
   <title>طلبات المتقدمين</title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
+  <link rel="stylesheet" href="/mutadarrib/assets/css/it.css">
 </head>
 
 <body data-theme="<?= h($theme) ?>">
@@ -270,24 +271,6 @@ $statusAr = [
 
         <?php endif; ?>
       <?php endif; ?>
-
-      <style>
-        .table-wrap{overflow:auto;border-radius:14px;border:1px solid rgba(15,23,42,.08)}
-        .dash-table{width:100%;border-collapse:collapse;background:#fff}
-        .dash-table th,.dash-table td{padding:12px;border-bottom:1px solid rgba(15,23,42,.08);text-align:right;vertical-align:top}
-        .dash-table th{background:#f7f8ff;color:#1b2a7a;font-weight:900}
-        .muted{color:#8890b4;font-size:12px;margin-top:6px}
-        .actions-cell{white-space:nowrap}
-        .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px}
-        .badge-blue{background:#eef1ff;color:#1b2a7a}
-        .select-sm{padding:8px 10px;border-radius:12px;border:1px solid rgba(15,23,42,.14)}
-        .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:14px;text-decoration:none;font-weight:800;border:0;cursor:pointer}
-        .btn-outline{background:#fff;color:#4154d0;border:2px solid #4154d0}
-        .btn-ghost{background:#f4f6ff;color:#1b2a7a}
-        .btn-sm{padding:8px 12px;border-radius:12px;font-size:13px}
-        .empty-state{padding:18px;background:#fff;border:1px dashed rgba(15,23,42,.18);border-radius:16px;color:#5b5f85}
-      </style>
-
     </main>
   </div>
 

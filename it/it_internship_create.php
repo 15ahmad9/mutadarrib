@@ -89,6 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>إضافة فرصة تدريب</title>
   <link rel="stylesheet" href="/mutadarrib/assets/css/style.css">
   <link rel="stylesheet" href="/mutadarrib/assets/css/admin.css">
+  <link rel="stylesheet" href="/mutadarrib/assets/css/it.css">
 </head>
 
 <body data-theme="<?= h($theme) ?>">
