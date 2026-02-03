@@ -277,6 +277,15 @@ $pref_role = $_GET['role'] ?? '';
         grid-column: span 12;
       }
     }
+
+    #major{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(15,23,42,.14);
+  background:#fff;
+}
+
   </style>
 </head>
 
@@ -398,17 +407,39 @@ $pref_role = $_GET['role'] ?? '';
             <input type="text" name="university" id="university" value="<?= h($_POST['university'] ?? '') ?>">
           </div>
 
-          <div class="auth-field col-6">
-            <label for="major">التخصص (اختياري):</label>
-            <input type="text" name="major" id="major" value="<?= h($_POST['major'] ?? '') ?>">
-          </div>
+<div class="auth-field col-6">
+  <label for="major">التخصص (اختياري):</label>
+  <?php $majorSel = $_POST['major'] ?? ''; ?>
+  <select name="major" id="major">
+    <option value="">اختر التخصص</option>
+    <?php
+      $options = [
+        'علوم الحاسوب',
+        'هندسة البرمجيات',
+        'نظم المعلومات',
+        'الأمن السيبراني',
+        'الذكاء الاصطناعي',
+        'علم البيانات',
+        'شبكات الحاسوب',
+        'تطوير تطبيقات الموبايل',
+        'تطوير الويب',
+        'هندسة الحاسوب'
+      ];
+      foreach ($options as $opt):
+        $selected = ($opt === $majorSel) ? 'selected' : '';
+    ?>
+      <option value="<?= h($opt) ?>" <?= $selected ?>><?= h($opt) ?></option>
+    <?php endforeach; ?>
+  </select>
+</div>
+
 
           <div class="auth-field col-6">
             <label for="graduation_year">سنة التخرج (اختياري):</label>
             <input type="number" name="graduation_year" id="graduation_year" min="1990" max="2100" value="<?= h($_POST['graduation_year'] ?? '') ?>">
           </div>
 
-          <div class="auth-field col-12">
+          <div class="auth-field col-6">
             <label for="skills">المهارات (اختياري):</label>
             <input type="text" name="skills" id="skills" placeholder="HTML, CSS, PHP..." value="<?= h($_POST['skills'] ?? '') ?>">
           </div>
@@ -423,7 +454,7 @@ $pref_role = $_GET['role'] ?? '';
             <input type="text" name="linkedin_url" id="linkedin_url" placeholder="linkedin.com/in/..." value="<?= h($_POST['linkedin_url'] ?? '') ?>">
           </div>
 
-          <div class="auth-field col-12">
+          <div class="auth-field col-6">
             <label for="cv_file">السيرة الذاتية (PDF/DOC/DOCX) (اختياري):</label>
             <input type="file" name="cv_file" id="cv_file" accept=".pdf,.doc,.docx">
           </div>

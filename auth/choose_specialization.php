@@ -31,6 +31,9 @@ require_once __DIR__ . '/../includes/theme_init.php';
               <option value="pharmacy" class="disabled-option" disabled>صيدلة (غير متاح حاليًا)</option>
               <option value="nursing" class="disabled-option" disabled>تمريض (غير متاح حاليًا)</option>
               <option value="business" class="disabled-option" disabled>الأعمال (غير متاح حاليًا)</option>
+              <option value="architecture_design" class="disabled-option" disabled>العمارة والتصميم (غير متاح حاليًا)</option>
+              <option value="literature" class="disabled-option" disabled>الآداب (غير متاح حاليًا)</option>
+              <option value="medical_support" class="disabled-option" disabled>دعم طبي (غير متاح حاليًا)</option>
             </select>
           </div>
 
@@ -72,6 +75,18 @@ function goToRegister() {
 
             case "business":
             window.location.href = "register_business.php";
+            break;
+
+            case "architecture_design":
+            window.location.href = "register_architecture_design.php";
+            break;
+
+            case "literature":
+            window.location.href = "register_literature.php";
+            break;
+
+            case "medical_support":
+            window.location.href = "register_medical_support.php";
             break;
 
         default:
