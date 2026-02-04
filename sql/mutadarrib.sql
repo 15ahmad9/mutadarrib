@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 02, 2026 at 09:08 PM
+-- Generation Time: Feb 03, 2026 at 08:33 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,51 +24,11 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `allied_medical_providers`
---
-
-CREATE TABLE `allied_medical_providers` (
-  `provider_id` int(11) NOT NULL,
-  `company_name` varchar(180) NOT NULL,
-  `contact_name` varchar(150) DEFAULT NULL,
-  `email` varchar(190) NOT NULL,
-  `phone` varchar(40) DEFAULT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `city` varchar(120) DEFAULT NULL,
-  `country` varchar(120) DEFAULT NULL,
-  `website` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `allied_medical_trainees`
---
-
-CREATE TABLE `allied_medical_trainees` (
-  `trainee_id` int(11) NOT NULL,
-  `full_name` varchar(150) NOT NULL,
-  `email` varchar(190) NOT NULL,
-  `phone` varchar(40) DEFAULT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `university` varchar(160) DEFAULT NULL,
-  `major` varchar(160) DEFAULT NULL,
-  `graduation_year` int(11) DEFAULT NULL,
-  `skills` text DEFAULT NULL,
-  `cv_file_path` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `architecture_design_providers`
 --
 
 CREATE TABLE `architecture_design_providers` (
-  `provider_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `company_name` varchar(180) NOT NULL,
   `contact_name` varchar(150) DEFAULT NULL,
   `email` varchar(190) NOT NULL,
@@ -88,7 +48,7 @@ CREATE TABLE `architecture_design_providers` (
 --
 
 CREATE TABLE `architecture_design_trainees` (
-  `trainee_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `full_name` varchar(150) NOT NULL,
   `email` varchar(190) NOT NULL,
   `phone` varchar(40) DEFAULT NULL,
@@ -98,7 +58,8 @@ CREATE TABLE `architecture_design_trainees` (
   `graduation_year` int(11) DEFAULT NULL,
   `skills` text DEFAULT NULL,
   `cv_file_path` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `linkedin_url` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -108,7 +69,7 @@ CREATE TABLE `architecture_design_trainees` (
 --
 
 CREATE TABLE `business_providers` (
-  `provider_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `company_name` varchar(180) NOT NULL,
   `contact_name` varchar(150) DEFAULT NULL,
   `email` varchar(190) NOT NULL,
@@ -128,7 +89,7 @@ CREATE TABLE `business_providers` (
 --
 
 CREATE TABLE `business_trainees` (
-  `trainee_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `full_name` varchar(150) NOT NULL,
   `email` varchar(190) NOT NULL,
   `phone` varchar(40) DEFAULT NULL,
@@ -141,6 +102,13 @@ CREATE TABLE `business_trainees` (
   `linkedin_url` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `business_trainees`
+--
+
+INSERT INTO `business_trainees` (`user_id`, `full_name`, `email`, `phone`, `password_hash`, `university`, `skills`, `major`, `graduation_year`, `cv_file_path`, `linkedin_url`, `created_at`) VALUES
+(214, '', '', NULL, '', 'zuj', 'php', 'إدارة موارد بشرية', NULL, NULL, 'https://LinkedIn.com', '2026-02-03 19:09:58');
 
 -- --------------------------------------------------------
 
@@ -408,7 +376,7 @@ INSERT INTO `lawyers_syndicate` (`syndicate_id`, `lawyer_name`, `national_id`, `
 --
 
 CREATE TABLE `literature_providers` (
-  `provider_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `company_name` varchar(180) NOT NULL,
   `contact_name` varchar(150) DEFAULT NULL,
   `email` varchar(190) NOT NULL,
@@ -428,7 +396,7 @@ CREATE TABLE `literature_providers` (
 --
 
 CREATE TABLE `literature_trainees` (
-  `trainee_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `full_name` varchar(150) NOT NULL,
   `email` varchar(190) NOT NULL,
   `phone` varchar(40) DEFAULT NULL,
@@ -438,8 +406,57 @@ CREATE TABLE `literature_trainees` (
   `graduation_year` int(11) DEFAULT NULL,
   `skills` text DEFAULT NULL,
   `cv_file_path` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `linkedin_url` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `medical_support_providers`
+--
+
+CREATE TABLE `medical_support_providers` (
+  `user_id` int(11) NOT NULL,
+  `company_name` varchar(180) NOT NULL,
+  `contact_name` varchar(150) DEFAULT NULL,
+  `email` varchar(190) NOT NULL,
+  `phone` varchar(40) DEFAULT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `city` varchar(120) DEFAULT NULL,
+  `country` varchar(120) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `medical_support_trainees`
+--
+
+CREATE TABLE `medical_support_trainees` (
+  `user_id` int(11) NOT NULL,
+  `full_name` varchar(150) NOT NULL,
+  `email` varchar(190) NOT NULL,
+  `phone` varchar(40) DEFAULT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `university` varchar(160) DEFAULT NULL,
+  `major` varchar(160) DEFAULT NULL,
+  `graduation_year` int(11) DEFAULT NULL,
+  `skills` text DEFAULT NULL,
+  `cv_file_path` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `linkedin_url` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `medical_support_trainees`
+--
+
+INSERT INTO `medical_support_trainees` (`user_id`, `full_name`, `email`, `phone`, `password_hash`, `university`, `major`, `graduation_year`, `skills`, `cv_file_path`, `created_at`, `linkedin_url`) VALUES
+(218, '', '', NULL, '', 'zuj', 'علاج وظيفي', NULL, 'php', NULL, '2026-02-03 19:32:56', 'https://LinkedIn.com');
 
 -- --------------------------------------------------------
 
@@ -643,7 +660,7 @@ CREATE TABLE `users` (
   `email` varchar(150) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('trainee','lawyer','admin','syndicate_admin','IT_Provider','IT_Trainee') NOT NULL DEFAULT 'trainee',
+  `role` enum('trainee','lawyer','admin','syndicate_admin','IT_Provider','IT_Trainee','business_trainee','business_provider','architecture_design_trainee','architecture_design_provider','medical_support_trainee','medical_support_provider','literature_trainee','literature_provider') NOT NULL DEFAULT 'trainee',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `profile_completed` tinyint(1) NOT NULL DEFAULT 0,
@@ -673,52 +690,40 @@ INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `a
 (207, 'company', NULL, '0784564566', 'company@example.com', 'amman', '$2y$10$QnHL0feBKB8hwdamzNbwPezQO7x1gVlq5Vy8wzNcUQC.HTqK4sBSW', 'IT_Provider', '2026-01-26 21:12:39', '2026-01-26 21:12:39', 0, NULL),
 (208, 'محمد احمد لؤي تيست', '1010101010', '0780000001', 'moh@example.com', 'amman', '$2y$10$hDK.EbimjfqYSFnfeNJm0eISKbmfm86DBnYFRCJIprnbs9UoRZnLK', 'IT_Trainee', '2026-01-26 21:47:50', '2026-01-26 21:47:50', 0, NULL),
 (209, '2company', NULL, '0784564556', 'company2@example.com', 'amman', '$2y$10$pE3msYYhe.X7Kpuw1tYBdOEmJao4vVT5H8Y19G6WvMHME3dsuuVG6', 'IT_Provider', '2026-01-26 22:17:55', '2026-01-26 22:17:55', 0, NULL),
-(212, 'سيد علي لؤي المتدرب', NULL, '0780123456', 'saed@example.com', 'عمان', '$2y$10$cZoY/Fkr8sTi7z9ixQPvgupVk0ylJgXRUP0UVRtT2O0SPcsBGModO', 'trainee', '2026-02-02 22:29:06', '2026-02-02 22:29:06', 0, NULL);
+(212, 'سيد علي لؤي المتدرب', NULL, '0780123456', 'saed@example.com', 'عمان', '$2y$10$cZoY/Fkr8sTi7z9ixQPvgupVk0ylJgXRUP0UVRtT2O0SPcsBGModO', 'trainee', '2026-02-02 22:29:06', '2026-02-02 22:29:06', 0, NULL),
+(214, 'سيد علي لؤي المتدرب', NULL, '0780123456', 'saedbu@example.com', 'عمان', '$2y$10$Ve5lTqM/mvxQOceDe34fneemDfW.T9DllvDLeaxO3h7yRL8mr8jJe', 'business_trainee', '2026-02-03 22:09:58', '2026-02-03 22:09:58', 0, NULL),
+(218, 'سيد علي لؤي المتدرب', NULL, '0780123456', 'saedme@example.com', 'عمان', '$2y$10$1C.uBv6WhuDkci31KAF7g.Kekdp2cXjD77ZFNeazjcNg5aAbQ2gjm', 'medical_support_trainee', '2026-02-03 22:32:56', '2026-02-03 22:32:56', 0, NULL);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `allied_medical_providers`
---
-ALTER TABLE `allied_medical_providers`
-  ADD PRIMARY KEY (`provider_id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- Indexes for table `allied_medical_trainees`
---
-ALTER TABLE `allied_medical_trainees`
-  ADD PRIMARY KEY (`trainee_id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
 -- Indexes for table `architecture_design_providers`
 --
 ALTER TABLE `architecture_design_providers`
-  ADD PRIMARY KEY (`provider_id`),
+  ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `architecture_design_trainees`
 --
 ALTER TABLE `architecture_design_trainees`
-  ADD PRIMARY KEY (`trainee_id`),
+  ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `business_providers`
 --
 ALTER TABLE `business_providers`
-  ADD PRIMARY KEY (`provider_id`),
+  ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `business_trainees`
 --
 ALTER TABLE `business_trainees`
-  ADD PRIMARY KEY (`trainee_id`),
+  ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
@@ -786,14 +791,28 @@ ALTER TABLE `lawyers_syndicate`
 -- Indexes for table `literature_providers`
 --
 ALTER TABLE `literature_providers`
-  ADD PRIMARY KEY (`provider_id`),
+  ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `literature_trainees`
 --
 ALTER TABLE `literature_trainees`
-  ADD PRIMARY KEY (`trainee_id`),
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `medical_support_providers`
+--
+ALTER TABLE `medical_support_providers`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `medical_support_trainees`
+--
+ALTER TABLE `medical_support_trainees`
+  ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
@@ -843,42 +862,6 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `allied_medical_providers`
---
-ALTER TABLE `allied_medical_providers`
-  MODIFY `provider_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `allied_medical_trainees`
---
-ALTER TABLE `allied_medical_trainees`
-  MODIFY `trainee_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `architecture_design_providers`
---
-ALTER TABLE `architecture_design_providers`
-  MODIFY `provider_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `architecture_design_trainees`
---
-ALTER TABLE `architecture_design_trainees`
-  MODIFY `trainee_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `business_providers`
---
-ALTER TABLE `business_providers`
-  MODIFY `provider_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `business_trainees`
---
-ALTER TABLE `business_trainees`
-  MODIFY `trainee_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `calendar_events`
 --
 ALTER TABLE `calendar_events`
@@ -915,18 +898,6 @@ ALTER TABLE `lawyers_syndicate`
   MODIFY `syndicate_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT for table `literature_providers`
---
-ALTER TABLE `literature_providers`
-  MODIFY `provider_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `literature_trainees`
---
-ALTER TABLE `literature_trainees`
-  MODIFY `trainee_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `membership_requests`
 --
 ALTER TABLE `membership_requests`
@@ -960,7 +931,7 @@ ALTER TABLE `training_applications`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=213;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
 
 --
 -- Constraints for dumped tables

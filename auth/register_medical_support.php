@@ -13,9 +13,55 @@ function norm_url($url){
   return $url;
 }
 
+// ===== CV Upload Helper =====
+function upload_cv($userId){
+  if (!isset($_FILES['cv_file']) || $_FILES['cv_file']['error'] === UPLOAD_ERR_NO_FILE) {
+    return [null, null]; // no file
+  }
+
+  if ($_FILES['cv_file']['error'] !== UPLOAD_ERR_OK) {
+    throw new Exception("حدث خطأ أثناء رفع ملف السيرة الذاتية.");
+  }
+
+  $allowed = [
+    'application/pdf' => 'pdf',
+    'application/msword' => 'doc',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+  ];
+
+  $mime = @mime_content_type($_FILES['cv_file']['tmp_name']);
+  if (!$mime || !isset($allowed[$mime])) {
+    throw new Exception("صيغة CV غير مدعومة. المسموح: PDF/DOC/DOCX");
+  }
+
+  if ($_FILES['cv_file']['size'] > 5 * 1024 * 1024) {
+    throw new Exception("حجم CV كبير. الحد الأقصى 5MB");
+  }
+
+  $ext = $allowed[$mime];
+
+  $uploadDir = __DIR__ . "/../uploads/cv/";
+  if (!is_dir($uploadDir)) {
+    if (!mkdir($uploadDir, 0755, true)) {
+      throw new Exception("تعذر إنشاء مجلد رفع CV.");
+    }
+  }
+
+  $safeName = "cv_{$userId}_" . time() . "." . $ext;
+  $destPath = $uploadDir . $safeName;
+
+  if (!move_uploaded_file($_FILES['cv_file']['tmp_name'], $destPath)) {
+    throw new Exception("تعذر حفظ ملف CV.");
+  }
+
+  $abs = $destPath;
+  $rel = "uploads/cv/" . $safeName;
+
+  return [$abs, $rel];
+}
+
 $message = "";
 
-// ====== POST ======
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $account_type = $_POST['account_type'] ?? ''; // trainee | provider
@@ -24,16 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $phone        = trim($_POST['phone'] ?? '');
   $address      = trim($_POST['address'] ?? '');
 
-  // ✅ هذا الملف لتخصص العمارة والتصميم
-  $specialization = "architecture_design";
-
-  // trainee fields (الاسم الرباعي)
+  // trainee fields
   $first_name       = trim($_POST['first_name'] ?? '');
   $father_name      = trim($_POST['father_name'] ?? '');
   $grandfather_name = trim($_POST['grandfather_name'] ?? '');
   $family_name      = trim($_POST['family_name'] ?? '');
 
-  // الاسم الكامل
+  // full name
   $full_name = trim($_POST['full_name'] ?? '');
   if ($full_name === '') {
     $full_name = trim(implode(' ', array_filter([$first_name, $father_name, $grandfather_name, $family_name])));
@@ -41,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $university = trim($_POST['university'] ?? '');
 
-  // dropdown major (اختيار واحد)
+  // dropdown major
   $major = trim($_POST['major'] ?? '');
   $major = ($major !== '') ? $major : null;
 
@@ -53,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $description  = trim($_POST['description'] ?? '');
   $city         = trim($_POST['city'] ?? '');
 
-  // ====== Validations ======
+  // validations
   $errors = [];
 
   if (!in_array($account_type, ['trainee','provider'], true)) $errors[] = "يرجى اختيار نوع الحساب.";
@@ -68,23 +111,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if ($account_type === 'provider' && $company_name === '') $errors[] = "اسم الشركة مطلوب لمزود التدريب.";
 
-  // تحقق major ضمن خيارات التخصص (اختياري)
-  if ($account_type === 'trainee' && $major !== null) {
-    $allowedMajors = ['هندسة معمارية','تصميم داخلي','تصميم جرافيك','تصميم صناعي','تخطيط عمراني'];
-    if (!in_array($major, $allowedMajors, true)) {
-      $errors[] = "التخصص المختار غير صحيح.";
-    }
-  }
-
   if ($errors) {
     $message = "<p class='error'>❌ " . implode("<br>", array_map('h', $errors)) . "</p>";
   } else {
-
     try {
-      // email unique
+
+      // check email unique
       $chk = $pdo->prepare("SELECT user_id FROM users WHERE email = ? LIMIT 1");
       $chk->execute([$email]);
-
       if ($chk->fetchColumn()) {
         $message = "<p class='error'>❌ هذا البريد مستخدم مسبقاً.</p>";
       } else {
@@ -93,14 +127,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $passwordHash = password_hash($passwordRaw, PASSWORD_BCRYPT);
 
-        // ✅ role الجديدة (حسب طلبك)
-        $role = ($account_type === 'provider')
-          ? 'architecture_design_provider'
-          : 'architecture_design_trainee';
+        // ✅ NEW ROLE NAMES
+        $role = ($account_type === 'provider') ? 'medical_support_provider' : 'medical_support_trainee';
 
         $displayName = ($account_type === 'provider') ? $company_name : $full_name;
 
-        // ✅ ملاحظة: جدول users عندك لا يحتوي specialization، لذلك لا نضيفه هنا
+        // 1) users (بدون specialization)
         $insU = $pdo->prepare("
           INSERT INTO users (full_name, email, phone, address, password, role)
           VALUES (?, ?, ?, ?, ?, ?)
@@ -116,12 +148,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $userId = (int)$pdo->lastInsertId();
 
-        // إدخال تفاصيل حسب نوع الحساب (في جدول تخصص العمارة والتصميم)
+        $uploadedCvAbsPath = null;
+        $cv_path = null;
+
+        // 2) specialization tables
         if ($account_type === 'trainee') {
 
+          // ✅ CV upload optional
+          [$uploadedCvAbsPath, $cv_path] = upload_cv($userId);
+
           $insT = $pdo->prepare("
-            INSERT INTO architecture_design_trainees (user_id, university, major, skills, linkedin_url)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO medical_support_trainees (user_id, university, major, skills, linkedin_url, cv_file_path)
+            VALUES (?, ?, ?, ?, ?, ?)
           ");
           $insT->execute([
             $userId,
@@ -129,21 +167,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $major,
             ($skills !== '' ? $skills : null),
             $linkedin,
+            $cv_path
           ]);
 
         } else {
 
           $insP = $pdo->prepare("
-            INSERT INTO architecture_design_providers (user_id, company_name, description, city)
+            INSERT INTO medical_support_providers (user_id, company_name, description, city)
             VALUES (?, ?, ?, ?)
           ");
           $insP->execute([
             $userId,
             $company_name,
             ($description !== '' ? $description : null),
-            ($city !== '' ? $city : null),
+            ($city !== '' ? $city : null)
           ]);
-
         }
 
         $pdo->commit();
@@ -152,6 +190,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } catch (Exception $e) {
       if ($pdo->inTransaction()) $pdo->rollBack();
+
+      if (!empty($uploadedCvAbsPath) && file_exists($uploadedCvAbsPath)) {
+        @unlink($uploadedCvAbsPath);
+      }
+
       $message = "<p class='error'>❌ خطأ: " . h($e->getMessage()) . "</p>";
     }
   }
@@ -162,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>تسجيل العمارة والتصميم</title>
+  <title>تسجيل العلوم الطبية المساندة</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -172,13 +215,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <main class="auth-shell">
   <section class="auth-card auth-card--wide">
     <div class="auth-head">
-      <h2 class="auth-title">إنشاء حساب - تخصص العمارة والتصميم</h2>
+      <h2 class="auth-title">إنشاء حساب - تخصص العلوم الطبية المساندة</h2>
       <p class="auth-subtitle">اختر متدرب أو مزود تدريب ثم أكمل البيانات</p>
     </div>
 
     <?= $message ?>
 
-    <form method="POST" class="auth-form" autocomplete="on">
+    <form method="POST" class="auth-form" enctype="multipart/form-data">
       <div class="auth-grid">
 
         <div class="auth-field col-6">
@@ -250,7 +293,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <select name="major" id="major">
               <option value="">اختر التخصص</option>
               <?php
-                $options = ['هندسة معمارية','تصميم داخلي','تصميم جرافيك','تصميم صناعي','تخطيط عمراني'];
+                $options = ['تحاليل طبية','علاج طبيعي','تصوير طبي','تمريض','تغذية','علاج وظيفي','أطراف صناعية'];
                 foreach ($options as $opt):
                   $selected = ($opt === $majorSel) ? 'selected' : '';
               ?>
@@ -261,7 +304,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           <div class="auth-field col-12">
             <label>المهارات (اختياري)</label>
-            <input type="text" name="skills" placeholder="مثل: AutoCAD, Revit, Photoshop"
+            <input type="text" name="skills" placeholder="مثل: Lab Skills, Patient Care, Communication"
                    value="<?= h($_POST['skills'] ?? '') ?>">
           </div>
 
@@ -269,6 +312,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label>LinkedIn (اختياري)</label>
             <input type="text" name="linkedin_url" placeholder="linkedin.com/in/username"
                    value="<?= h($_POST['linkedin_url'] ?? '') ?>">
+          </div>
+
+          <div class="auth-field col-12">
+            <label>رفع السيرة الذاتية (اختياري) PDF/DOC/DOCX</label>
+            <input type="file" name="cv_file" accept=".pdf,.doc,.docx">
           </div>
 
         </div>
@@ -303,13 +351,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script>
 function updateFullName(){
-  const first = ($("#first_name").val() || "").trim();
-  const father = ($("#father_name").val() || "").trim();
-  const grand = ($("#grandfather_name").val() || "").trim();
-  const family = ($("#family_name").val() || "").trim();
-  $("#full_name").val([first, father, grand, family].filter(Boolean).join(" "));
+  const first = $("#first_name").val()?.trim() || "";
+  const father = $("#father_name").val()?.trim() || "";
+  const grand = $("#grandfather_name").val()?.trim() || "";
+  const family = $("#family_name").val()?.trim() || "";
+  const full = [first, father, grand, family].filter(Boolean).join(" ");
+  $("#full_name").val(full);
 }
-
 $("#first_name, #father_name, #grandfather_name, #family_name").on("input", updateFullName);
 
 function toggleFields(){
@@ -317,30 +365,15 @@ function toggleFields(){
   if(t === "trainee"){
     $("#trainee_fields").show();
     $("#provider_fields").hide();
-
-    $("#first_name, #father_name, #grandfather_name, #family_name").prop("required", true);
-    $("input[name='company_name']").prop("required", false);
-
   }else if(t === "provider"){
     $("#provider_fields").show();
     $("#trainee_fields").hide();
-
-    $("input[name='company_name']").prop("required", true);
-    $("#first_name, #father_name, #grandfather_name, #family_name").prop("required", false);
-
   }else{
     $("#trainee_fields").hide();
     $("#provider_fields").hide();
-
-    $("input[name='company_name']").prop("required", false);
-    $("#first_name, #father_name, #grandfather_name, #family_name").prop("required", false);
   }
 }
-
-$("#account_type").on("change", function(){
-  toggleFields();
-  updateFullName();
-});
+$("#account_type").on("change", toggleFields);
 
 $(document).ready(function(){
   toggleFields();
