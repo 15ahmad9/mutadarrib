@@ -130,6 +130,25 @@ require_once __DIR__ . '/includes/theme_init.php';
         <p>تدريب عملي في الشركات والمكاتب المعتمدة.</p>
         <span class="btn-card">دخول القسم</span>
     </a>
+
+    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
+        <h3>🏛️ العمارة والتصميم</h3>
+        <p>تدريب ميداني في مكاتب العمارة والتصميم المعتمدة.</p>
+        <span class="btn-card">دخول القسم</span>
+    </a>
+
+    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
+        <h3>📚 الآداب</h3>
+        <p>تدريب مهني في المكتبات والمؤسسات الثقافية المعتمدة.</p>
+        <span class="btn-card">دخول القسم</span>
+    </a>  
+
+    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
+        <h3>🩹 الدعم الطبي</h3>
+        <p>تدريب عملي في المستشفيات والمراكز الطبية المعتمدة.</p>
+        <span class="btn-card">دخول القسم</span>  
+    </a>
+
   </div>
 </section>
 
