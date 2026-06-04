@@ -99,10 +99,34 @@ require_once __DIR__ . '/includes/theme_init.php';
         <span class="btn-card">دخول القسم</span>
     </a>
 
-    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
+    <a class="card card-link reveal-item" href="/mutadarrib/specializations/lawyers/index.php">
         <h3>⚖️ المحاماة</h3>
         <p>تدريب مهني تحت إشراف محامين مزاولين معتمدين.</p>
         <span class="btn-card">دخول القسم</span>
+    </a>
+
+    <a class="card card-link reveal-item" href="/mutadarrib/specializations/business/index.php">
+        <h3>🏢 الأعمال</h3>
+        <p>تدريب عملي في الشركات والمكاتب المعتمدة.</p>
+        <span class="btn-card">دخول القسم</span>
+    </a>
+
+    <a class="card card-link reveal-item" href="/mutadarrib/specializations/architecture_design/index.php">
+        <h3>🏛️ العمارة والتصميم</h3>
+        <p>تدريب ميداني في مكاتب العمارة والتصميم المعتمدة.</p>
+        <span class="btn-card">دخول القسم</span>
+    </a>
+
+    <a class="card card-link reveal-item" href="/mutadarrib/specializations/literature/index.php">
+        <h3>📚 الآداب</h3>
+        <p>تدريب مهني في المكتبات والمؤسسات الثقافية المعتمدة.</p>
+        <span class="btn-card">دخول القسم</span>
+    </a>  
+
+    <a class="card card-link reveal-item" href="/mutadarrib/specializations/medical_support/index.php">
+        <h3>🩹 الدعم الطبي</h3>
+        <p>تدريب عملي في المستشفيات والمراكز الطبية المعتمدة.</p>
+        <span class="btn-card">دخول القسم</span>  
     </a>
 
     <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
@@ -125,29 +149,7 @@ require_once __DIR__ . '/includes/theme_init.php';
         <span class="btn-card">دخول القسم</span>
     </a>
 
-<a class="card card-link reveal-item" href="/mutadarrib/soon.php">
-        <h3>🏢 الأعمال</h3>
-        <p>تدريب عملي في الشركات والمكاتب المعتمدة.</p>
-        <span class="btn-card">دخول القسم</span>
-    </a>
 
-    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
-        <h3>🏛️ العمارة والتصميم</h3>
-        <p>تدريب ميداني في مكاتب العمارة والتصميم المعتمدة.</p>
-        <span class="btn-card">دخول القسم</span>
-    </a>
-
-    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
-        <h3>📚 الآداب</h3>
-        <p>تدريب مهني في المكتبات والمؤسسات الثقافية المعتمدة.</p>
-        <span class="btn-card">دخول القسم</span>
-    </a>  
-
-    <a class="card card-link reveal-item" href="/mutadarrib/soon.php">
-        <h3>🩹 الدعم الطبي</h3>
-        <p>تدريب عملي في المستشفيات والمراكز الطبية المعتمدة.</p>
-        <span class="btn-card">دخول القسم</span>  
-    </a>
 
   </div>
 </section>

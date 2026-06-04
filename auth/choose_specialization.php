@@ -26,14 +26,14 @@ require_once __DIR__ . '/../includes/theme_init.php';
             <select id="specialization" required>
               <option value="">اختر</option>
               <option value="it">تكنولوجيا معلومات</option>
-              <option value="lawyer" class="disabled-option" disabled>محاماه (غير متاح حاليًا)</option>
+              <option value="lawyer">محاماه</option>
+              <option value="business" >الأعمال</option>
+              <option value="architecture_design" >العمارة والتصميم</option>
+              <option value="literature" >الآداب</option>
+              <option value="medical_support" >دعم طبي</option>
               <option value="engineering" class="disabled-option" disabled>هندسة (غير متاح حاليًا)</option>
               <option value="pharmacy" class="disabled-option" disabled>صيدلة (غير متاح حاليًا)</option>
               <option value="nursing" class="disabled-option" disabled>تمريض (غير متاح حاليًا)</option>
-              <option value="business" class="disabled-option" disabled>الأعمال (غير متاح حاليًا)</option>
-              <option value="architecture_design" class="disabled-option" disabled>العمارة والتصميم (غير متاح حاليًا)</option>
-              <option value="literature" class="disabled-option" disabled>الآداب (غير متاح حاليًا)</option>
-              <option value="medical_support" class="disabled-option" disabled>دعم طبي (غير متاح حاليًا)</option>
             </select>
           </div>
 
