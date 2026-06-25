@@ -36,6 +36,25 @@ $membershipApproved = $pdo->query("SELECT COUNT(*) FROM membership_requests WHER
 $membershipRejected = $pdo->query("SELECT COUNT(*) FROM membership_requests WHERE status='rejected'")->fetchColumn();
 $membershipAll = $pdo->query("SELECT COUNT(*) FROM membership_requests")->fetchColumn();
 
+// ===========================
+// فرص تدريب التخصصات
+// ===========================
+$specInternshipsAll = 0;
+$specInternshipsOpen = 0;
+$specInternshipsClosed = 0;
+$specApplicationsAll = 0;
+
+try {
+  $specInternshipsAll = (int)$pdo->query("SELECT COUNT(*) FROM specialization_internships")->fetchColumn();
+  $specInternshipsOpen = (int)$pdo->query("SELECT COUNT(*) FROM specialization_internships WHERE status='open'")->fetchColumn();
+  $specInternshipsClosed = (int)$pdo->query("SELECT COUNT(*) FROM specialization_internships WHERE status='closed'")->fetchColumn();
+  $specApplicationsAll = (int)$pdo->query("SELECT COUNT(*) FROM specialization_applications")->fetchColumn();
+} catch (Exception $e) {
+  $specInternshipsAll = 0;
+  $specInternshipsOpen = 0;
+  $specInternshipsClosed = 0;
+  $specApplicationsAll = 0;
+}
 
 // ===========================
 // رسائل تواصل معنا
@@ -140,6 +159,38 @@ try {
             <div class="dash-row"><span>مرفوضة</span><strong><?= (int) $membershipRejected ?></strong></div>
           </div>
         </section>
+
+<!-- Specialization Internships -->
+<section class="dash-card">
+  <div class="dash-card-head">
+    <div class="dash-card-title">
+      <span class="dash-icon" data-icon="training" aria-hidden="true"></span>
+      فرص تدريب التخصصات
+    </div>
+    <div class="dash-card-total"><?= (int) $specInternshipsAll ?></div>
+  </div>
+
+  <div class="dash-breakdown">
+    <div class="dash-row">
+      <span>مفتوحة</span>
+      <strong><?= (int) $specInternshipsOpen ?></strong>
+    </div>
+    <div class="dash-row">
+      <span>مغلقة</span>
+      <strong><?= (int) $specInternshipsClosed ?></strong>
+    </div>
+    <div class="dash-row">
+      <span>طلبات التقديم</span>
+      <strong><?= (int) $specApplicationsAll ?></strong>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;">
+    <a href="/mutadarrib/admin/internship/internships.php" class="btn">
+      إدارة فرص التدريب
+    </a>
+  </div>
+</section>
 
         <!-- Contact Messages -->
         <section class="dash-card ">

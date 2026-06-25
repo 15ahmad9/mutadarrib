@@ -29,6 +29,13 @@ function is_active($needle, $currentPath)
     <li><a class="<?= is_active('/admin/membership/', $currentPath) ?>" href="/mutadarrib/admin/membership/requests.php" data-icon="membership">طلبات الانتساب</a></li>
 
     <li class="sidebar-section">محتوى</li>
+    <li>
+  <a class="<?= is_active('/admin/internship/', $currentPath) ?>"
+     href="/mutadarrib/admin/internship/internships.php"
+     data-icon="training">
+     فرص تدريب التخصصات
+  </a>
+</li>
     <li><a class="<?= is_active('/admin/documents/', $currentPath) ?>" href="/mutadarrib/admin/documents/documents.php" data-icon="docs">وثائق المستخدمين</a></li>
     <li><a class="<?= is_active('/admin/contact/', $currentPath) ?>" href="/mutadarrib/admin/contact/messages.php" data-icon="messages">رسائل تواصل معنا</a></li>
 
