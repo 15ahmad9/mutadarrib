@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 03, 2026 at 08:33 PM
+-- Generation Time: Jun 16, 2026 at 10:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -263,7 +263,8 @@ CREATE TABLE `it_trainees` (
 
 INSERT INTO `it_trainees` (`user_id`, `university`, `major`, `graduation_year`, `skills`, `github_url`, `linkedin_url`, `cv_file_path`, `created_at`, `updated_at`) VALUES
 (208, 'zuj', 'se', 2025, 'php', NULL, NULL, NULL, '2026-01-26 21:47:50', '2026-01-26 21:47:50'),
-(212, 'zuj', 'علم بيانات', NULL, 'php', 'https://github/a', 'https://LinkedIn.com', NULL, '2026-02-02 22:29:06', '2026-02-02 22:29:06');
+(212, 'zuj', 'علم بيانات', NULL, 'php', 'https://github/a', 'https://LinkedIn.com', NULL, '2026-02-02 22:29:06', '2026-02-02 22:29:06'),
+(219, 'ZU', 'SE', NULL, 'Flutter, PHP', NULL, NULL, NULL, '2026-06-16 23:50:31', '2026-06-16 23:50:31');
 
 -- --------------------------------------------------------
 
@@ -692,7 +693,8 @@ INSERT INTO `users` (`user_id`, `full_name`, `national_id`, `phone`, `email`, `a
 (209, '2company', NULL, '0784564556', 'company2@example.com', 'amman', '$2y$10$pE3msYYhe.X7Kpuw1tYBdOEmJao4vVT5H8Y19G6WvMHME3dsuuVG6', 'IT_Provider', '2026-01-26 22:17:55', '2026-01-26 22:17:55', 0, NULL),
 (212, 'سيد علي لؤي المتدرب', NULL, '0780123456', 'saed@example.com', 'عمان', '$2y$10$cZoY/Fkr8sTi7z9ixQPvgupVk0ylJgXRUP0UVRtT2O0SPcsBGModO', 'trainee', '2026-02-02 22:29:06', '2026-02-02 22:29:06', 0, NULL),
 (214, 'سيد علي لؤي المتدرب', NULL, '0780123456', 'saedbu@example.com', 'عمان', '$2y$10$Ve5lTqM/mvxQOceDe34fneemDfW.T9DllvDLeaxO3h7yRL8mr8jJe', 'business_trainee', '2026-02-03 22:09:58', '2026-02-03 22:09:58', 0, NULL),
-(218, 'سيد علي لؤي المتدرب', NULL, '0780123456', 'saedme@example.com', 'عمان', '$2y$10$1C.uBv6WhuDkci31KAF7g.Kekdp2cXjD77ZFNeazjcNg5aAbQ2gjm', 'medical_support_trainee', '2026-02-03 22:32:56', '2026-02-03 22:32:56', 0, NULL);
+(218, 'سيد علي لؤي المتدرب', NULL, '0780123456', 'saedme@example.com', 'عمان', '$2y$10$1C.uBv6WhuDkci31KAF7g.Kekdp2cXjD77ZFNeazjcNg5aAbQ2gjm', 'medical_support_trainee', '2026-02-03 22:32:56', '2026-02-03 22:32:56', 0, NULL),
+(219, 'Mobile Test User', '2382810033', '0790000000', 'mobile_test_321117996@example.com', 'Amman', '$2y$10$eNZyQSWLC1J6xe62aykxfO48o/1KqLbNqY5rjNlmEMqeZ8bp4vru2', 'IT_Trainee', '2026-06-16 23:50:31', '2026-06-16 23:50:31', 0, NULL);
 
 --
 -- Indexes for dumped tables
@@ -931,7 +933,7 @@ ALTER TABLE `training_applications`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=220;
 
 --
 -- Constraints for dumped tables
@@ -972,28 +974,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
-CREATE TABLE specialization_internships (
-  internship_id INT AUTO_INCREMENT PRIMARY KEY,
-  specialization_slug VARCHAR(100) NOT NULL,
-  provider_name VARCHAR(200) NOT NULL,
-  title VARCHAR(200) NOT NULL,
-  description TEXT,
-  location VARCHAR(255),
-  training_type ENUM('حضوري','عن بعد','هجين') DEFAULT 'حضوري',
-  seats INT NOT NULL DEFAULT 1,
-  status ENUM('open','closed') NOT NULL DEFAULT 'open',
-  start_date DATE DEFAULT NULL,
-  end_date DATE DEFAULT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE specialization_applications (
-  application_id INT AUTO_INCREMENT PRIMARY KEY,
-  internship_id INT NOT NULL,
-  user_id INT NOT NULL,
-  status ENUM('pending','accepted','rejected') DEFAULT 'pending',
-  applied_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (internship_id) REFERENCES specialization_internships(internship_id)
-);

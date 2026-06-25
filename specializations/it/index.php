@@ -35,7 +35,7 @@ require_once __DIR__ . '/../../includes/theme_init.php';
         سجّل كمتدرب IT، أضف مهاراتك وروابطك، وتقدّم لفرص التدريب المتاحة وتابع حالة طلباتك.
       </p>
 
-      <a class="landing-btn landing-btn-primary" href="../../auth/choose_specialization.php">
+      <a class="landing-btn landing-btn-primary" href="../../auth/register_it.php">
         تسجيل متدرب IT
       </a>
     </div>
